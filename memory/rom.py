@@ -3,8 +3,9 @@ class ROM():
     LONG_PTR_SIZE = 3   # long ptr  (24-bit)
 
     def __init__(self, file_name):
+        import args
         from valid_rom_file import valid_rom_file
-        if not valid_rom_file(file_name):
+        if not valid_rom_file(file_name) and not args.post_gen:
             raise ValueError("Invalid ROM File")
 
         with open(file_name, "rb") as rom_file:

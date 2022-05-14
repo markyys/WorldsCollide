@@ -22,6 +22,7 @@ class Arguments:
         self.parser.add_argument("-o", dest = "output_file", required = False, help = "Modified FFIII US v1.0 rom file")
         self.parser.add_argument("-sid", dest = "seed_id", required = False, help = "Seed unique id (website)")
         self.parser.add_argument("-debug", dest = "debug", action = "store_true", help = "Debug mode")
+        self.parser.add_argument("-post-gen", dest = "post_gen", action = "store_true", help = "No validity check on input ROM. Used for post-seed generation experiments.")
 
         self.parser.add_argument("-nro", dest = "no_rom_output", action = "store_true", help = "Do not output a modified rom file")
         self.parser.add_argument("-slog", dest = "stdout_log", action = "store_true", help = "Write log to stdout instead of file")
