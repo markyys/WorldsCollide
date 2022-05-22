@@ -34,6 +34,7 @@ Other changes:
 - Feature: Esper and Lore MP random value MP costs can now go to 254.
 - Feature: New Title Graphics from CDude
 - QoL: Move Descriptions in Rage Menu
+- Bugfix: Removing Excluded Non-S Tier Items (ex: Fenix Down in permadeath) from scaled or tiered chests
 
 Associated PRs:
 - <https://github.com/AtmaTek/WorldsCollide/pull/35>
@@ -51,5 +52,6 @@ Associated PRs:
 - <https://github.com/AtmaTek/WorldsCollide/pull/39>
 - <https://github.com/AtmaTek/WorldsCollide/pull/38>
 - <https://github.com/AtmaTek/WorldsCollide/pull/41>
+- <https://github.com/AtmaTek/WorldsCollide/pull/44>
 
 
