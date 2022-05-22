@@ -1,5 +1,6 @@
-from memory.space import Bank, Write, Reserve, Allocate, Read
+from memory.space import START_ADDRESS_SNES, Bank, Write, Reserve, Allocate, Read
 import instruction.asm as asm
+import instruction.c3 as c3
 
 class TrackMenu:
     MENU_NUMBER = 10
@@ -192,10 +193,10 @@ class TrackMenu:
 
     def initialize_mod(self):
         src = [
-            asm.JSR(self.common.initialize, asm.ABS),
+            asm.JSL(self.common.initialize + START_ADDRESS_SNES),
 
             asm.JSR(self.draw_options, asm.ABS),
-            asm.JSR(self.common.upload_bg123ab, asm.ABS),
+            asm.JSL(self.common.upload_bg123ab + START_ADDRESS_SNES),
 
             asm.LDA(self.MENU_NUMBER, asm.IMM8),
             asm.STA(0x0200, asm.ABS),
@@ -206,6 +207,7 @@ class TrackMenu:
             asm.STA(0x26, asm.DIR),     # add fade in menu to queue
             asm.JMP(0x3541, asm.ABS),   # set brightness and refresh screen
         ]
+        # called by C3 JSR jump table
         space = Write(Bank.C3, src, "track initialize")
         self.initialize = space.start_address
 
@@ -286,6 +288,10 @@ class TrackMenu:
 
         src.extend(self.common.get_scroll_area_exit_src(self.MENU_NUMBER, self.common.invoke_flags))
 
+<<<<<<< HEAD
+=======
+        # Called by C3 JSR jump table
+>>>>>>> remove_learnable_spells
         space = Write(Bank.C3, src, "track sustain")
         self.sustain = space.start_address
 
