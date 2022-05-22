@@ -35,6 +35,7 @@ Other changes:
 - Feature: New Title Graphics from CDude
 - QoL: Move Descriptions in Rage Menu
 - Bugfix: Removing Excluded Non-S Tier Items (ex: Fenix Down in permadeath) from scaled or tiered chests
+- QoL: Ensuring Gau can use Magic in FT
 
 Associated PRs:
 - Feature: Add ability to shuffle/mix both dragons and statues: <https://github.com/AtmaTek/WorldsCollide/pull/35>
@@ -53,5 +54,6 @@ Associated PRs:
 - Feature: Magic MP Randomization: <https://github.com/AtmaTek/WorldsCollide/pull/38>
 - QoL: Adding Rage Move descriptions to rage men: <https://github.com/AtmaTek/WorldsCollide/pull/41>
 - Bugfix: Removing excluded non-S tier items from tiered or scaled chests: <https://github.com/AtmaTek/WorldsCollide/pull/44>
+- QoL: Ensuring that Gau can use Magic in FT <https://github.com/AtmaTek/WorldsCollide/pull/45>
 
 
