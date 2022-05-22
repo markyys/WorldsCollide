@@ -49,11 +49,7 @@ class PreGameTrack:
             asm.BNE(SUBMENU_END_LABEL),    # branch if not
             asm.TDC(),
             asm.JSR(0x0eb2, asm.ABS),       # click sound
-<<<<<<< HEAD
-            asm.JSR(self.exit_scroll_area, asm.ABS), # save current submenu position
-=======
             asm.JSL(self.exit_scroll_area + START_ADDRESS_SNES), # save current submenu position
->>>>>>> remove_learnable_spells
             asm.JMP(invoke_submenu_addr, asm.ABS), # load the flags submenu
             SUBMENU_END_LABEL,
         ]
@@ -65,11 +61,7 @@ class PreGameTrack:
         # a flags submenu or to the given destination_menu_number otherwise.
         src = [
             asm.JSR(0x0EA9, asm.ABS),       # cursor sound
-<<<<<<< HEAD
-            asm.JSR(self.exit_scroll_area, asm.ABS), # save current submenu position
-=======
             asm.JSL(self.exit_scroll_area + START_ADDRESS_SNES), # save current submenu position
->>>>>>> remove_learnable_spells
             asm.LDA(0x0200, asm.ABS),
         ]
 
@@ -401,11 +393,7 @@ class PreGameTrack:
                 asm.JMP(self.flags.submenus[submenu_idx].remember_draw, asm.ABS),
             ]
 
-<<<<<<< HEAD
-        space = Write(Bank.C3, src, "pregame track initialize scroll area")
-=======
         space = Write(Bank.F0, src, "pregame track initialize scroll area")
->>>>>>> remove_learnable_spells
         self.initialize_scroll_area = space.start_address
 
     def InvokeScrollArea(self, scroll_area_menu):

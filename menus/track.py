@@ -288,10 +288,7 @@ class TrackMenu:
 
         src.extend(self.common.get_scroll_area_exit_src(self.MENU_NUMBER, self.common.invoke_flags))
 
-<<<<<<< HEAD
-=======
         # Called by C3 JSR jump table
->>>>>>> remove_learnable_spells
         space = Write(Bank.C3, src, "track sustain")
         self.sustain = space.start_address
 
