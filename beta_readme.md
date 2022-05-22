@@ -37,21 +37,21 @@ Other changes:
 - Bugfix: Removing Excluded Non-S Tier Items (ex: Fenix Down in permadeath) from scaled or tiered chests
 
 Associated PRs:
-- <https://github.com/AtmaTek/WorldsCollide/pull/35>
-- <https://github.com/AtmaTek/WorldsCollide/pull/16>
-- <https://github.com/AtmaTek/WorldsCollide/pull/15>
-- <https://github.com/AtmaTek/WorldsCollide/pull/18>
-- <https://github.com/AtmaTek/WorldsCollide/pull/21>
-- <https://github.com/AtmaTek/WorldsCollide/pull/25>
-- <https://github.com/AtmaTek/WorldsCollide/pull/28>
-- <https://github.com/AtmaTek/WorldsCollide/pull/30>
-- <https://github.com/AtmaTek/WorldsCollide/pull/32>
-- <https://github.com/AtmaTek/WorldsCollide/pull/34>
-- <https://github.com/AtmaTek/WorldsCollide/pull/36>
-- <https://github.com/AtmaTek/WorldsCollide/pull/37>
-- <https://github.com/AtmaTek/WorldsCollide/pull/39>
-- <https://github.com/AtmaTek/WorldsCollide/pull/38>
-- <https://github.com/AtmaTek/WorldsCollide/pull/41>
-- <https://github.com/AtmaTek/WorldsCollide/pull/44>
+- Feature: Add ability to shuffle/mix both dragons and statues: <https://github.com/AtmaTek/WorldsCollide/pull/35>
+- QoL: Ebot's Rock: Add guaranteed warp to chest: <https://github.com/AtmaTek/WorldsCollide/pull/16>
+- QoL & Feature: Making Mt. Kolts peekable & add no-peeking flag: <https://github.com/AtmaTek/WorldsCollide/pull/15>
+- Bugfix: Fix weapon special abilities with Capture and Multi-steals only giving 1 item: <https://github.com/AtmaTek/WorldsCollide/pull/18>
+- Feature: Adding Controllable Coliseum flag: <https://github.com/AtmaTek/WorldsCollide/pull/21>
+- Feature: Making Top 4 Magitek commands an objective result: <https://github.com/AtmaTek/WorldsCollide/pull/25>
+- Feature: Adding flags to improve Sketch/Control: <https://github.com/AtmaTek/WorldsCollide/pull/28>
+- Feature: Add Remove learnable spells flag + Submenu: <https://github.com/AtmaTek/WorldsCollide/pull/43>
+- Feature: Adding Gau and Father Reunion as a Quest: <https://github.com/AtmaTek/WorldsCollide/pull/32>
+- Feature: Adding flag for giving starting Espers: <https://github.com/AtmaTek/WorldsCollide/pull/34>
+- Bugfix: Can't learn Bum Rush if recruited >= 42: <https://github.com/AtmaTek/WorldsCollide/pull/36>
+- Feature: Add Dash/Sprint Shoe Dash movement options, reorganize the auto-sprint/dash flags: <https://github.com/AtmaTek/WorldsCollide/pull/37>
+- Feature: Set Starting level: <https://github.com/AtmaTek/WorldsCollide/pull/39>
+- Feature: Magic MP Randomization: <https://github.com/AtmaTek/WorldsCollide/pull/38>
+- QoL: Adding Rage Move descriptions to rage men: <https://github.com/AtmaTek/WorldsCollide/pull/41>
+- Bugfix: Removing excluded non-S tier items from tiered or scaled chests: <https://github.com/AtmaTek/WorldsCollide/pull/44>
 
 
