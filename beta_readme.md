@@ -23,6 +23,7 @@ Adds the following flags for new features:
     - `-mmprv <MIN> <MAX>` for Magic spells' MP costs randomized between given values (0-254)
     - `-mmprp <MIN> <MAX>` for each Magic spell's MP cost set to random percent of original within given range (0 - 200)
 13. `-u254` to make Ultima cost 254 MP
+14. `-warp` to make Warp cost 0 MP and give to all characters
 
 Other changes:
 - QoL: Mt Kolts is peekable -- the shadowy figure will now represent the reward
@@ -55,5 +56,6 @@ Associated PRs:
 - QoL: Adding Rage Move descriptions to rage men: <https://github.com/AtmaTek/WorldsCollide/pull/41>
 - Bugfix: Removing excluded non-S tier items from tiered or scaled chests: <https://github.com/AtmaTek/WorldsCollide/pull/44>
 - QoL: Ensuring that Gau can use Magic in FT <https://github.com/AtmaTek/WorldsCollide/pull/45>
+- Feature: Adding warp-all flag for 0 cost starting Warp <https://github.com/AtmaTek/WorldsCollide/pull/46>
 
 
