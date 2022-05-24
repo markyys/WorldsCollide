@@ -76,6 +76,8 @@ def flags(args):
         flags += " -rc"
     if args.scan_all:
         flags += " -scan"
+    if args.warp_all:
+        flags += " -warp"
 
     if args.event_timers_random:
         flags += " -etr"
