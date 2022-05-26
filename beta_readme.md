@@ -24,7 +24,7 @@ Adds the following flags for new features:
     - `-mmprp <MIN> <MAX>` for each Magic spell's MP cost set to random percent of original within given range (0 - 200)
 13. `-u254` to make Ultima cost 254 MP
 14. `-warp` to make Warp cost 0 MP and give to all characters
-15. `-sj <quantity>` to add the given quantity of junk (tier 0) weapon/shields/helmets/armor to starting inventory
+15. `-sj <quantity>` to add the given quantity of junk (tier 0) weapon/shields/helmets/armor/relics to starting inventory
 16. `-rechu` to replace all Random (non-fixed/non-boss/non-Veldt/non-Zone Eater) checks with Coliseum Chupon.
 
 Other changes:
