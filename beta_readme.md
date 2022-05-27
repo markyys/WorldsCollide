@@ -40,6 +40,7 @@ Other changes:
 - Bugfix: Removing Excluded Non-S Tier Items (ex: Fenix Down in permadeath) from scaled or tiered chests
 - QoL: Ensuring Gau can use Magic in FT
 - QoL: Config options default to commonly used values
+- Feature: Added Unlock Perma KT Skip as an Objective Result (result `61`)
 
 Associated PRs:
 - Feature: Add ability to shuffle/mix both dragons and statues: <https://github.com/AtmaTek/WorldsCollide/pull/35>
@@ -63,5 +64,6 @@ Associated PRs:
 - Feature: Adding random-encounters-chupon flag <https://github.com/AtmaTek/WorldsCollide/pull/47>
 - Kielbasiago's add --start-junk flag <https://github.com/AtmaTek/WorldsCollide/pull/48>
 - QoL: Setting default config options to most commonly used values <https://github.com/AtmaTek/WorldsCollide/pull/49>
+- Kielbasiago's Add objective result Unlock Perma KT Skip https://github.com/AtmaTek/WorldsCollide/pull/50
 
 

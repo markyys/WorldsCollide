@@ -15,7 +15,7 @@ category_types = {
     "Kefka's Tower" : [
         ResultType(1, "Kefka's Tower", "Random", None),
         ResultType(2, "Unlock Final Kefka", "Unlock Final Kefka", None),
-        ResultType(3, "Unlock KT Skip", "Unlock KT Skip", None),
+        ResultType(3, "Unlock One KT Skip", "Unlock One KT Skip", None),
     ],
     "Auto" : [
         ResultType(4, "Auto", "Random", None),
@@ -88,6 +88,7 @@ category_types = {
 #Additional results
 category_types["Command"].append(ResultType(59, "Magitek Upgrade", "Magitek Upgrade", None))
 category_types["Item"].append(ResultType(60, "Sprint Shoes", "Sprint Shoes", None))
+category_types["Kefka's Tower"] += [ResultType(61, "Unlock Perma KT Skip", "Unlock Perma KT Skip", None)]
 
 categories = list(category_types.keys())
 
