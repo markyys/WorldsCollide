@@ -39,6 +39,7 @@ Other changes:
 - QoL: Move Descriptions in Rage Menu
 - Bugfix: Removing Excluded Non-S Tier Items (ex: Fenix Down in permadeath) from scaled or tiered chests
 - QoL: Ensuring Gau can use Magic in FT
+- QoL: Config options default to commonly used values
 
 Associated PRs:
 - Feature: Add ability to shuffle/mix both dragons and statues: <https://github.com/AtmaTek/WorldsCollide/pull/35>
@@ -61,5 +62,6 @@ Associated PRs:
 - Feature: Adding warp-all flag for 0 cost starting Warp <https://github.com/AtmaTek/WorldsCollide/pull/46>
 - Feature: Adding random-encounters-chupon flag <https://github.com/AtmaTek/WorldsCollide/pull/47>
 - Kielbasiago's add --start-junk flag <https://github.com/AtmaTek/WorldsCollide/pull/48>
+- QoL: Setting default config options to most commonly used values <https://github.com/AtmaTek/WorldsCollide/pull/49>
 
 
