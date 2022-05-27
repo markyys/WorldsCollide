@@ -1,4 +1,3 @@
-from data.movement import MovementActions
 
 
 def name():
@@ -16,11 +15,13 @@ def parse(parser):
     misc.add_argument("-scan", "--scan-all", action = "store_true",
                       help = "All enemies scannable. All characters start with scan learned. Scan costs 0 MP. Useful for testing/debugging")
 
+    from data.movement import ALL
     movement = misc.add_mutually_exclusive_group()
     movement.name = "Movement"
-    movement.add_argument("-move", "--movement", type = str.lower, choices = MovementActions.ALL,
+    movement.add_argument("-move", "--movement", type = str.lower, choices = ALL,
                       help = "Player movement options")
-    movement.add_argument("-as", "--auto-sprint", action = "store_true",
+    # Completely ignore this argument, and default to auto sprint when -move is not defined
+    misc.add_argument("-as", "--auto-sprint", action = "store_true",
                       help = "DEPRECATED - Use `-move as` instead. Player always sprints. Sprint Shoes have no effect")
 
     event_timers = misc.add_mutually_exclusive_group()
@@ -149,8 +150,15 @@ def options(args):
     elif args.flashes_remove_most:
         remove_flashes = "Most"
 
+    from data.movement import key_name, AUTO_SPRINT
+    # Similar logic is present in the init fn of settings/movement.py
+    if args.movement:
+        movement = key_name[args.movement]
+    else:
+        movement = key_name[AUTO_SPRINT]
+
     return [
-        ("Movement", args.movement),
+        ("Movement", movement),
         ("Original Name Display", args.original_name_display),
         ("Random RNG", args.random_rng),
         ("Random Clock", args.random_clock),

@@ -1,13 +1,13 @@
-from data.movement import MovementActions, MovementSpeed
 from memory.space import Allocate, Bank, Reserve, Write
 import instruction.asm as asm
+from data.movement import AUTO_SPRINT, B_DASH, ORIGINAL, SPRINT_SHOES_B_DASH, MovementSpeed
 
 class Movement:
     def __init__(self):
         import args
-        self.movement = args.movement or MovementActions.AUTO_SPRINT
+        self.movement = args.movement or AUTO_SPRINT
 
-        if self.movement != MovementActions.ORIGINAL:
+        if self.movement != ORIGINAL:
             self.mod()
 
     def mod(self):
@@ -56,14 +56,13 @@ class Movement:
             asm.BEQ("STORE_DEFAULT"),               # do nothing if b pressed
         ]
 
-
-        if self.movement == MovementActions.AUTO_SPRINT:
+        if self.movement == AUTO_SPRINT:
             src += [
                 "ON_B_BUTTON",
                 asm.LDA(MovementSpeed.WALK, asm.IMM8),
                 asm.BRA("STORE"),
             ]
-        elif self.movement == MovementActions.B_DASH:
+        elif self.movement == B_DASH:
             src += owzers_src
             src += [
                 "ON_B_BUTTON",
@@ -71,7 +70,7 @@ class Movement:
                 asm.BRA("STORE"),
             ]
 
-        elif self.movement == MovementActions.SPRINT_SHOES_B_DASH:
+        elif self.movement == SPRINT_SHOES_B_DASH:
             src += owzers_src
             src += [
                 "ON_B_BUTTON",
