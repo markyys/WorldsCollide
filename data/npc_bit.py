@@ -1,6 +1,7 @@
 # NOTE: (address - 1e80) * 0x8 + bit
 # e.g. (1eb7 - 1e80) * 0x8 + 0x1 = 1b9 (airship visible) 
 #      (1f43 - 1e80) * 0x8 + 0x3 = 61b (characters on narshe battlefield)
+# Note: all are +0x300 from what you'll find in FF6 Tools
 
 SOLDIER_DOORWAY_ARVIS_HOUSE = 0x688
 SHADOW_SOUTH_FIGARO_PUB = 0x305
@@ -104,6 +105,8 @@ BROWN_SOLDIER5_BATTLE_NARSHE_WOB = 0x626
 BROWN_SOLDIER6_BATTLE_NARSHE_WOB = 0x627
 BANON_DURING_BATTLE_NARSHE_WOB = 0x628
 BANON_BEFORE_BATTLE_NARSHE_WOB = 0x62c # mine, using cid at imperial banquet npc bit
+TERRA_COLLAPSED_NARSHE_WOB = 0x631
+MARSHAL_NARSHE_WOB = 0x6c8 # mine, otherwise unused
 SAVE_POINT_SNOWFIELD_NARSHE_WOB = 0x633
 IFRIT_SHIVA_MAGITEK_FACTORY = 0x646
 SABIN_COLLAPSING_HOUSE = 0x66c

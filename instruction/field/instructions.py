@@ -1007,3 +1007,5 @@ class DeleteRotatingPyramids(_Instruction):
 class InvokeFinalLineup(_Instruction):
     def __init__(self):
         super().__init__(0x9d)
+
+#CC/3188: 77    Perform level averaging on character $01 (LOCKE ) and calculate new maximum HP/MP

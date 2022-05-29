@@ -183,7 +183,7 @@ class Characters():
         return self.DEFAULT_NAME[character]
 
     def get_sprite(self, character):
-        return self.characters[character].sprite
+        return self.character_sprites.character_sprites[character].id
 
     def get_random_esper_item_sprite(self):
         sprites = [self.SOLDIER, self.IMP, self.MERCHANT, self.GHOST]
