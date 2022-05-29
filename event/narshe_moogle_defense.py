@@ -115,8 +115,9 @@ class NarsheMoogleDefense(Event):
         space.write(
             field.Return()
         )
-        # Clear use of event_bit.12E (TERRA_COLLAPSED_NARHSE_WOB) at cc/aaab so that we can reuse that bit
-        space = Reserve(0xcaaab, 0xcaaac, "set terra falls event bit", field.NOP())
+        # Clear use of event_bit.12E (TERRA_COLLAPSED_NARHSE_WOB) and event_bit.003 (moogle defense) at cc/aaab so that we can reuse 12E 
+        # and so that 003 doesn't cause issues at WoB Narshe entrance
+        space = Reserve(0xcaaab, 0xcaaae, "set terra falls event bit & initiated moogle defense bit", field.NOP())
 
         # No dialog starting at cc/a85f -- reasonable point to add in the Marshal NPC
         space = Reserve(0xca85f, 0xca86f, "dialog: There's a whole bunch of 'em + Kupo", field.NOP())
@@ -148,7 +149,7 @@ class NarsheMoogleDefense(Event):
         )
 
         # Victory condition (marshal defeated)
-        # Remove moogles and party 
+        # Remove moogles from party 
         src = [
             field.FadeOutScreen(),
             field.WaitForFade(),
@@ -156,14 +157,16 @@ class NarsheMoogleDefense(Event):
             field.ClearEventBit(event_bit.TEMP_SONG_OVERRIDE), # allow song to change on map change
             field.ClearEventBit(npc_bit.MARSHAL_NARSHE_WOB), # Remove Marshal
             field.ClearEventBit(npc_bit.TERRA_COLLAPSED_NARSHE_WOB), # Remove collapsed Terra
-            field.HideEntity(0x1B), # the exit block at top of map
 
             Read(0xcaded, 0xcadf2), # load map
+
+            field.HideEntity(0x1B), # the exit block at top of map
+
+            field.SetParty(1),
+            field.Call(field.REMOVE_ALL_CHARACTERS_FROM_ALL_PARTIES),
         ]
         for character_idx in range(self.characters.CHARACTER_COUNT):
             src += [
-                # Remove all characters from parties
-                field.RemoveCharacterFromParties(character_idx),
                 # Restore character appearance, name, and properties
                 field.SetSprite(character_idx, self.characters.get_sprite(character_idx)),
                 field.SetPalette(character_idx, self.characters.get_palette(character_idx)),
@@ -172,6 +175,9 @@ class NarsheMoogleDefense(Event):
             ]
         src += [ 
             field.Call(field.REFRESH_CHARACTERS_AND_SELECT_PARTY),
+            field.UpdatePartyLeader(),
+            field.ShowEntity(field_entity.PARTY0),
+            field.RefreshEntities(),
 
             field.FreeScreen(),
 

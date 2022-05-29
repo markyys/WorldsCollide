@@ -274,9 +274,10 @@ class EnemyPacks():
         iaf = [382] # sky armor / spit fire
         floating_continent_escape = [397, 398, 399] # naughty
         owzer_mansion = [402, 403, 407, 404] # dahling, nightshade, souldancer, still life
+        moogle_defense = [261, 262] # vomammoth, marshal
 
         self.fixed = lete_river + imperial_camp + doma_wob + phantom_train + serpent_trench + narshe_battle + opera_house + vector
-        self.fixed += mine_cart + imperial_base + sealed_cave + burning_house + iaf + floating_continent_escape + owzer_mansion
+        self.fixed += mine_cart + imperial_base + sealed_cave + burning_house + iaf + floating_continent_escape + owzer_mansion + moogle_defense
 
         boss_percent = self.args.fixed_encounters_random / 100.0
 
@@ -294,6 +295,7 @@ class EnemyPacks():
 
         # special event instead of game over (move to save point and try again)
         self.randomize_packs(narshe_battle, boss_percent, no_phunbaba3 = True)
+        self.randomize_packs(moogle_defense, boss_percent, no_phunbaba3 = True)
 
         # special game over event does not refresh objects/party leader
         self.randomize_packs(opera_house, boss_percent, no_phunbaba3 = True)
