@@ -20,6 +20,7 @@ class NarsheWOB(Event):
         self.terra_elder_scene_mod()
         self.security_checkpoint_mod()
         self.shop_mod()
+        self.bridge_hop()
 
     def end_terra_scenario(self):
         # delete the end of terra's scenario event in arvis' house
@@ -86,3 +87,34 @@ class NarsheWOB(Event):
         space.write(
             field.Branch("INVOKE_SHOP"),
         )
+
+    def bridge_hop(self):
+        # Enable hopping off of the bridge in Narshe north
+        from instruction.entity import Speed
+        import data.direction as direction
+        src = [
+            field.BranchIfAny([event_bit.FACING_DOWN, False,
+                               event_bit.PRESSING_A, False],
+                               field.RETURN),
+            field.EntityAct(field_entity.PARTY0, True, 
+                            field_entity.SetSpeed(Speed.NORMAL),
+                            field_entity.SetSpriteLayer(2),
+                            field_entity.DisableWalkingAnimation(),
+                            field_entity.AnimateLowJump(),
+                            field_entity.AnimateFrontHandsUp(),
+                            field_entity.Move(direction.DOWN, 3),
+                            field_entity.AnimateKneeling(),
+                            field_entity.EnableWalkingAnimation(),
+                            field_entity.SetSpriteLayer(0)
+                            ),
+            field.Return()
+        ]
+        space = Write(Bank.CB, src, "WoB Narshe bridge hop")
+        bridge_hop_event_tile = space.start_address
+
+        from data.map_event import MapEvent
+        new_event = MapEvent()
+        new_event.x = 30
+        new_event.y = 27
+        new_event.event_address = bridge_hop_event_tile - EVENT_CODE_START
+        self.maps.add_event(0x15, new_event)
