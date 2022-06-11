@@ -41,6 +41,7 @@ Other changes:
 - QoL: Ensuring Gau can use Magic in FT
 - QoL: Config options default to commonly used values
 - Feature: Added Unlock Perma KT Skip as an Objective Result (result `61`)
+- Bugfix: Fixed Burning House Objective dialog causing warp to wrong Thamasa map
 
 Associated PRs:
 - Feature: Add ability to shuffle/mix both dragons and statues: <https://github.com/AtmaTek/WorldsCollide/pull/35>
@@ -65,5 +66,5 @@ Associated PRs:
 - Kielbasiago's add --start-junk flag <https://github.com/AtmaTek/WorldsCollide/pull/48>
 - QoL: Setting default config options to most commonly used values <https://github.com/AtmaTek/WorldsCollide/pull/49>
 - Kielbasiago's Add objective result Unlock Perma KT Skip https://github.com/AtmaTek/WorldsCollide/pull/50
-
+- Bugfix: Making objective dialog appear earlier in BH to avoid bug https://github.com/AtmaTek/WorldsCollide/pull/52
 
