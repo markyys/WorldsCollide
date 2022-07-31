@@ -26,6 +26,10 @@ def parse(parser):
     misc.add_argument("-as", "--auto-sprint", action = "store_true",
                       help = "DEPRECATED - Use `-move as` instead. Player always sprints. Sprint Shoes have no effect")
 
+    ### new option for NPC tips
+    misc.add_argument("-npctips", "--npc-dialog-tips", action = "store_true",
+                      help = "NPC provide general game tips")
+
     event_timers = misc.add_mutually_exclusive_group()
     event_timers.add_argument("-etr", "--event-timers-random", action = "store_true",
                               help = "Collapsing House, Opera House, and Floating Continent timers randomized")
@@ -79,6 +83,10 @@ def flags(args):
         flags += " -scan"
     if args.warp_all:
         flags += " -warp"
+
+    ### NPC tips
+    if args.npc_dialog_tips:
+        flags += " -npctips"
 
     if args.event_timers_random:
         flags += " -etr"
@@ -153,6 +161,7 @@ def options(args):
         ("Warp All", args.warp_all),
         ("Event Timers", event_timers),
         ("Y NPC", y_npc),
+        ("NPC Tips", args.npc_dialog_tips),        
     ]
 
 def menu(args):

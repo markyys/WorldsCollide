@@ -26,6 +26,7 @@ Adds the following flags for new features:
 14. `-warp` to make Warp cost 0 MP and give to all characters
 15. `-sj <quantity>` to add the given quantity of junk (tier 0) weapon/shields/helmets/armor/relics to starting inventory
 16. `-rechu` to replace all Random (non-fixed/non-boss/non-Veldt/non-Zone Eater) checks with Coliseum Chupon.
+17. `-npctips` for Franklin's NPC general game tips
 
 Other changes:
 - QoL: Mt Kolts is peekable -- the shadowy figure will now represent the reward
@@ -42,6 +43,7 @@ Other changes:
 - QoL: Config options default to commonly used values
 - Feature: Added Unlock Perma KT Skip as an Objective Result (result `61`)
 - Bugfix: Fixed Burning House Objective dialog causing warp to wrong Thamasa map
+- QoL: Following Kefka at Narshe, the party warps to Arvis' house
 
 Associated PRs:
 - Feature: Add ability to shuffle/mix both dragons and statues: <https://github.com/AtmaTek/WorldsCollide/pull/35>
@@ -67,4 +69,6 @@ Associated PRs:
 - QoL: Setting default config options to most commonly used values <https://github.com/AtmaTek/WorldsCollide/pull/49>
 - Kielbasiago's Add objective result Unlock Perma KT Skip https://github.com/AtmaTek/WorldsCollide/pull/50
 - Bugfix: Making objective dialog appear earlier in BH to avoid bug https://github.com/AtmaTek/WorldsCollide/pull/52
+- QoL: Making Party warp to Arvis house following K@N https://github.com/AtmaTek/WorldsCollide/pull/53
+- Added a misc. option to have NPC dialog replaced with general game tips https://github.com/AtmaTek/WorldsCollide/pull/56
 
