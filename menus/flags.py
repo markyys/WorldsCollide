@@ -23,18 +23,18 @@ class Flags(scroll_area.ScrollArea):
                     for option in options:
                         key, value = option
 
-                    key = "  " + key.replace("&", "+")
+                        key = "  " + key.replace("&", "+")
 
-                    # if we're given a scroll area, save it as a sub-menu with a value of X …, where X is the number of items in the sub-menu
-                    if isinstance(value, scroll_area.ScrollArea):
-                        self.submenus[len(self.lines)] = value
-                        value = f"{value.number_items} {chr(text_value['…'])}"
+                        # if we're given a scroll area, save it as a sub-menu with a value of X …, where X is the number of items in the sub-menu
+                        if isinstance(value, scroll_area.ScrollArea):
+                            self.submenus[len(self.lines)] = value
+                            value = f"{value.number_items} {chr(text_value['…'])}"
 
-                    value = str(value)
-                    if value == "True":
-                        value = "T"
-                    elif value == "False":
-                        value = "F"
+                        value = str(value)
+                        if value == "True":
+                            value = "T"
+                        elif value == "False":
+                            value = "F"
 
                         padding = scroll_area.WIDTH - (len(key) + len(value))
                         self.lines.append(scroll_area.Line(f"{key}{' ' * padding}{value}", f0.set_user_text_color))
