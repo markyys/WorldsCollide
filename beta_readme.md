@@ -28,6 +28,7 @@ Adds the following flags for new features:
 16. `-rechu` to replace all Random (non-fixed/non-boss/non-Veldt/non-Zone Eater) checks with Coliseum Chupon. <https://github.com/AtmaTek/WorldsCollide/pull/47>
 17. `-npctips` for Franklin's NPC general game tips <https://github.com/AtmaTek/WorldsCollide/pull/56>
 18. `-llr` to randomize L.x Lore Levels (L.5 Doom, L.4 Flare, L.3 Muddle, L? Pearl) <https://github.com/AtmaTek/WorldsCollide/pull/57>
+19. `-hf` to hide flags from .txt file and Flags menus. Have Fun! <https://github.com/AtmaTek/WorldsCollide/pull/58>
 
 Other changes:
 - QoL: Mt Kolts is peekable -- the shadowy figure will now represent the reward <https://github.com/AtmaTek/WorldsCollide/pull/15>
