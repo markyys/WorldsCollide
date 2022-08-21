@@ -186,6 +186,9 @@ class Dialogs():
         #### NPC dialog tip mod
         import args
         if args.npc_dialog_tips:
+            # free unused opening dialog
+            for i in range(0, 31):
+                self.set_text(i, "<end>")
             self.set_text(81, "The Figaro Throne reward exists in both worlds!<end>")
             self.set_text(82, "MasterPug doesn't grant any XP. Too bad…<end>")
             self.set_text(83, "Blue Drgn uses Water magic. Use Imp gear to absorb it.<end>")
