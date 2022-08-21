@@ -46,5 +46,6 @@ Other changes:
 - Feature: Added Unlock Perma KT Skip as an Objective Result (result `61`) <https://github.com/AtmaTek/WorldsCollide/pull/50>
 - Bugfix: Fixed Burning House Objective dialog causing warp to wrong Thamasa map <https://github.com/AtmaTek/WorldsCollide/pull/52>
 - QoL: Following Kefka at Narshe, the party warps to Arvis' house <https://github.com/AtmaTek/WorldsCollide/pull/53>
+- QoL: Objective menu has "Any" and "All" indications that get grayed out upon completion <https://github.com/AtmaTek/WorldsCollide/pull/59>
 
 
