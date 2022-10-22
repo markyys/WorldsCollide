@@ -188,6 +188,11 @@ class Start(Event):
                 field.AddItem(tool, sound_effect = False),
             ]
 
+        if self.args.harm_bangle:
+            src += [
+                field.AddItem("Charm Bangle", sound_effect = False),
+            ]
+
         if self.args.debug:
             src += [
                 field.AddItem("Dried Meat", sound_effect = False),

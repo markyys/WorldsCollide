@@ -49,6 +49,9 @@ def parse(parser):
     items.add_argument("-saw", "--stronger-atma-weapon", action = "store_true",
                        help = "Atma Weapon moved to higher tier and divisor reduced from 64 to 32")
 
+    items.add_argument("-hb", "--harm-bangle", action = "store_true",
+                       help = "Charm Bangle now causes encounter every step, sells for 1 GP, and you start with one.")
+
 def process(args):
     args._process_min_max("item_equipable_random")
     if args.item_equipable_balanced_random is not None:
@@ -108,6 +111,9 @@ def flags(args):
     if args.stronger_atma_weapon:
         flags += " -saw"
 
+    if args.harm_bangle:
+        flags += "-hb"
+
     return flags
 
 def options(args):
@@ -140,6 +146,7 @@ def options(args):
         ("Moogle Charm All", args.moogle_charm_all),
         ("SwdTech Runic All", args.swdtech_runic_all),
         ("Stronger Atma Weapon", args.stronger_atma_weapon),
+        ("Harm Bangle", args.harm_bangle),
     ]
 
 def menu(args):

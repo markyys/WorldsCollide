@@ -4,6 +4,11 @@ import instruction.asm as asm
 from data.item_names import name_id
 import random
 
+def harm_bangle():
+    #Write all FF's to the chamm bangle tables to make it always cause an encounter
+    Reserve(0x0c2a7, 0x0c2ae, "charm bangle overworld", 0xFF)
+    Reserve(0x0c2c7, 0x0c2ce, "charm bangle dungeons", 0xFF)
+
 def stronger_atma_weapon():
     space = Reserve(0x20e59, 0x20e59, "atma weapon divisor exponent")
     space.write(4) # change modifier from 2^(5+1) to 2^(4+1)
