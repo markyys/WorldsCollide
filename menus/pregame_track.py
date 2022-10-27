@@ -277,7 +277,7 @@ class PreGameTrack:
             asm.LDY(self.cursor_positions, asm.IMM16),
             c3.eggers_jump(0x0640),   # update cursor position
             c3.eggers_jump(0x07b0),   # add cursor to animation queue
-            asm.RTS(),                
+            asm.RTS(),
         ]
         space = Write(Bank.F0, src, "pregame track update cursor position")
         self.update_cursor_position = space.start_address
