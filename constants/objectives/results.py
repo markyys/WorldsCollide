@@ -89,6 +89,8 @@ category_types = {
 category_types["Command"].append(ResultType(59, "Magitek Upgrade", "Magitek Upgrade", None))
 category_types["Item"].append(ResultType(60, "Sprint Shoes", "Sprint Shoes", None))
 category_types["Kefka's Tower"] += [ResultType(61, "Unlock Perma KT Skip", "Unlock Perma KT Skip", None)]
+category_types["Kefka's Tower"] += [ResultType(62, "Unlock KT Gauntlet", "Unlock KT Gauntlet", None)]
+
 
 categories = list(category_types.keys())
 
