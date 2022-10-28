@@ -1,4 +1,5 @@
 import data.battle_bit as battle_bit
+import data.event_bit as event_bit
 import constants.checks as checks
 import constants.quests as quests
 from data.bosses import normal_formation_name, dragon_formation_name
