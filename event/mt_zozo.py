@@ -1,4 +1,3 @@
-from constants.checks import MT_ZOZO
 from event.event import *
 
 class MtZozo(Event):
@@ -9,7 +8,7 @@ class MtZozo(Event):
         return self.characters.CYAN
 
     def init_rewards(self):
-        self.reward = self.add_reward(MT_ZOZO)
+        self.reward = self.add_reward(RewardType.CHARACTER | RewardType.ESPER | RewardType.ITEM)
 
     def init_event_bits(self, space):
         space.write(

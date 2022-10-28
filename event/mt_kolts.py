@@ -1,4 +1,3 @@
-from constants.checks import MT_KOLTS
 from event.event import *
 
 class MtKolts(Event):
@@ -9,7 +8,7 @@ class MtKolts(Event):
         return self.characters.SABIN
 
     def init_rewards(self):
-        self.reward = self.add_reward(MT_KOLTS)
+        self.reward = self.add_reward(RewardType.CHARACTER | RewardType.ESPER | RewardType.ITEM)
 
     def mod(self):
         self.vargas_npc_id = 0x10

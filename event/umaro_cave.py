@@ -1,4 +1,3 @@
-from constants.checks import UMAROS_CAVE
 from event.event import *
 
 class UmaroCave(Event):
@@ -9,7 +8,7 @@ class UmaroCave(Event):
         return self.characters.UMARO
 
     def init_rewards(self):
-        self.reward = self.add_reward(UMAROS_CAVE)
+        self.reward = self.add_reward(RewardType.CHARACTER | RewardType.ESPER | RewardType.ITEM)
 
     def mod(self):
         space = Reserve(0xcd6f5, 0xcd6f7, "umaro cave what's with this carving", field.NOP())

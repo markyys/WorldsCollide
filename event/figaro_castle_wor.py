@@ -1,15 +1,14 @@
 from event.event import *
-from constants.checks import FIGARO_CASTLE_ENGINE
 
 class FigaroCastleWOR(Event):
     def name(self):
-        return FIGARO_CASTLE_ENGINE.name
+        return "Figaro Castle WOR"
 
     def character_gate(self):
         return self.characters.EDGAR
 
     def init_rewards(self):
-        self.reward = self.add_reward(FIGARO_CASTLE_ENGINE)
+        self.reward = self.add_reward(RewardType.CHARACTER | RewardType.ESPER | RewardType.ITEM)
 
     def init_event_bits(self, space):
         if self.args.character_gating:

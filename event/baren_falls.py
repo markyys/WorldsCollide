@@ -1,4 +1,3 @@
-from constants.checks import BAREN_FALLS
 from event.event import *
 
 class BarenFalls(Event):
@@ -9,7 +8,7 @@ class BarenFalls(Event):
         return self.characters.SABIN
 
     def init_rewards(self):
-        self.reward = self.add_reward(BAREN_FALLS)
+        self.reward = self.add_reward(RewardType.CHARACTER | RewardType.ESPER | RewardType.ITEM)
 
     def mod(self):
         # delete row of events that trigger sabin/cyan dialog and shadow leaving (if in party)
