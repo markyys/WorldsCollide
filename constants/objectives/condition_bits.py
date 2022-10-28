@@ -88,7 +88,8 @@ quest_bit = [
     quests.SUPLEX_A_TRAIN,
     quests.WIN_AN_AUCTION,
     quests.WIN_A_COLISEUM_MATCH,
-    quests.REUNITE_GAU_AND_DAD
+    quests.REUNITE_GAU_AND_DAD,
+    NameBit("Complete the KT Gauntlet", event_bit.COMPLETED_KT_GAUNTLET)            # 11
 ]
 
 boss_bit = []
