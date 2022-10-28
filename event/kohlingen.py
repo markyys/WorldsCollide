@@ -1,18 +1,20 @@
 from event.event import *
-from constants.checks import KOHLINGEN_CAFE
 
 # TODO use setzer npc instead of shadow's
 #      for character reward show the animations setzer does in wor before daryl's tomb
 
 class Kohlingen(Event):
     def name(self):
-        return KOHLINGEN_CAFE.name
+        return "Kohlingen"
 
     def character_gate(self):
         return self.characters.SETZER
 
     def init_rewards(self):
-        self.reward = self.add_reward(KOHLINGEN_CAFE)
+        if self.args.no_free_characters_espers:
+            self.reward = self.add_reward(RewardType.ITEM)
+        else:
+            self.reward = self.add_reward(RewardType.CHARACTER | RewardType.ESPER | RewardType.ITEM)
 
     def init_event_bits(self, space):
         space.write(

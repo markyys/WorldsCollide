@@ -1,4 +1,3 @@
-from constants.checks import EBOTS_ROCK
 from event.event import *
 
 class EbotsRock(Event):
@@ -9,7 +8,7 @@ class EbotsRock(Event):
         return self.characters.STRAGO
 
     def init_rewards(self):
-        self.reward = self.add_reward(EBOTS_ROCK)
+        self.reward = self.add_reward(RewardType.CHARACTER | RewardType.ESPER | RewardType.ITEM)
 
     def init_event_bits(self, space):
         space.write(

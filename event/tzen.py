@@ -5,8 +5,7 @@ class Tzen(Event):
         return "Tzen"
 
     def init_rewards(self):
-        from constants.checks import TZEN_THIEF
-        self.reward = self.add_reward(TZEN_THIEF)
+        self.reward = self.add_reward(RewardType.ESPER | RewardType.ITEM)
 
     def init_event_bits(self, space):
         space.write(

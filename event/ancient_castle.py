@@ -1,4 +1,3 @@
-from constants.checks import ANCIENT_CASTLE
 from event.event import *
 
 class AncientCastle(Event):
@@ -9,7 +8,7 @@ class AncientCastle(Event):
         return self.characters.EDGAR
 
     def init_rewards(self):
-        self.reward = self.add_reward(ANCIENT_CASTLE)
+        self.reward = self.add_reward(RewardType.CHARACTER | RewardType.ESPER | RewardType.ITEM)
 
     def init_event_bits(self, space):
         space.write(

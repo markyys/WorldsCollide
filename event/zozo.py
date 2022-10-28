@@ -8,8 +8,7 @@ class Zozo(Event):
         return self.characters.TERRA
 
     def init_rewards(self):
-        from constants.checks import ZOZO_TOWER
-        self.reward = self.add_reward(ZOZO_TOWER)
+        self.reward = self.add_reward(RewardType.CHARACTER | RewardType.ESPER | RewardType.ITEM)
 
     def init_event_bits(self, space):
         space.write(

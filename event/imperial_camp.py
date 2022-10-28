@@ -1,4 +1,3 @@
-from constants.checks import IMPERIAL_CAMP
 from event.event import *
 
 class ImperialCamp(Event):
@@ -9,7 +8,7 @@ class ImperialCamp(Event):
         return self.characters.SABIN
 
     def init_rewards(self):
-        self.reward = self.add_reward(IMPERIAL_CAMP)
+        self.reward = self.add_reward(RewardType.CHARACTER | RewardType.ESPER | RewardType.ITEM)
 
     def init_event_bits(self, space):
         space.write(

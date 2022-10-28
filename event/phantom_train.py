@@ -1,4 +1,3 @@
-from constants.checks import PHANTOM_TRAIN
 from event.event import *
 
 class PhantomTrain(Event):
@@ -9,7 +8,7 @@ class PhantomTrain(Event):
         return self.characters.SABIN
 
     def init_rewards(self):
-        self.reward = self.add_reward(PHANTOM_TRAIN)
+        self.reward = self.add_reward(RewardType.CHARACTER | RewardType.ESPER | RewardType.ITEM)
 
     def init_event_bits(self, space):
         space.write(
