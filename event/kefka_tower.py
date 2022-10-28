@@ -1,6 +1,10 @@
+
+from constants.checks import KEFKAS_TOWER_CELL_BEAST
+
 from asyncio import wait_for
 from data.map_event import MapEvent
 from data.npc import NPC
+
 from event.event import *
 import args
 
@@ -30,7 +34,7 @@ class KefkaTower(Event):
         return "Kefka's Tower"
 
     def init_rewards(self):
-        self.atma_reward = self.add_reward(RewardType.ITEM)
+        self.atma_reward = self.add_reward(KEFKAS_TOWER_CELL_BEAST)
 
     def init_event_bits(self, space):
         space.write(
