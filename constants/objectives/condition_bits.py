@@ -87,7 +87,8 @@ quest_bit = [
     quests.SET_ZOZO_CLOCK,
     quests.SUPLEX_A_TRAIN,
     quests.WIN_AN_AUCTION,
-    quests.WIN_A_COLISEUM_MATCH,        # Indexes for dev
+    quests.WIN_A_COLISEUM_MATCH,
+                                        # Indexes for dev
     quests.REUNITE_GAU_AND_FATHER,      # 10
     quests.COMPLETED_KT_GAUNTLET,       # 11
 ]
