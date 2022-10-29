@@ -49,6 +49,8 @@ Other changes:
 - QoL: Following Kefka at Narshe, the party warps to Arvis' house <https://github.com/AtmaTek/WorldsCollide/pull/53>
 - QoL: Objective menu has "Any" and "All" indications that get grayed out upon completion <https://github.com/AtmaTek/WorldsCollide/pull/59>
 - Feature: Added "KT Gauntlet", a new way to enter Kefka's Tower <https://github.com/AtmaTek/WorldsCollide/pull/59> - See [Gauntlet](#gauntlet) section below for more information
+    - "Unlock KT Gauntlet" Result - Result id `62`
+    - "Completed KT Gauntlet" Quest - Append objective string `.12.11` (12 is "Quest" type, 11 is "Completed KT Gauntlet" condition)
 - Feature: Added five checks, one for each main boss in Kefka's Tower
     - Unlike other checks, these do not yield inherent rewards
     - However, this will increase the number of checks, so it will affect things like "Checks" scaling and the "Checks" objective condition
