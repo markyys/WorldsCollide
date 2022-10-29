@@ -69,7 +69,7 @@ check_bit = [
     checks.ZOZO_TOWER,
 ]
 
-check_bit += [                                                          # Index
+check_bit += [                                                          # Indexes for dev
     NameBit("Kefka's Tower Ambush", event_bit.DEFEATED_INFERNO),        # 59
     NameBit("Kefka's Tower Guardian", event_bit.DEFEATED_GUARDIAN),     # 60
     NameBit("KT Left Triad Statue", event_bit.DEFEATED_DOOM),           # 61
@@ -87,8 +87,9 @@ quest_bit = [
     quests.SET_ZOZO_CLOCK,
     quests.SUPLEX_A_TRAIN,
     quests.WIN_AN_AUCTION,
-    quests.WIN_A_COLISEUM_MATCH,
-    quests.COMPLETED_KT_GAUNTLET
+    quests.WIN_A_COLISEUM_MATCH,        # Indexes for dev
+    quests.REUNITE_GAU_AND_FATHER,      # 10
+    quests.COMPLETED_KT_GAUNTLET,       # 11
 ]
 
 boss_bit = []
