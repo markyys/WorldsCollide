@@ -48,7 +48,7 @@ Other changes:
 - Bugfix: Fixed Burning House Objective dialog causing warp to wrong Thamasa map <https://github.com/AtmaTek/WorldsCollide/pull/52>
 - QoL: Following Kefka at Narshe, the party warps to Arvis' house <https://github.com/AtmaTek/WorldsCollide/pull/53>
 - QoL: Objective menu has "Any" and "All" indications that get grayed out upon completion <https://github.com/AtmaTek/WorldsCollide/pull/59>
-- Feature: Added "KT Gauntlet" <https://github.com/AtmaTek/WorldsCollide/pull/59> - See [Gauntlet](#gauntlet) section below for more information
+- Feature: Added "KT Gauntlet", a new way to enter Kefka's Tower <https://github.com/AtmaTek/WorldsCollide/pull/59> - See [Gauntlet](#gauntlet) section below for more information
 - Feature: Added five checks, one for each main boss in Kefka's Tower
     - Unlike other checks, these do not yield inherent rewards
     - However, this will increase the number of checks, so it will affect things like "Checks" scaling and the "Checks" objective condition
@@ -60,11 +60,10 @@ Other changes:
     - KT Right Triad Statue (objective string `11.63`)
 
 ### Gauntlet
-- The KT Gauntlet is a new alternative way to storm Kefka's Tower
 - This functions similarly to the KT Skip. When unlocked, it will show a new option in the dialog when entering KT.
-- Preview video: https://www.youtube.com/watch?v=dtlHM_naEoo&t=1s
 - When entering the gauntlet the player will fight all five "required" KT fights back to back. There will be no chance to menu or save until you've completed the gauntlet.
-- The order is a follows:
+- Preview video: https://www.youtube.com/watch?v=dtlHM_naEoo&t=1s
+- The battle order is a follows:
     - The **RIGHT** party will fight the boss in the Ambush location
     - The **MIDDLE** party will fight the boss in the Guardian location
     - The **LEFT** party will fight the boss in the Left Triad Statue
@@ -72,7 +71,7 @@ Other changes:
     - The **MIDDLE** party will fight the boss in the Middle Triad Statue
     - Once the gauntlet is complete all 3 parties will drop down into the final switch room. You can then warp out, or backtrack to access save points.
 
-**Known Issues**
+**Gauntlet Known Issues**
 - Sometimes when running the gauntlet with anything but vanilla bosses the "seamless music" isn't working correctly. It may also plays victory music
 - Sometimes the guardian cutscene does not intialize the middle party's spot correctly, but it's only a visual issue
 - Entering KT normally, looting the "validation chest", warping out before killing Poltergeist, then entering the gauntlet will double-loot the validation chest again during the poltergeist cutscene
