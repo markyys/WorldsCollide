@@ -1,5 +1,5 @@
+from constants.checks import CHARACTER_ESPER_ONLY_REWARDS
 from data.espers import Espers
-from event.event_reward import CHARACTER_ESPER_ONLY_REWARDS
 
 # If all 27 espers are allocated at start, there will be logic errors when it comes to
 # assigning characters to character/esper only checks.
