@@ -300,7 +300,7 @@ class LoneWolf(Event):
 
     def alternative_esper_mod(self, esper):
         # esper lone wolf will give as a reward for not picking self.reward1
-        self.lone_wolf_dialog_esper_mod()
+        self.lone_wolf_dialog_esper_mod(esper)
 
         esper_space = Allocate(Bank.CC, 50, "Receive esper from lone wolf", field.NOP())
         esper_space.write([
@@ -316,7 +316,7 @@ class LoneWolf(Event):
         ])
 
     def alternative_item_mod(self, item):
-        self.lone_wolf_dialog_item_mod()
+        self.lone_wolf_dialog_item_mod(item)
 
         # item lone wolf will give as a reward for not picking self.reward1
         space = Reserve(0xcd59f, 0xcd59f, "lone wolf item received", field.NOP())
