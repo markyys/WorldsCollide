@@ -8,9 +8,9 @@ Adds the following flags for new features:
 5. Kielbasiago's movement options: <https://github.com/AtmaTek/WorldsCollide/pull/37>
     - `-noshoes` flag for "Removes Sprint Shoes from appearing in shops, chests, etc."
     - `-move og | as | bd | ssbd` for Movement Speed (MS) changes:
-        - **Original (`og`)** -- MS 2 by default, MS 3 with sprint shoes | 
-        - **Auto Sprint (`as`)** -- MS 3 by default, MS 2 when holding B (new default, equivalent to deprecated `-as` flag)| 
-        - **B Dash (`bd`)** -- MS 3 by default, MS 4 when holding B | 
+        - **Original (`og`)** -- MS 2 by default, MS 3 with sprint shoes |
+        - **Auto Sprint (`as`)** -- MS 3 by default, MS 2 when holding B (new default, equivalent to deprecated `-as` flag)|
+        - **B Dash (`bd`)** -- MS 3 by default, MS 4 when holding B |
         - **Sprint Shoes B Dash (`ssbd`)** -- MS 3 by default, MS 2 when holding B, MS 4 when holding B with sprint shoes
 6. `-rls` flag for "Remove spells from learnable sources: Items, Espers, Natural Magic, and Objectives" <https://github.com/AtmaTek/WorldsCollide/pull/43>
 7. `-scis` flag for "Sketch & Control 100% accurate and use Sketcher/Controller's stats" <https://github.com/AtmaTek/WorldsCollide/pull/28>
@@ -50,3 +50,57 @@ Other changes:
 - QoL: Objective menu has "Any" and "All" indications that get grayed out upon completion <https://github.com/AtmaTek/WorldsCollide/pull/59>
 
 
+
+
+## Force Item Rewards
+Consolidated most of the check info to one file (`check.py`) and changed the tie in point for No Free Progression from the individual event files into the single `events.py` file
+
+These use the event bit to distinguish which check it is - I made a tool for selecting different checks easier: https://tracker.kielbasiago.com/checks
+
+## Flags
+`--force-item-reward-checks` (`-firr id1,id2,id3`) - Forces up to 13 checks to be dead. Functions similarly to no free character/esper, but instead you can target which checks.
+
+**I think** I updated the remaining non-item checks to support this flag. The only check that can't be a fored item is Gau's `Veldt` check. I wasn't comfortable writing the battle commands so I skipped it.
+
+`--force-esper-reward-checks`(`ferr`) - Forces checks to be espers. This one is a bit more finnicky with starting espers flag.
+
+There's some logic for starting espers where the number of starting espers is
+```
+27 - number of character-esper-only checks
+```
+and this flag complicates that as some espers can get forced to non-char-esper-only checks
+
+`--force-esper-item-reward-checks` (`feirr`) -Same as the others above, but can force item or esper. Not sure what use case there is for it, but it was simple to set up.
+
+`--no-free-character-esper` still functions, but cannot be used alongisde the new flags.
+- Tzen Thief was removed from this flag
+
+## Checks
+
+**Cyan Nightmare**
+- Cyan Nightmare 2 can now be an item
+    - By default these will give a Character/Esper only. However, using `-firr` or `-feirr` means it can now yield an item
+
+**Floating Continent**
+- Floating Continent 1 can now be an item
+    - By default these will give a Character/Esper only. However, using `-firr` or `-feirr` means it can now yield an item
+- Floating Continent 3 can now be an item
+    - By default these will give a Character/Esper only. However, using `-firr` or `-feirr` means it can now yield an item
+
+**Mog Checks**
+- Any time the mog checks are a character, that character's theme will play
+
+**Lone Wolf Moogle Room**
+- This can now be a character. Lone Wolf's sprite will be replaced with the recruitable character's sprite
+- This can now be an esper. Lone wolf will still appear as normal when it is an esper or item.
+
+**Narshe Battle (Kefka at Narshe)**
+- This now yields a Character/Esper-only by default
+- This can still be forced dead using the new item-force flags
+
+**Narshe Weapon Shop**
+- Narshe Weapon Shop Mines (the second option) can now obtain an esper.
+    - By default this will still always be an item. However, using `feirr` or `ferr` means it can yield an esper
+
+## Misc
+- Esper rewards in the spoiler log now are prefixed with a `*` (no more Ragnarok mixup)
