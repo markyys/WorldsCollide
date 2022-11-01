@@ -124,9 +124,13 @@ class AnimateBackRightHandUp(_Instruction):
     def __init__(self):
         super().__init__(0x1c)
 
-class AnimateHappy(_Instruction):
+class AnimateLaughingOne(_Instruction):
     def __init__(self):
         super().__init__(0x1d)
+
+class AnimateLaughingTwo(_Instruction):
+    def __init__(self):
+        super().__init__(0x1e)
 
 class AnimateSurprised(_Instruction):
     def __init__(self):

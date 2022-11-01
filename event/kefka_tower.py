@@ -1,15 +1,9 @@
-from asyncio import wait_for
-from data.map_event import MapEvent
-from data.npc import NPC
+from constants.checks import KEFKAS_TOWER_CELL_BEAST
 from event.event import *
-import args
-
 from constants.maps import name_id as map_name_id
 from constants.songs import name_id as song_name_id
 from constants.sound_effects import name_id as sfx_name_id
-import data.event_bit as event_bits
-from instruction.field.instructions import BranchIfEventBitSet
-from instruction.vehicle import Branch
+
 final_switch_map_id = map_name_id["KT Final Switch Room"]
 inferno_room_id =  map_name_id["Inferno Room"]
 guardian_room_id =  map_name_id["Guardian Room"]
@@ -30,7 +24,7 @@ class KefkaTower(Event):
         return "Kefka's Tower"
 
     def init_rewards(self):
-        self.atma_reward = self.add_reward(RewardType.ITEM)
+        self.atma_reward = self.add_reward(KEFKAS_TOWER_CELL_BEAST)
 
     def init_event_bits(self, space):
         space.write(

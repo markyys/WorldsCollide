@@ -58,7 +58,6 @@ category_types = {
         ResultType(36, "Dragoon", "Dragoon", None),
         ResultType(37, "Dried Meat", "Dried Meat", None),
         ResultType(38, "Exp. Egg", "Exp. Egg", None),
-        ResultType(58, "High Tier Item", "High Tier Item", None),
         ResultType(40, "Illumina", "Illumina", None),
         ResultType(39, "Imp Set", "Imp Set", None),
         ResultType(41, "Rename Cards", "Rename Cards", None),
@@ -86,11 +85,11 @@ category_types = {
 }
 
 #Additional results
+category_types["Item"].append(ResultType(58, "High Tier Item", "High Tier Item", None))
 category_types["Command"].append(ResultType(59, "Magitek Upgrade", "Magitek Upgrade", None))
 category_types["Item"].append(ResultType(60, "Sprint Shoes", "Sprint Shoes", None))
 category_types["Kefka's Tower"] += [ResultType(61, "Unlock Perma KT Skip", "Unlock Perma KT Skip", None)]
 category_types["Kefka's Tower"] += [ResultType(62, "Unlock KT Gauntlet", "Unlock KT Gauntlet", None)]
-
 
 categories = list(category_types.keys())
 

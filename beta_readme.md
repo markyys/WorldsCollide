@@ -72,9 +72,64 @@ Other changes:
     - The **RIGHT** party will fight the boss in the Right Triad Statue
     - The **MIDDLE** party will fight the boss in the Middle Triad Statue
     - Once the gauntlet is complete all 3 parties will drop down into the final switch room. You can then warp out, or backtrack to access save points.
-
+    
 **Gauntlet Known Issues**
 - Sometimes when running the gauntlet with anything but vanilla bosses the "seamless music" isn't working correctly. It may also plays victory music
 - Sometimes the guardian cutscene does not intialize the middle party's spot correctly, but it's only a visual issue
 - Entering KT normally, looting the "validation chest", warping out before killing Poltergeist, then entering the gauntlet will double-loot the validation chest again during the poltergeist cutscene
 - Entering KT normally, killing Inferno, warping out, then entering the gauntlet will play the WOR overworld music throughout the entirety of the gauntlet (assuming seamless music is working)
+
+## Force Item Rewards
+Consolidated most of the check info to one file (`check.py`) and changed the tie in point for No Free Progression from the individual event files into the single `events.py` file
+
+These use the event bit to distinguish which check it is - I made a tool for selecting different checks easier: https://tracker.kielbasiago.com/checks
+
+## Flags
+`--force-item-reward-checks` (`-firr id1,id2,id3`) - Forces up to 13 checks to be dead. Functions similarly to no free character/esper, but instead you can target which checks.
+
+**I think** I updated the remaining non-item checks to support this flag. The only check that can't be a fored item is Gau's `Veldt` check. I wasn't comfortable writing the battle commands so I skipped it.
+
+`--force-esper-reward-checks`(`ferr`) - Forces checks to be espers. This one is a bit more finnicky with starting espers flag.
+
+There's some logic for starting espers where the number of starting espers is
+```
+27 - number of character-esper-only checks
+```
+and this flag complicates that as some espers can get forced to non-char-esper-only checks
+
+`--force-esper-item-reward-checks` (`feirr`) -Same as the others above, but can force item or esper. Not sure what use case there is for it, but it was simple to set up.
+
+`--no-free-character-esper` still functions, but cannot be used alongisde the new flags.
+- Tzen Thief was removed from this flag
+
+## Checks
+
+**Cyan Nightmare**
+- Cyan Nightmare 2 can now be an item
+    - By default these will give a Character/Esper only. However, using `-firr` or `-feirr` means it can now yield an item
+
+**Floating Continent**
+- Floating Continent 1 can now be an item
+    - By default these will give a Character/Esper only. However, using `-firr` or `-feirr` means it can now yield an item
+- Floating Continent 3 can now be an item
+    - By default these will give a Character/Esper only. However, using `-firr` or `-feirr` means it can now yield an item
+
+**Mog Checks**
+- Any time the mog checks are a character, that character's theme will play
+
+**Lone Wolf Moogle Room**
+- This can now be a character. Lone Wolf's sprite will be replaced with the recruitable character's sprite
+- This can now be an esper. Lone wolf will still appear as normal when it is an esper or item.
+
+**Narshe Battle (Kefka at Narshe)**
+- This now yields a Character/Esper-only by default
+- This can still be forced dead using the new item-force flags
+
+**Narshe Weapon Shop**
+- Narshe Weapon Shop Mines (the second option) can now obtain an esper.
+    - By default this will still always be an item. However, using `feirr` or `ferr` means it can yield an esper
+
+## Misc
+- Esper rewards in the spoiler log now are prefixed with a `*` (no more Ragnarok mixup)
+
+
