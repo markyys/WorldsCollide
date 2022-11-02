@@ -1,6 +1,6 @@
-Beta Branch for 1.1.x
+# Beta Branch for 1.1.x
 
-Adds the following flags for new features:
+## Adds the following flags for new features:
 1. `-stloc/-drloc <original | shuffle | mix>` for Kielbasigo's Status Boss Location/Dragon Boss Location shuffle or mix. Shuffle = shuffled amongst themselves, Mix = mixed boss pool <https://github.com/AtmaTek/WorldsCollide/pull/35>
 2. `-fc` to Fix Capture Bugs (multi-steal not giving more than 1 item and weapon specials not proccing) <https://github.com/AtmaTek/WorldsCollide/pull/18>
 3. `-np` flag for Sprites in peekable checks are left a mystery until reward <https://github.com/AtmaTek/WorldsCollide/pull/15>
@@ -31,7 +31,7 @@ Adds the following flags for new features:
 19. `-hf` to hide flags from .txt file and Flags menus. Have Fun! <https://github.com/AtmaTek/WorldsCollide/pull/58>
 20. `-sesb` and `-sebr` for Expensive Super Balls and Expensive Breakable Rods <https://github.com/ff6wc/WorldsCollide/pull/27>
 
-Other changes:
+## Other changes:
 - QoL: Mt Kolts is peekable -- the shadowy figure will now represent the reward <https://github.com/AtmaTek/WorldsCollide/pull/15>
 - QoL: Once you have 22 coral, every teleporter will take you to chest <https://github.com/AtmaTek/WorldsCollide/pull/16>
 - Feature: The Top 4 Magitek default to disabled for all characters, and are now unlockable for an objective (result = 59, "Magitek Upgrade") <https://github.com/AtmaTek/WorldsCollide/pull/25>
@@ -60,8 +60,9 @@ Other changes:
     - KT Left Triad Statue (objective string `11.61`)
     - KT Mid Triad Statue (objective string `11.62`)
     - KT Right Triad Statue (objective string `11.63`)
+- Bugfix: Added Osteoclave's fix for the flying-offscreen bug <https://github.com/ff6wc/WorldsCollide/pull/29>
 
-### Gauntlet
+## Gauntlet
 - This functions similarly to the KT Skip. When unlocked, it will show a new option in the dialog when entering KT.
 - When entering the gauntlet the player will fight all five "required" KT fights back to back. There will be no chance to menu or save until you've completed the gauntlet.
 - Preview video: https://www.youtube.com/watch?v=dtlHM_naEoo&t=1s
@@ -84,7 +85,7 @@ Consolidated most of the check info to one file (`check.py`) and changed the tie
 
 These use the event bit to distinguish which check it is - I made a tool for selecting different checks easier: https://tracker.kielbasiago.com/checks
 
-## Flags
+### Flags
 `--force-item-reward-checks` (`-firr id1,id2,id3`) - Forces up to 13 checks to be dead. Functions similarly to no free character/esper, but instead you can target which checks.
 
 **I think** I updated the remaining non-item checks to support this flag. The only check that can't be a fored item is Gau's `Veldt` check. I wasn't comfortable writing the battle commands so I skipped it.
@@ -102,7 +103,7 @@ and this flag complicates that as some espers can get forced to non-char-esper-o
 `--no-free-character-esper` still functions, but cannot be used alongisde the new flags.
 - Tzen Thief was removed from this flag
 
-## Checks
+### Checks
 
 **Cyan Nightmare**
 - Cyan Nightmare 2 can now be an item
@@ -129,7 +130,7 @@ and this flag complicates that as some espers can get forced to non-char-esper-o
 - Narshe Weapon Shop Mines (the second option) can now obtain an esper.
     - By default this will still always be an item. However, using `feirr` or `ferr` means it can yield an esper
 
-## Misc
+### Misc
 - Esper rewards in the spoiler log now are prefixed with a `*` (no more Ragnarok mixup)
 
 
