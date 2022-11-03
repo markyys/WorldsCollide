@@ -1,7 +1,7 @@
 # Beta Branch for 1.1.x
 
 ## Adds the following flags for new features:
-1. `-stloc/-drloc <original | shuffle | mix>` for Kielbasigo's Status Boss Location/Dragon Boss Location shuffle or mix. Shuffle = shuffled amongst themselves, Mix = mixed boss pool <https://github.com/AtmaTek/WorldsCollide/pull/35>
+1. `-stloc/-drloc <original | shuffle | mix>` for Kielbasigo's Statue Boss Location/Dragon Boss Location shuffle or mix. Shuffle = shuffled amongst themselves, Mix = mixed boss pool <https://github.com/AtmaTek/WorldsCollide/pull/35>
 2. `-fc` to Fix Capture Bugs (multi-steal not giving more than 1 item and weapon specials not proccing) <https://github.com/AtmaTek/WorldsCollide/pull/18>
 3. `-np` flag for Sprites in peekable checks are left a mystery until reward <https://github.com/AtmaTek/WorldsCollide/pull/15>
 4. `-cc` flag for Controllable Coliseum <https://github.com/AtmaTek/WorldsCollide/pull/21>
