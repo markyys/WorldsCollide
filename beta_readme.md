@@ -30,6 +30,17 @@
 18. `-llr` to randomize L.x Lore Levels (L.5 Doom, L.4 Flare, L.3 Muddle, L? Pearl) <https://github.com/AtmaTek/WorldsCollide/pull/57>
 19. `-hf` to hide flags from .txt file and Flags menus. Have Fun! <https://github.com/AtmaTek/WorldsCollide/pull/58>
 20. `-sesb` and `-sebr` for Expensive Super Balls and Expensive Breakable Rods <https://github.com/ff6wc/WorldsCollide/pull/27>
+21. `-dchar <MIN> <MAX>` forces between MIN - MAX dragons to reward characters when defeated. 
+    - When a character will be rewarded as a dragon, the dragon will have the character's palette/sprite. 
+    - Video showing Mt Zozo dragon rewarding Terra: https://www.youtube.com/watch?v=7Rk8zXN7dfo
+    - Only dragons in the following locations can currently be characters: 
+        - Ancient Castle
+        - Fanatic's Tower
+        - Mt Zozo
+        - Narshe Mountain
+        - Opera House
+22. `-checks <PRESET>` is similar to No Free Characters/Espers (`-nfce`) flag, but with more presets available now. The list of [presets](##presets) below describes  what they do. You can also access the information about the rewards at the very bottom of the in-game flags menu. https://i.imgur.com/NES19Ln.png
+23. `-nfce` is now the same as `-checks nfce-classic`
 
 ## Other changes:
 - QoL: Mt Kolts is peekable -- the shadowy figure will now represent the reward <https://github.com/AtmaTek/WorldsCollide/pull/15>
@@ -60,8 +71,7 @@
     - KT Left Triad Statue (objective string `11.61`)
     - KT Mid Triad Statue (objective string `11.62`)
     - KT Right Triad Statue (objective string `11.63`)
-- Bugfix: Added Osteoclave's fix for the flying-offscreen bug <https://github.com/ff6wc/WorldsCollide/pull/29>
-
+- QoL: Esper rewards in the spoiler log now are prefixed with a `*` (no more Ragnarok mixup)
 ## Gauntlet
 - This functions similarly to the KT Skip. When unlocked, it will show a new option in the dialog when entering KT.
 - When entering the gauntlet the player will fight all five "required" KT fights back to back. There will be no chance to menu or save until you've completed the gauntlet.
@@ -80,30 +90,42 @@
 - Entering KT normally, looting the "validation chest", warping out before killing Poltergeist, then entering the gauntlet will double-loot the validation chest again during the poltergeist cutscene
 - Entering KT normally, killing Inferno, warping out, then entering the gauntlet will play the WOR overworld music throughout the entirety of the gauntlet (assuming seamless music is working)
 
-## Force Item Rewards
-Consolidated most of the check info to one file (`check.py`) and changed the tie in point for No Free Progression from the individual event files into the single `events.py` file
 
-These use the event bit to distinguish which check it is - I made a tool for selecting different checks easier: https://tracker.kielbasiago.com/checks
+## Check Presets
+### Auction House is Closed
+`-checks ah` will guarantee Auction House will only reward items
 
-### Flags
-`--force-item-reward-checks` (`-firr id1,id2,id3`) - Forces up to 13 checks to be dead. Functions similarly to no free character/esper, but instead you can target which checks.
+### No Free Characters/Espers
+`-checks nfce`  is identical to the current version of `-nfce` but it does not include auction house or tzen thief
 
-**I think** I updated the remaining non-item checks to support this flag. The only check that can't be a fored item is Gau's `Veldt` check. I wasn't comfortable writing the battle commands so I skipped it.
+### No Free Characters/Espers (Classic)
+`-checks nfce-classic`  is identical to the current version of `-nfce`
 
-`--force-esper-reward-checks`(`ferr`) - Forces checks to be espers. This one is a bit more finnicky with starting espers flag.
+### Sedentary Lifestyle 
+`-checks sitlife` makes the longest checks in the games are guaranteed to reward items
+- Ancient Castle
+- Burning House
+- Fanatics Tower 1-2
+- Floating Continent 1-3
+- Lete River
+- Magitek Factory 3
+- Opera House Disruption
+- Phoenix Cave
+- Phantom Train
 
-There's some logic for starting espers where the number of starting espers is
-```
-27 - number of character-esper-only checks
-```
-and this flag complicates that as some espers can get forced to non-char-esper-only checks
+### Squid Game
+`-checks squid` will make all rewards that follow the vanilla ultros fight locations guaranteed to reward characters 
 
-`--force-esper-item-reward-checks` (`feirr`) -Same as the others above, but can force item or esper. Not sure what use case there is for it, but it was simple to set up.
+### Vanilla Espers
+`-checks vanesp` will make all events that initially focused on espers are guaranteed to reward espers
+- Ancient Castle
+- Esper Mountain
+- Magitek 1-3
+- Sealed Gate
+- Phoenix Cave
+- Zozo Tower (Rahum)
 
-`--no-free-character-esper` still functions, but cannot be used alongisde the new flags.
-- Tzen Thief was removed from this flag
-
-### Checks
+## Check Updates
 
 **Cyan Nightmare**
 - Cyan Nightmare 2 can now be an item
@@ -129,8 +151,3 @@ and this flag complicates that as some espers can get forced to non-char-esper-o
 **Narshe Weapon Shop**
 - Narshe Weapon Shop Mines (the second option) can now obtain an esper.
     - By default this will still always be an item. However, using `feirr` or `ferr` means it can yield an esper
-
-### Misc
-- Esper rewards in the spoiler log now are prefixed with a `*` (no more Ragnarok mixup)
-
-
