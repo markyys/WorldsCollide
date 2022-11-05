@@ -1,3 +1,5 @@
+
+from event.event_reward import RewardType, Reward
 from data.item import Item
 from memory.space import Bank, Space, Reserve, Allocate, Free, Write, Read
 import data.direction as direction
@@ -14,7 +16,6 @@ import instruction.world as world
 import instruction.vehicle as vehicle
 
 from instruction.event import EVENT_CODE_START
-from event.event_reward import RewardType, Reward
 
 class Event():
     def __init__(self, events, rom, args, dialogs, characters, items, maps, enemies, espers, shops):
@@ -42,17 +43,19 @@ class Event():
     def characters_required(self):
         return 1
 
-    def get_reward_type(self, check_info = None):
+    def get_reward_type(self, check_info, reward_type = None):
         bit = check_info.bit
 
         assert bit
 
+        if reward_type:
+            return reward_type
+        if bit in self.args.character_rewards:
+            return RewardType.CHARACTER
         if bit in self.args.esper_item_rewards:
             return RewardType.ESPER | RewardType.ITEM
-
         if bit in self.args.esper_rewards:
             return RewardType.ESPER
-
         if bit in self.args.item_rewards:
             return RewardType.ITEM
 
@@ -68,8 +71,8 @@ class Event():
         self.rewards.append(reward)
         return reward
 
-    def add_reward(self, check_info):
-        possible_types = self.get_reward_type(check_info)
+    def add_reward(self, check_info, reward_type = None):
+        possible_types = self.get_reward_type(check_info, reward_type)
         assert possible_types
 
         reward = Reward(self, possible_types)
