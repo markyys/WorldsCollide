@@ -13,5 +13,5 @@ SET_ZOZO_CLOCK = NameBit("Set Zozo Clock", event_bit.SET_ZOZO_CLOCK)
 SUPLEX_A_TRAIN = NameBit("Suplex A Train", event_bit.SUPLEXED_TRAIN)
 WIN_AN_AUCTION = NameBit("Win An Auction", event_bit.WON_AN_AUCTION)
 WIN_A_COLISEUM_MATCH = NameBit("Win A Coliseum Match", event_bit.WON_A_COLISEUM_MATCH)
-REUNITE_GAU_AND_FATHER = NameBit("Reunite Gau and Father", event_bit.GAU_FATHER_REUNION),
+REUNITE_GAU_AND_FATHER = NameBit("Reunite Gau and Father", event_bit.GAU_FATHER_REUNION)
 COMPLETED_KT_GAUNTLET = NameBit("Complete the KT Gauntlet", event_bit.COMPLETED_KT_GAUNTLET)
