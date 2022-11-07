@@ -76,10 +76,7 @@ class AnimateBattleStanding(_Instruction):
     def __init__(self):
         super().__init__(0x0c)
 
-class AnimateAirborneHandAtSide(_Instruction):
-    def __init__(self):
-        super().__init__(0x0d)
-class AnimateAirborneHandInAir(_Instruction):
+class AnimateArmsRaisedWalking(_Instruction):
     def __init__(self):
         super().__init__(0x0e)
 
