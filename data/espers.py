@@ -31,6 +31,8 @@ class Espers():
     ABILITY_DATA_START = 0x046db4
     ABILITY_DATA_END = 0x046fd5
 
+    SRAM_CHARACTER_ID = 0x1600 # Actor index is Save RAM
+
     def __init__(self, rom, args, spells, characters):
         self.rom = rom
         self.args = args
@@ -269,9 +271,30 @@ class Espers():
     def multi_summon(self):
         space = Reserve(0x24da3, 0x24da5, "espers set used in battle bit", asm.NOP())
 
+    def _get_def_mdef_logic(self, sram_addr, label):
+        ''' get common assembly logic for mdef/def bonuses '''
+        return [
+            # we will do similar to how strength, magic, speed, and stamina get added for defense and magic defense
+            asm.LDA(self.SRAM_CHARACTER_ID,asm.ABS_Y),
+            asm.ASL(),
+            asm.ASL(),  # *4 because each character has four stats to boost here
+            asm.TAY(),
+            asm.TXA(),
+            asm.LSR(),
+            asm.LSR(), # if the low bit was set, we're only doing +1
+            asm.LDA(sram_addr,asm.ABS_Y),  #load defense bonus
+            asm.INC(),
+            asm.BCS(f"{label}_plus_1"),
+            asm.INC(),
+            f"{label}_plus_1",
+            asm.STA(sram_addr,asm.ABS_Y),  # at no point can defense ever get to 255 through leveling, so no need to check for wrapping
+            asm.RTL(),
+        ]
+        
     def more_level_up_bonuses(self):
         import data.text as text
-# Testing with py wc.py -i ../rom/ff3.sfc -stesp 20 20 -ebr 100
+# Testing with py wc.py -i ../rom/ff3.sfc -stesp 20 20 -ebr 100 -xpm 99 -sc1 terra -sc2 locke -sc3 edgar -sc4 cyan
+#Problem 11/6: display of evade is wrong on Terra
         # Lenophis' additional level up bonus options:
         # Defense +1
         # Defense +2
@@ -284,6 +307,16 @@ class Espers():
         # Zero out the SwdTech names set in SRAM init.
         space = Reserve(0x0bde2, 0x0bdf0, "swdtech name SRAM init", asm.NOP())
 
+        # New Bonus storage in SRAM
+        SRAM_EVADE_BONUS = 0x1cf8
+        SRAM_MEVADE_BONUS = 0x1cf9
+        SRAM_DEF_BONUS = 0x1cfa
+        SRAM_MDEF_BONUS = 0x1cfb
+        # Character stat locations in SRAM
+        SRAM_CHAR_DEF = 0x11ba
+        SRAM_CHAR_MDEF = 0x11bb
+        SRAM_CHAR_EVADE = 0x11a8
+        SRAM_CHAR_MEVADE = 0x11aa
         # Add logic for applying stat boosts
         # Evade/MEvade
         src = [
@@ -292,7 +325,7 @@ class Espers():
             # ; X and Y can be trashed as needed, since PLX and PLY follow this routine
             # ; we need to get character ID so we can properly access our evade bonuses
             # ; fortunately, we don't need to worry about a Gogo or Umaro check here, because they've already been accounted for
-            asm.LDA(0x1600,asm.ABS_Y),  # get our ID
+            asm.LDA(self.SRAM_CHARACTER_ID,asm.ABS_Y),  # get our ID
             asm.ASL(),
             asm.ASL(), # *4 because each character has four stats to boost here
             asm.TAY(),
@@ -300,55 +333,23 @@ class Espers():
             asm.BCC("not_m_evade"),  # if carry is set, X is #$10 so we would do magic evade instead
             asm.INY(),  # add one to Y to point at magic evade instead
             "not_m_evade",
-            asm.LDA(0x1CF8,asm.ABS_Y),  # now we load up our evade boost from before
+            asm.LDA(SRAM_EVADE_BONUS,asm.ABS_Y),  # now we load up our evade boost from before
             asm.INC(),
             asm.CMP(0x81, asm.IMM8),  # is it at 129? cap if so. evade soft caps at 128 because nothing can touch you at that point anyway
             asm.BCC("evade_max"),
             asm.LDA(0x80, asm.IMM8),
             "evade_max",
-            asm.STA(0x1CF8,asm.ABS_Y),
+            asm.STA(SRAM_EVADE_BONUS,asm.ABS_Y),
             asm.RTL(),
         ]
         space = Write(Bank.F0, src, "Evade/MEvade level up Bonus")
         evade_bonus_address_snes = space.start_address_snes
 
-        src = [
-            # we will do similar to how strength, magic, speed, and stamina get added for defense and magic defense
-            asm.LDA(0x1600,asm.ABS_Y),
-            asm.ASL(),
-            asm.ASL(),  # *4 because each character has four stats to boost here
-            asm.TAY(),
-            asm.TXA(),
-            asm.LSR(),
-            asm.LSR(), # if the low bit was set, we're only doing +1
-            asm.LDA(0x1CFA,asm.ABS_Y),  #load defense bonus
-            asm.INC(),
-            asm.BCS("def_plus_1"),
-            asm.INC(),
-            "def_plus_1",
-            asm.STA(0x1CFA,asm.ABS_Y),  # at no point can defense ever get to 255 through leveling, so no need to check for wrapping
-            asm.RTL(),
-        ]
+        src = self._get_def_mdef_logic(SRAM_DEF_BONUS, "def")
         space = Write(Bank.F0, src, "Defense level up bonus")
         def_bonus_address_snes = space.start_address_snes
 
-        src = [
-            # we will do similar to how strength, magic, speed, and stamina get added for defense and magic defense
-            asm.LDA(0x1600,asm.ABS_Y),
-            asm.ASL(),
-            asm.ASL(),  # *4 because each character has four stats to boost here
-            asm.TAY(),
-            asm.TXA(),
-            asm.LSR(),
-            asm.LSR(), # if the low bit was set, we're only doing +1
-            asm.LDA(0x1CFB,asm.ABS_Y),  #load magic defense bonus
-            asm.INC(),
-            asm.BCS("m_def_plus_1"),
-            asm.INC(),
-            "m_def_plus_1",
-            asm.STA(0x1CFB,asm.ABS_Y),  # at no point can magic defense ever get to 255 through leveling, so no need to check for wrapping
-            asm.RTL(),
-        ]
+        src = self._get_def_mdef_logic(SRAM_MDEF_BONUS, "mdef")
         space = Write(Bank.F0, src, "Magic Defense level up bonus")
         magic_def_bonus_address_snes = space.start_address_snes
 
@@ -360,7 +361,7 @@ class Espers():
         # coming in, M is clear so accumulator is 16-bit
         src = [
             asm.LDA(0xED7CAB,asm.LNG_X),  # defense and magic defense
-            asm.STA(0x11BA, asm.ABS),  # save both for now
+            asm.STA(SRAM_CHAR_DEF, asm.ABS),  # save both for now
             asm.LDA(0x04,asm.S),  # load our character index again
             asm.TAY(),
             asm.TDC(),
@@ -371,38 +372,38 @@ class Espers():
             asm.ASL(),
             asm.ASL(),
             asm.TAY(),
-            asm.LDA(0x1CFA,asm.ABS_Y),  # load our boosted defense
+            asm.LDA(SRAM_DEF_BONUS,asm.ABS_Y),  # load our boosted defense
             asm.CLC(),
-            asm.ADC(0x11BA, asm.ABS),
+            asm.ADC(SRAM_CHAR_DEF, asm.ABS),
             asm.BCC("def_no_wrap"),
             asm.LDA(0xFF, asm.IMM8),
             "def_no_wrap",
-            asm.STA(0x11BA, asm.ABS),
-            asm.LDA(0x1CFB,asm.ABS_Y),  # load our boosted magic defense
+            asm.STA(SRAM_CHAR_DEF, asm.ABS),
+            asm.LDA(SRAM_MDEF_BONUS,asm.ABS_Y),  # load our boosted magic defense
             asm.CLC(),
-            asm.ADC(0x11BB, asm.ABS),
+            asm.ADC(SRAM_CHAR_MDEF, asm.ABS),
             asm.BCC("m_def_no_wrap"),
             asm.LDA(0xFF, asm.IMM8),
             "m_def_no_wrap",
-            asm.STA(0x11BB, asm.ABS),
+            asm.STA(SRAM_CHAR_MDEF, asm.ABS),
             # Add Evade Bonus
             asm.A16(),
-            asm.LDA(0xED7CAD,asm.ABS_X),
+            asm.LDA(0xED7CAD,asm.LNG_X),
             asm.A8(),  # sets M to 8 bit
-            asm.STA(0x11A8, asm.ABS),  # save evade for now
+            asm.STA(SRAM_CHAR_EVADE, asm.ABS),  # save evade for now
             asm.XBA(),
-            asm.STA(0x11AA, asm.ABS),  # save magic evade for now
-            asm.LDA(0x1CF8,asm.ABS_Y), # load our boosted evade
+            asm.STA(SRAM_CHAR_MEVADE, asm.ABS),  # save magic evade for now
+            asm.LDA(SRAM_EVADE_BONUS,asm.ABS_Y), # load our boosted evade
             asm.CLC(),
-            asm.ADC(0x11A8, asm.ABS),  # add in our evade from equipment
+            asm.ADC(SRAM_CHAR_EVADE, asm.ABS),  # add in our evade from equipment
             asm.CMP(0x81, asm.IMM8),  # is it at 129? cap if so. evade soft caps at 128 because nothing can touch you at that point anyway
             asm.BCC("evade_good"),
             asm.LDA(0x80, asm.IMM8),
             "evade_good",
-            asm.STA(0x11A8, asm.ABS),
-            asm.LDA(0x1CF9,asm.ABS_Y),
+            asm.STA(SRAM_CHAR_EVADE, asm.ABS),
+            asm.LDA(SRAM_MEVADE_BONUS,asm.ABS_Y),
             asm.CLC(),
-            asm.ADC(0x11AA, asm.ABS),  # add in our magic evade from equipment
+            asm.ADC(SRAM_CHAR_MEVADE, asm.ABS),  # add in our magic evade from equipment
             asm.CMP(0x81, asm.IMM8),  # is it at 129? cap if so. magic evade soft caps at 128 because nothing can touch you at that point anyway
             asm.BCC("m_evade_good"),
             asm.LDA(0x80, asm.IMM8),
@@ -411,9 +412,9 @@ class Espers():
             "get_out",
             # if we're here, our character is Gogo, Umaro, or someone higher. That means they can't get boosted stats.
             asm.A16(),
-            asm.LDA(0xED7CAD,asm.ABS_X),  # so let's load our evade and magic evade like we normally would
+            asm.LDA(0xED7CAD,asm.LNG_X),  # so let's load our evade and magic evade like we normally would
             asm.A8(),
-            asm.STA(0x11A8, asm.ABS),  # save evade
+            asm.STA(SRAM_CHAR_EVADE, asm.ABS),  # save evade
             asm.XBA(),
             asm.RTL(),  # and exit out for magic evade
         ]
@@ -451,7 +452,7 @@ class Espers():
 
         space = Reserve(0x2615a, 0x2615f, "Level up bonus jump table - repurposed", asm.NOP())
         space.write(
-            asm.JSL(def_bonus_address_snes),
+            asm.JSL(magic_def_bonus_address_snes),
             asm.RTS(),
         )
         m_def_addr = space.start_address
