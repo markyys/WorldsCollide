@@ -15,10 +15,8 @@ class Events():
         self.espers = data.espers
         self.shops = data.shops
 
-        ##### franklin add this to get logic for location/chest rank tiering and post-events mods
         self.pathing = ""   #used for display but not in logic
         self.pathingdict = {}
-        ##### franklin add this to get logic for location/chest rank tiering and post-events mods
 
         events = self.mod()
 
@@ -148,15 +146,13 @@ class Events():
             self.characters.set_character_path(slot.id, slot.check.gate_character)
             iteration += 1
 
-        ##### franklin this is the earliest point that pathingdict and event_depth can be determined
-        for event in events:
-            for reward in event.rewards:
-                if reward.type == RewardType.CHARACTER:
-                    self.pathing = self.pathing + "\n" + event.name() + ": " + self.characters.get_name(reward.id) + "/ " + self.characters.get_default_name(reward.id)
-                    self.pathingdict[self.characters.get_default_name(reward.id)] = event.name()
         if self.args.debug:
-            self.print_pathing_tree()
-        ##### franklin this is the earliest point that pathingdict and event_depth can be determined
+            for event in events:
+                for reward in event.rewards:
+                    if reward.type == RewardType.CHARACTER:
+                        self.pathing = self.pathing + "\n" + event.name() + ": " + self.characters.get_name(reward.id) + "/ " + self.characters.get_default_name(reward.id)
+                        self.pathingdict[self.characters.get_default_name(reward.id)] = event.name()
+                self.print_pathing_tree()
 
         # get all reward slots still available
         reward_slots = [reward for event in events for reward in event.rewards if reward.id is None]
