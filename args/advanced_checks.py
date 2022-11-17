@@ -32,7 +32,7 @@ def parse(parser):
 
     advanced_checks.add_argument("-dchar", "--dragons-as-characters", default = [0, 0], type = int,
                 nargs = 2, metavar = ("MIN", "MAX"), choices = range(6),
-                help = "Up to 5 dragons are guranteed to reward characters. The dragon will have the recruited character's sprite. Kefka's Tower and Phoenix Cave dragons cannot be characters.")
+                help = "Up to 5 dragons are guaranteed to reward a CHARACTER. The dragon will have the recruited character's sprite. Kefka's Tower and Phoenix Cave dragons cannot be characters.")
 
 character_title = "Character Checks"
 esper_item_title = "Esper+Item Checks"
