@@ -25,8 +25,8 @@ class MapProperty:
         self.song = self.data[28]
 
     def write(self):
-        self.data[1] &= self.enable_warp << 1
-        self.data[5] &= self.enable_random_encounters << 7
+        self.data[1] = (self.data[1] & ~ENABLE_WARP) | (self.enable_warp << 1)
+        self.data[5] = (self.data[5] & ~ENABLE_RANDOM_ENCOUNTER) | (self.enable_random_encounters << 7)
         self.data[28] = self.song
         self.rom.set_bytes(self.data_start, self.data)
 
