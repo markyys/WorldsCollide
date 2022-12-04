@@ -88,10 +88,11 @@ category_types = {
 category_types["Item"].append(ResultType(58, "High Tier Item", "High Tier Item", None))
 category_types["Command"].append(ResultType(59, "Magitek Upgrade", "Magitek Upgrade", None))
 category_types["Item"].append(ResultType(60, "Sprint Shoes", "Sprint Shoes", None))
-category_types["Auto"].append(ResultType(61, "Auto Dog Block", "Auto Dog Block", None))
-category_types["Auto"].append(ResultType(62, "Auto Life 3", "Auto Life 3", None))
-category_types["Kefka's Tower"] += [ResultType(63, "Unlock Perma KT Skip", "Unlock Perma KT Skip", None)]
-category_types["Kefka's Tower"] += [ResultType(64, "Unlock KT Gauntlet", "Unlock KT Gauntlet", None)]
+category_types["Kefka's Tower"] += [ResultType(61, "Unlock Perma KT Skip", "Unlock Perma KT Skip", None)]
+category_types["Kefka's Tower"] += [ResultType(62, "Unlock KT Gauntlet", "Unlock KT Gauntlet", None)]
+category_types["Auto"].append(ResultType(63, "Auto Dog Block", "Auto Dog Block", None))
+category_types["Auto"].append(ResultType(64, "Auto Life 3", "Auto Life 3", None))
+
 
 categories = list(category_types.keys())
 
