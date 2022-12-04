@@ -72,6 +72,8 @@
     - KT Mid Triad Statue (objective string `11.62`)
     - KT Right Triad Statue (objective string `11.63`)
 - QoL: Esper rewards in the spoiler log now are prefixed with a `*` (no more Ragnarok mixup)
+- Feature: "Auto Dog Block" (result `63` and "Auto Life 3" (`64`) <https://github.com/AtmaTek/WorldsCollide/pull/42>
+
 ## Gauntlet
 - This functions similarly to the KT Skip. When unlocked, it will show a new option in the dialog when entering KT.
 - When entering the gauntlet the player will fight all five "required" KT fights back to back. There will be no chance to menu or save until you've completed the gauntlet.
