@@ -31,7 +31,7 @@ class Espers():
     ABILITY_DATA_START = 0x046db4
     ABILITY_DATA_END = 0x046fd5
 
-    SRAM_CHARACTER_ID = 0x1600 # Actor index is Save RAM
+    SRAM_CHARACTER_ID = 0x1600 # Actor index in Save RAM
 
     def __init__(self, rom, args, spells, characters):
         self.rom = rom
