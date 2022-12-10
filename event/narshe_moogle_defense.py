@@ -57,9 +57,20 @@ class NarsheMoogleDefense(Event):
                     # Make character look like a moogle
                     field.SetSprite(character_idx, self.characters.get_sprite(self.characters.MOG)),
                     field.SetPalette(character_idx, self.characters.get_palette(self.characters.MOG)),
-                    # Give it the name and properties of the moogle #TODO: average moogle level to parties
+                    # Give it the name and properties of the moogle
                     field.SetName(character_idx, moogle_id),
                     field.SetProperties(character_idx, moogle_id),
+                    field.CreateEntity(character_idx),
+                    field.RefreshEntities(),
+                ]
+                if self.args.start_average_level:
+                    src += [
+                        # Average character level via field command - example ref: CC/3A2C
+                        field.AverageLevel(character_idx),
+                        field.RestoreHp(character_idx, 0x7f), # restore all HP
+                        field.RestoreMp(character_idx, 0x7f), # restore all HP
+                    ]
+                src += [
                     next_character_branch,
                     field.CreateEntity(character_idx),
                 ]
