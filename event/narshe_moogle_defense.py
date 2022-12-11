@@ -1,5 +1,7 @@
 from event.event import *
 import data.npc_bit as npc_bit
+from constants.entities import character_id
+import data.direction
 
 class NarsheMoogleDefense(Event):
     WOB_MAP_ID = 0x33
@@ -7,9 +9,24 @@ class NarsheMoogleDefense(Event):
     def name(self):
         return "Narshe Moogle Defense"
 
+    def character_gate(self):
+        return self.characters.MOG
+
+    def init_rewards(self):
+        self.reward = self.add_reward(RewardType.CHARACTER | RewardType.ESPER | RewardType.ITEM)
+
     def init_event_bits(self, space):
+        if self.args.character_gating:
+            space.write(
+                # Hide Arvis until you have Mog
+                field.ClearEventBit(npc_bit.ARVIS_INTRO),
+            )
+        else:
+            space.write(
+                # Always show Arvis
+                field.SetEventBit(npc_bit.ARVIS_INTRO),
+            )
         space.write(
-            field.SetEventBit(npc_bit.TERRA_COLLAPSED_NARSHE_WOB), # show terra
             field.ClearEventBit(npc_bit.MARSHAL_NARSHE_WOB),       # do not show marshal
         )
 
@@ -38,6 +55,8 @@ class NarsheMoogleDefense(Event):
 
         # create all available characters, select count parties, delete characters not placed into any party
         src = [
+            field.FadeOutScreen(),
+            field.WaitForFade(),
             field.Call(field.DELETE_ALL_CHARACTERS),
         ]
 
@@ -85,50 +104,73 @@ class NarsheMoogleDefense(Event):
         self.refresh_characters_and_select_parties_with_moogles = space.start_address
 
     def mod(self):
+        if self.args.character_gating:
+            self.add_gating_condition() #TODO
+
         # Change the NPC bit that activates Marshal
         marshal_npc = self.maps.get_npc(self.WOB_MAP_ID, 0x12)
         marshal_npc.event_byte = npc_bit.event_byte(npc_bit.MARSHAL_NARSHE_WOB)
         marshal_npc.event_bit = npc_bit.event_bit(npc_bit.MARSHAL_NARSHE_WOB)
-
-        # Change the TERRA NPC such that it triggers the battle
-        terra_npc = self.maps.get_npc(self.WOB_MAP_ID, 0x19)
-        terra_npc.unknown1 = 0 # part of animation
-        terra_npc.sprite = 106
-        terra_npc.palette = 6
-        terra_npc.split_sprite = 1
-        terra_npc.direction = direction.DOWN
-
-        # clear the scenes after terra falls in hole for event initialization
-        prepared_dialog = 0x32 # reuse "LOCKE: Wonderful There's a whole bunch of 'em"
-        self.dialogs.set_text(prepared_dialog, "Prepared?<line><choice> Yes<line><choice> No<end>")
-        space = Reserve(0xca2e6, 0xca754, "terra falls in hole scenes", field.NOP())
-        space.write(
-            field.DialogBranch(prepared_dialog,
-                               dest1 = space.end_address + 1,
-                               dest2 = field.RETURN)
-        )
-        terra_npc.set_event_address(space.start_address)
-
-        # clear the locke drop-down animation at the start of event
-        space = Reserve(0xca75b, 0xca7be, "locke drops down before battle", field.NOP())
-        space.write(
-            field.StartSong(13), # play song: Locke
-            field.SetEventBit(event_bit.TEMP_SONG_OVERRIDE), # keep song playing
-            field.FadeInScreen(speed = 2),
-            field.WaitForFade(),
-        )
-
-        # Clear guard dialog
-        space = Reserve(0xca7ee, 0xca7f0, "dialog: Now we gotcha!", field.NOP())
 
         # ensure that the terra falls in hole event never triggers, as we're reusing the associated event bit
         space = Reserve(0xca2e5, 0xca2e5, "terra falls in hole event start")
         space.write(
             field.Return()
         )
-        # Clear use of event_bit.12E (TERRA_COLLAPSED_NARHSE_WOB) and event_bit.003 (moogle defense) at cc/aaab so that we can reuse 12E 
-        # and so that 003 doesn't cause issues at WoB Narshe entrance
-        space = Reserve(0xcaaab, 0xcaaae, "set terra falls event bit & initiated moogle defense bit", field.NOP())
+
+        # Actions after accepting
+        src = [
+            field.FadeOutScreen(),
+            field.WaitForFade(),
+            field.HideEntity(field_entity.PARTY0),
+            field.LoadMap(0x32, direction.UP, True, 55, 11),
+            field.CreateEntity(character_id["TERRA"]),
+            field.EntityAct(character_id["TERRA"], True,
+                field_entity.SetPosition(55, 11),
+                field_entity.Turn(data.direction.UP)
+            ),
+            field.ShowEntity(character_id["TERRA"]),
+            field.FadeInScreen(),
+            field.WaitForFade(),
+            field.Call(0xCCA2EB) # 'Got her!' scene
+        ]
+        space = Write(Bank.CC, src, "load narshe caves map for Terra event")
+        got_her_map_change = space.start_address
+
+        # Change Arvis Script
+        prepared_dialog = 0x21 # reuse "OLD MAN: Make your way out through the mines! I’ll keep these brutes occupied!"
+        self.dialogs.set_text(prepared_dialog, "ARVIS: Took you long enough! Will you help?<line><choice> Yes<line><choice> No<end>")
+        space = Reserve(0xca06f, 0xca07d, "arvis dialog", field.NOP())
+        space.write(
+             field.DialogBranch(prepared_dialog,
+                                dest1 = got_her_map_change,
+                                dest2 = field.RETURN)
+        )
+
+        # Clear got her dialog
+        space = Reserve(0xca2f0, 0xca2f2, "dialog: Got her", field.NOP()) # 'Got her' dialog
+
+        # clear out the flashback, but show "Locke" in to allow for drop-down
+        space = Reserve(0xca436, 0xca75a, "Terra flashback", field.NOP()) # with fade out
+        space.write(
+            field.ShowEntity(field_entity.PARTY0),
+            field.StartSong(13), # play song: Locke
+            field.SetEventBit(event_bit.TEMP_SONG_OVERRIDE), # keep song playing
+            field.Branch(space.end_address + 1), # skip nops
+        )
+
+        # Change Locke to party leader
+        locke_action_queues = [0xca76b, 0xca77b, 0xca786, 
+                               0xca78e, 0xca793 , 0xca799, 0xca79f, 
+                               0xca7a4, 0xca7a8, 0xca7af, 0xca7b3, 
+                               0xca7b8]
+                               # 0xca868 NO-OP'd below
+        for address in locke_action_queues:
+            space = Reserve(address, address, "locke drop down to protect terra")
+            space.write(field_entity.PARTY0)
+
+        # Clear guard dialog
+        space = Reserve(0xca7ee, 0xca7f0, "dialog: Now we gotcha!", field.NOP())
 
         # No dialog starting at cc/a85f -- reasonable point to add in the Marshal NPC
         space = Reserve(0xca85f, 0xca86f, "dialog: There's a whole bunch of 'em + Kupo", field.NOP())
@@ -158,6 +200,10 @@ class NarsheMoogleDefense(Event):
             field.Call(self.refresh_characters_and_select_parties_with_moogles),
             field.Branch(space.end_address + 1), # skip nops
         )
+
+        # Clear use of event_bit.12E (TERRA_COLLAPSED_NARHSE_WOB) and event_bit.003 (moogle defense) at cc/aaab so that we can reuse 12E 
+        # and so that 003 doesn't cause issues at WoB Narshe entrance
+        space = Reserve(0xcaaab, 0xcaaae, "set terra falls event bit & initiated moogle defense bit", field.NOP())
 
         # Victory condition (marshal defeated)
         # Remove moogles from party 
@@ -197,6 +243,10 @@ class NarsheMoogleDefense(Event):
 
             field.SetEventBit(event_bit.FINISHED_MOOGLE_DEFENSE),
             field.FreeMovement(),
+
+            # hide Arvis 
+            field.ClearEventBit(npc_bit.ARVIS_INTRO),
+            field.FinishCheck(),
             field.Return(),
         ]
         space = Reserve(0xcade5, 0xcb04f, "moogle defense victory", field.NOP())

@@ -86,6 +86,7 @@ TEMP_NPC = 0x5f7 # used in many places (doma wor, veldt cave wob, ebot's rock, s
 LONE_WOLF_MOG_NARSHE_CLIFF = 0x640
 LONE_WOLF_NARSHE_CLIFF_BRIDGE = 0x641
 STORES_NARSHE = 0x600
+ARVIS_INTRO = 0x603
 WHELK_GUARD_NARSHE_WOB = 0x604
 WHELK_GUARD_TRITOCH_NARSHE_WOB = 0x605 # mine, replacing tritoch in narshe mines beginning
 BACK_DOOR_ARVIS_HOUSE = 0x606
