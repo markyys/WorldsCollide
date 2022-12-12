@@ -31,7 +31,7 @@ class NarsheMoogleDefense(Event):
         )
 
     def refresh_characters_and_select_parties_with_moogles_mod(self):
-        # Write a function for selecting parties or moogle replacements
+        # Method for selecting parties or moogle replacements
 
         # map of characters to replacement moogles. Our logic will be to replace any characters not in our party with their mapped moogle.
         # index is the character (0 - 14) -- note: no Terra, Locke, or Umaro replacement
@@ -103,9 +103,92 @@ class NarsheMoogleDefense(Event):
         space = Write(Bank.CC, src, "field function refresh characters and select three parties with moogles")
         self.refresh_characters_and_select_parties_with_moogles = space.start_address
 
+    def marshal_battle_mod(self):
+        boss_pack_id = self.get_boss("Rizopas")
+
+        space = Reserve(0xcadac, 0xcadae, "marshal invoke battle", field.NOP())
+        space.write(
+            field.InvokeBattle(boss_pack_id, check_game_over = False)
+        )
+
+    def after_battle_mod(self):
+        # Victory condition (marshal defeated)
+        # Remove moogles from party 
+        src = [
+            field.FadeOutScreen(),
+            field.WaitForFade(),
+
+            field.ClearEventBit(event_bit.TEMP_SONG_OVERRIDE), # allow song to change on map change
+            field.ClearEventBit(npc_bit.MARSHAL_NARSHE_WOB), # Remove Marshal
+            field.ClearEventBit(npc_bit.TERRA_COLLAPSED_NARSHE_WOB), # Remove collapsed Terra
+
+            Read(0xcaded, 0xcadf2), # load map
+
+            field.HideEntity(0x1B), # the exit block at top of map
+
+            field.SetParty(1),
+            field.Call(field.REMOVE_ALL_CHARACTERS_FROM_ALL_PARTIES),
+        ]
+        for character_idx in range(self.characters.CHARACTER_COUNT):
+            src += [
+                # Restore character appearance, name, and properties
+                field.SetSprite(character_idx, self.characters.get_sprite(character_idx)),
+                field.SetPalette(character_idx, self.characters.get_palette(character_idx)),
+                field.SetName(character_idx, character_idx),
+                field.SetProperties(character_idx, character_idx),
+            ]
+        src += [ 
+            field.Call(field.REFRESH_CHARACTERS_AND_SELECT_PARTY),
+            field.UpdatePartyLeader(),
+            field.ShowEntity(field_entity.PARTY0),
+            field.RefreshEntities(),
+
+            field.FreeScreen(),
+
+            field.FadeInScreen(),
+            field.WaitForFade(),
+
+            field.SetEventBit(event_bit.FINISHED_MOOGLE_DEFENSE),
+            field.FreeMovement(),
+
+            # hide Arvis 
+            field.ClearEventBit(npc_bit.ARVIS_INTRO),
+            field.FinishCheck(),
+            field.Return(),
+        ]
+        space = Reserve(0xcade5, 0xcb04f, "moogle defense victory", field.NOP())
+        space.write(src)
+
+    def add_gating_condition(self):
+        #TODO: if Mog recruited, show Arvis
+        pass
+
     def mod(self):
         if self.args.character_gating:
-            self.add_gating_condition() #TODO
+            self.add_gating_condition()
+
+        #TEST: add an NPC to Blackjack that triggers Marshal battle
+        from data.bosses import name_pack
+        src = [
+            field.InvokeBattle(name_pack["Marshal"], 17),
+            field.FadeInScreen(),
+            field.WaitForFade(),
+            field.Return(),
+        ]
+        space = Write(Bank.CC, src, "TEST Marshal battle")
+        test_marshal_battle = space.start_address
+
+        from data.npc import NPC
+        test_npc = NPC()
+        test_npc.x = 16
+        test_npc.y = 4
+        test_npc.sprite = 52
+        test_npc.palette = 0
+        test_npc.direction = direction.DOWN
+        test_npc.speed = 0
+        test_npc.set_event_address(test_marshal_battle)
+        self.maps.append_npc(0x6, test_npc)
+
 
         # Change the NPC bit that activates Marshal
         marshal_npc = self.maps.get_npc(self.WOB_MAP_ID, 0x12)
@@ -205,52 +288,11 @@ class NarsheMoogleDefense(Event):
         # and so that 003 doesn't cause issues at WoB Narshe entrance
         space = Reserve(0xcaaab, 0xcaaae, "set terra falls event bit & initiated moogle defense bit", field.NOP())
 
-        # Victory condition (marshal defeated)
-        # Remove moogles from party 
-        src = [
-            field.FadeOutScreen(),
-            field.WaitForFade(),
+        # Replace Marshal battle
+        self.marshal_battle_mod()
 
-            field.ClearEventBit(event_bit.TEMP_SONG_OVERRIDE), # allow song to change on map change
-            field.ClearEventBit(npc_bit.MARSHAL_NARSHE_WOB), # Remove Marshal
-            field.ClearEventBit(npc_bit.TERRA_COLLAPSED_NARSHE_WOB), # Remove collapsed Terra
+        self.after_battle_mod()
 
-            Read(0xcaded, 0xcadf2), # load map
-
-            field.HideEntity(0x1B), # the exit block at top of map
-
-            field.SetParty(1),
-            field.Call(field.REMOVE_ALL_CHARACTERS_FROM_ALL_PARTIES),
-        ]
-        for character_idx in range(self.characters.CHARACTER_COUNT):
-            src += [
-                # Restore character appearance, name, and properties
-                field.SetSprite(character_idx, self.characters.get_sprite(character_idx)),
-                field.SetPalette(character_idx, self.characters.get_palette(character_idx)),
-                field.SetName(character_idx, character_idx),
-                field.SetProperties(character_idx, character_idx),
-            ]
-        src += [ 
-            field.Call(field.REFRESH_CHARACTERS_AND_SELECT_PARTY),
-            field.UpdatePartyLeader(),
-            field.ShowEntity(field_entity.PARTY0),
-            field.RefreshEntities(),
-
-            field.FreeScreen(),
-
-            field.FadeInScreen(),
-            field.WaitForFade(),
-
-            field.SetEventBit(event_bit.FINISHED_MOOGLE_DEFENSE),
-            field.FreeMovement(),
-
-            # hide Arvis 
-            field.ClearEventBit(npc_bit.ARVIS_INTRO),
-            field.FinishCheck(),
-            field.Return(),
-        ]
-        space = Reserve(0xcade5, 0xcb04f, "moogle defense victory", field.NOP())
-        space.write(src)
 
 
 

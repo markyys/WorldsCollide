@@ -270,11 +270,11 @@ class EnemyPacks():
         mine_cart = [297, 400] # mag roaders
         imperial_base = [295, 296] # soldier and magitek
         sealed_cave = [405] # ninja
-        burning_house = [301, 287] # balloons
+        burning_house = [301, 287] # balloon (x4, x3)
         iaf = [382] # sky armor / spit fire
         floating_continent_escape = [397, 398, 399] # naughty
         owzer_mansion = [402, 403, 407, 404] # dahling, nightshade, souldancer, still life
-        moogle_defense = [261, 262] # vomammoth, marshal
+        moogle_defense = [261] # vomammoth
 
         self.fixed = lete_river + imperial_camp + doma_wob + phantom_train + serpent_trench + narshe_battle + opera_house + vector
         self.fixed += mine_cart + imperial_base + sealed_cave + burning_house + iaf + floating_continent_escape + owzer_mansion + moogle_defense
