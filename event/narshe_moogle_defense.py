@@ -16,18 +16,9 @@ class NarsheMoogleDefense(Event):
         self.reward = self.add_reward(RewardType.CHARACTER | RewardType.ESPER | RewardType.ITEM)
 
     def init_event_bits(self, space):
-        if self.args.character_gating:
-            space.write(
-                # Hide Arvis until you have Mog
-                field.ClearEventBit(npc_bit.ARVIS_INTRO),
-            )
-        else:
-            space.write(
-                # Always show Arvis
-                field.SetEventBit(npc_bit.ARVIS_INTRO),
-            )
         space.write(
-            field.ClearEventBit(npc_bit.MARSHAL_NARSHE_WOB),       # do not show marshal
+            field.SetEventBit(npc_bit.ARVIS_INTRO), # show Arvis
+            field.ClearEventBit(npc_bit.MARSHAL_NARSHE_WOB), # do not show marshal
         )
 
     def refresh_characters_and_select_parties_with_moogles_mod(self):
@@ -73,14 +64,13 @@ class NarsheMoogleDefense(Event):
                 # moogle exists -- check if the character exists -- if not, replace with moogle.
                 src += [
                     field.BranchIfEventBitSet(0x2F0 + character_idx, next_character_branch),
+                    # Ref: CC/A93D to make characters into moogles
                     # Make character look like a moogle
                     field.SetSprite(character_idx, self.characters.get_sprite(self.characters.MOG)),
                     field.SetPalette(character_idx, self.characters.get_palette(self.characters.MOG)),
                     # Give it the name and properties of the moogle
                     field.SetName(character_idx, moogle_id),
                     field.SetProperties(character_idx, moogle_id),
-                    field.CreateEntity(character_idx),
-                    field.RefreshEntities(),
                 ]
                 if self.args.start_average_level:
                     src += [
@@ -98,10 +88,16 @@ class NarsheMoogleDefense(Event):
             field.SelectParties(3),
             field.Call(field.DELETE_CHARACTERS_NOT_IN_ANY_PARTY),
             field.RefreshEntities(),
+            field.UpdatePartyLeader(),
+            field.ShowEntity(field_entity.PARTY0),
+            field.RefreshEntities(),
             field.Return(),
         ]
+
         space = Write(Bank.CC, src, "field function refresh characters and select three parties with moogles")
         self.refresh_characters_and_select_parties_with_moogles = space.start_address
+        print(hex(space.start_address))
+        print(hex(space.end_address))
 
     def marshal_battle_mod(self):
         boss_pack_id = self.get_boss("Rizopas")
@@ -160,14 +156,14 @@ class NarsheMoogleDefense(Event):
         space.write(src)
 
     def add_gating_condition(self):
-        #TODO: if Mog recruited, show Arvis
+        #TODO: if Mog not recruited, hide Arvis via map 30 NPC 1 entrance event (CC/395A)
         pass
 
     def mod(self):
         if self.args.character_gating:
             self.add_gating_condition()
 
-        #TEST: add an NPC to Blackjack that triggers Marshal battle
+        #TEST: add an NPC to Blackjack that triggers Marshal battle #TODO REMOVE
         from data.bosses import name_pack
         src = [
             field.InvokeBattle(name_pack["Marshal"], 17),
@@ -188,12 +184,14 @@ class NarsheMoogleDefense(Event):
         test_npc.speed = 0
         test_npc.set_event_address(test_marshal_battle)
         self.maps.append_npc(0x6, test_npc)
-
+        # TODO: remove above here (Test code)
 
         # Change the NPC bit that activates Marshal
         marshal_npc = self.maps.get_npc(self.WOB_MAP_ID, 0x12)
         marshal_npc.event_byte = npc_bit.event_byte(npc_bit.MARSHAL_NARSHE_WOB)
         marshal_npc.event_bit = npc_bit.event_bit(npc_bit.MARSHAL_NARSHE_WOB)
+
+        #TODO Replace Terra commands in script with new NPC for which we can manipulate the sprite/palette to match the reward
 
         # ensure that the terra falls in hole event never triggers, as we're reusing the associated event bit
         space = Reserve(0xca2e5, 0xca2e5, "terra falls in hole event start")
@@ -234,7 +232,8 @@ class NarsheMoogleDefense(Event):
         space = Reserve(0xca2f0, 0xca2f2, "dialog: Got her", field.NOP()) # 'Got her' dialog
 
         # clear out the flashback, but show "Locke" in to allow for drop-down
-        space = Reserve(0xca436, 0xca75a, "Terra flashback", field.NOP()) # with fade out
+        #space = Reserve(0xca436, 0xca75a, "Terra flashback", field.NOP()) # with fade out
+        space = Reserve(0xca3f9, 0xca75a, "Terra fall and flashback", field.NOP()) # with fade out
         space.write(
             field.ShowEntity(field_entity.PARTY0),
             field.StartSong(13), # play song: Locke
@@ -242,7 +241,7 @@ class NarsheMoogleDefense(Event):
             field.Branch(space.end_address + 1), # skip nops
         )
 
-        # Change Locke to party leader
+        # Change Locke actions to Party Leader
         locke_action_queues = [0xca76b, 0xca77b, 0xca786, 
                                0xca78e, 0xca793 , 0xca799, 0xca79f, 
                                0xca7a4, 0xca7a8, 0xca7af, 0xca7b3, 
@@ -284,6 +283,9 @@ class NarsheMoogleDefense(Event):
             field.Branch(space.end_address + 1), # skip nops
         )
 
+
+        # TODO: why is party collapsed coming out of moogle selection? Maybe because Terra's in party?
+
         # Clear use of event_bit.12E (TERRA_COLLAPSED_NARHSE_WOB) and event_bit.003 (moogle defense) at cc/aaab so that we can reuse 12E 
         # and so that 003 doesn't cause issues at WoB Narshe entrance
         space = Reserve(0xcaaab, 0xcaaae, "set terra falls event bit & initiated moogle defense bit", field.NOP())
@@ -292,6 +294,8 @@ class NarsheMoogleDefense(Event):
         self.marshal_battle_mod()
 
         self.after_battle_mod()
+
+        self.log_reward(self.reward)
 
 
 
