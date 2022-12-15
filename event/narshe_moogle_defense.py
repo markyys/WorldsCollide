@@ -2,9 +2,12 @@ from event.event import *
 import data.npc_bit as npc_bit
 from constants.entities import character_id
 import data.direction
+from data.npc import NPC
 
 class NarsheMoogleDefense(Event):
     WOB_MAP_ID = 0x33
+    MARSHAL_NPC_ID = 0x12
+    COLLAPSED_TERRA_NPC_ID = 0x19
 
     def name(self):
         return "Narshe Moogle Defense"
@@ -96,8 +99,6 @@ class NarsheMoogleDefense(Event):
 
         space = Write(Bank.CC, src, "field function refresh characters and select three parties with moogles")
         self.refresh_characters_and_select_parties_with_moogles = space.start_address
-        print(hex(space.start_address))
-        print(hex(space.end_address))
 
     def marshal_battle_mod(self):
         boss_pack_id = self.get_boss("Rizopas")
@@ -107,15 +108,34 @@ class NarsheMoogleDefense(Event):
             field.InvokeBattle(boss_pack_id, check_game_over = False)
         )
 
+    def add_terra_npc(self):
+        # Add an NPC to replace Terra during the chase scene in Narshe South Caves (map 50). 
+        # By doing so, it allows us to change her sprite without affecting a party Terra
+        terra_npc = NPC()
+        terra_npc.x = 55
+        terra_npc.y = 11
+        terra_npc.sprite = self.characters.get_sprite(self.characters.MOG)
+        terra_npc.palette = self.characters.get_palette(self.characters.MOG)
+        terra_npc.direction = direction.UP
+        terra_npc.speed = 0
+        terra_npc.event_byte = npc_bit.event_byte(npc_bit.MARSHAL_NARSHE_WOB) #dual purpose with showing Marshal NPC
+        terra_npc.event_bit = npc_bit.event_bit(npc_bit.MARSHAL_NARSHE_WOB)
+        self.terra_npc_id = self.maps.append_npc(50, terra_npc)
+        
+        # Replace collapsed Terra NPC
+        terra_collapsed_npc = self.maps.get_npc(self.WOB_MAP_ID, self.COLLAPSED_TERRA_NPC_ID)
+        terra_collapsed_npc.sprite = self.characters.get_sprite(self.characters.MOG)
+        terra_collapsed_npc.palette = self.characters.get_palette(self.characters.MOG)
+        
     def after_battle_mod(self):
         # Victory condition (marshal defeated)
         # Remove moogles from party 
-        src = [
+        src = [ 
             field.FadeOutScreen(),
             field.WaitForFade(),
 
             field.ClearEventBit(event_bit.TEMP_SONG_OVERRIDE), # allow song to change on map change
-            field.ClearEventBit(npc_bit.MARSHAL_NARSHE_WOB), # Remove Marshal
+            field.ClearEventBit(npc_bit.MARSHAL_NARSHE_WOB), # Remove Marshal and "Terra" in south caves
             field.ClearEventBit(npc_bit.TERRA_COLLAPSED_NARSHE_WOB), # Remove collapsed Terra
 
             Read(0xcaded, 0xcadf2), # load map
@@ -163,6 +183,8 @@ class NarsheMoogleDefense(Event):
         if self.args.character_gating:
             self.add_gating_condition()
 
+        self.add_terra_npc() # TODO: hide her by default, maybe by updating the map event or setting the event_byte/event_bit
+
         #TEST: add an NPC to Blackjack that triggers Marshal battle #TODO REMOVE
         from data.bosses import name_pack
         src = [
@@ -174,7 +196,6 @@ class NarsheMoogleDefense(Event):
         space = Write(Bank.CC, src, "TEST Marshal battle")
         test_marshal_battle = space.start_address
 
-        from data.npc import NPC
         test_npc = NPC()
         test_npc.x = 16
         test_npc.y = 4
@@ -191,8 +212,6 @@ class NarsheMoogleDefense(Event):
         marshal_npc.event_byte = npc_bit.event_byte(npc_bit.MARSHAL_NARSHE_WOB)
         marshal_npc.event_bit = npc_bit.event_bit(npc_bit.MARSHAL_NARSHE_WOB)
 
-        #TODO Replace Terra commands in script with new NPC for which we can manipulate the sprite/palette to match the reward
-
         # ensure that the terra falls in hole event never triggers, as we're reusing the associated event bit
         space = Reserve(0xca2e5, 0xca2e5, "terra falls in hole event start")
         space.write(
@@ -204,13 +223,9 @@ class NarsheMoogleDefense(Event):
             field.FadeOutScreen(),
             field.WaitForFade(),
             field.HideEntity(field_entity.PARTY0),
+            field.SetEventBit(npc_bit.MARSHAL_NARSHE_WOB), # Show "Terra" in south caves and Marshal in battle
+            field.SetEventBit(npc_bit.TERRA_COLLAPSED_NARSHE_WOB), # Show collapsed "Terra"
             field.LoadMap(0x32, direction.UP, True, 55, 11),
-            field.CreateEntity(character_id["TERRA"]),
-            field.EntityAct(character_id["TERRA"], True,
-                field_entity.SetPosition(55, 11),
-                field_entity.Turn(data.direction.UP)
-            ),
-            field.ShowEntity(character_id["TERRA"]),
             field.FadeInScreen(),
             field.WaitForFade(),
             field.Call(0xCCA2EB) # 'Got her!' scene
@@ -228,14 +243,23 @@ class NarsheMoogleDefense(Event):
                                 dest2 = field.RETURN)
         )
 
+        #Replace Terra commands in script with new NPC for which we can manipulate the sprite/palette to match the reward
+        terra_action_queues = [0xCA2EB, 0xCA2F3, 0xCA31F, 0xCA32D, 0xCA34F, 0xCA362, 0xCA371, 0xCA38B, 0xCA390, 0xCA397, 0xCA3BC]
+        for address in terra_action_queues:
+            space = Reserve(address, address, "terra chased action queues")
+            space.write(self.terra_npc_id)
+
         # Clear got her dialog
         space = Reserve(0xca2f0, 0xca2f2, "dialog: Got her", field.NOP()) # 'Got her' dialog
 
-        # clear out the flashback, but show "Locke" in to allow for drop-down
-        #space = Reserve(0xca436, 0xca75a, "Terra flashback", field.NOP()) # with fade out
-        space = Reserve(0xca3f9, 0xca75a, "Terra fall and flashback", field.NOP()) # with fade out
+        # clear out Terra's fall & flashback, but show "Locke" (party leader) to allow for drop-down
+        space = Reserve(0xca3f9, 0xca769, "Terra fall and flashback", field.NOP())
         space.write(
+            
+            field.ShowEntity(self.COLLAPSED_TERRA_NPC_ID),
+            field.HideEntity(self.MARSHAL_NPC_ID),
             field.ShowEntity(field_entity.PARTY0),
+            field.RefreshEntities(),
             field.StartSong(13), # play song: Locke
             field.SetEventBit(event_bit.TEMP_SONG_OVERRIDE), # keep song playing
             field.Branch(space.end_address + 1), # skip nops
@@ -257,7 +281,7 @@ class NarsheMoogleDefense(Event):
         # No dialog starting at cc/a85f -- reasonable point to add in the Marshal NPC
         space = Reserve(0xca85f, 0xca86f, "dialog: There's a whole bunch of 'em + Kupo", field.NOP())
         space.write(
-            field.SetEventBit(npc_bit.MARSHAL_NARSHE_WOB), # show the Marshal NPC
+            field.ShowEntity(self.MARSHAL_NPC_ID), # show the Marshal NPC
         )
 
         # No dialog at cc/a8b3
@@ -282,9 +306,6 @@ class NarsheMoogleDefense(Event):
             field.Call(self.refresh_characters_and_select_parties_with_moogles),
             field.Branch(space.end_address + 1), # skip nops
         )
-
-
-        # TODO: why is party collapsed coming out of moogle selection? Maybe because Terra's in party?
 
         # Clear use of event_bit.12E (TERRA_COLLAPSED_NARHSE_WOB) and event_bit.003 (moogle defense) at cc/aaab so that we can reuse 12E 
         # and so that 003 doesn't cause issues at WoB Narshe entrance
