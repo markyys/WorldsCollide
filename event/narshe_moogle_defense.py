@@ -101,91 +101,37 @@ class NarsheMoogleDefense(Event):
         self.refresh_characters_and_select_parties_with_moogles = space.start_address
 
     def marshal_battle_mod(self):
-        boss_pack_id = self.get_boss("Rizopas")
+        # Replace Marshal battle
+        boss_pack_id = self.get_boss("Marshal")
 
         space = Reserve(0xcadac, 0xcadae, "marshal invoke battle", field.NOP())
         space.write(
             field.InvokeBattle(boss_pack_id, check_game_over = False)
         )
 
-    def add_terra_npc(self):
+    def terra_npc_mod(self):
         # Add an NPC to replace Terra during the chase scene in Narshe South Caves (map 50). 
         # By doing so, it allows us to change her sprite without affecting a party Terra
-        terra_npc = NPC()
-        terra_npc.x = 55
-        terra_npc.y = 11
-        terra_npc.sprite = self.characters.get_sprite(self.characters.MOG)
-        terra_npc.palette = self.characters.get_palette(self.characters.MOG)
-        terra_npc.direction = direction.UP
-        terra_npc.speed = 0
-        terra_npc.event_byte = npc_bit.event_byte(npc_bit.MARSHAL_NARSHE_WOB) #dual purpose with showing Marshal NPC
-        terra_npc.event_bit = npc_bit.event_bit(npc_bit.MARSHAL_NARSHE_WOB)
-        self.terra_npc_id = self.maps.append_npc(50, terra_npc)
+        self.terra_npc = NPC()
+        self.terra_npc.x = 55
+        self.terra_npc.y = 11
+        self.terra_npc.direction = direction.UP
+        self.terra_npc.speed = 0
+        self.terra_npc.event_byte = npc_bit.event_byte(npc_bit.MARSHAL_NARSHE_WOB) #dual purpose with showing Marshal NPC
+        self.terra_npc.event_bit = npc_bit.event_bit(npc_bit.MARSHAL_NARSHE_WOB)
+        self.terra_npc_id = self.maps.append_npc(50, self.terra_npc)
         
         # Replace collapsed Terra NPC
-        terra_collapsed_npc = self.maps.get_npc(self.WOB_MAP_ID, self.COLLAPSED_TERRA_NPC_ID)
-        terra_collapsed_npc.sprite = self.characters.get_sprite(self.characters.MOG)
-        terra_collapsed_npc.palette = self.characters.get_palette(self.characters.MOG)
-        
-    def after_battle_mod(self):
-        # Victory condition (marshal defeated)
-        # Remove moogles from party 
-        src = [ 
-            field.FadeOutScreen(),
-            field.WaitForFade(),
+        self.terra_collapsed_npc = self.maps.get_npc(self.WOB_MAP_ID, self.COLLAPSED_TERRA_NPC_ID)
 
-            field.ClearEventBit(event_bit.TEMP_SONG_OVERRIDE), # allow song to change on map change
-            field.ClearEventBit(npc_bit.MARSHAL_NARSHE_WOB), # Remove Marshal and "Terra" in south caves
-            field.ClearEventBit(npc_bit.TERRA_COLLAPSED_NARSHE_WOB), # Remove collapsed Terra
+        # ensure that the terra falls in hole event never triggers, as we're reusing the associated event bit
+        space = Reserve(0xca2e5, 0xca2e5, "terra falls in hole event start")
+        space.write(
+            field.Return()
+        )
 
-            Read(0xcaded, 0xcadf2), # load map
-
-            field.HideEntity(0x1B), # the exit block at top of map
-
-            field.SetParty(1),
-            field.Call(field.REMOVE_ALL_CHARACTERS_FROM_ALL_PARTIES),
-        ]
-        for character_idx in range(self.characters.CHARACTER_COUNT):
-            src += [
-                # Restore character appearance, name, and properties
-                field.SetSprite(character_idx, self.characters.get_sprite(character_idx)),
-                field.SetPalette(character_idx, self.characters.get_palette(character_idx)),
-                field.SetName(character_idx, character_idx),
-                field.SetProperties(character_idx, character_idx),
-            ]
-        src += [ 
-            field.Call(field.REFRESH_CHARACTERS_AND_SELECT_PARTY),
-            field.UpdatePartyLeader(),
-            field.ShowEntity(field_entity.PARTY0),
-            field.RefreshEntities(),
-
-            field.FreeScreen(),
-
-            field.FadeInScreen(),
-            field.WaitForFade(),
-
-            field.SetEventBit(event_bit.FINISHED_MOOGLE_DEFENSE),
-            field.FreeMovement(),
-
-            # hide Arvis 
-            field.ClearEventBit(npc_bit.ARVIS_INTRO),
-            field.FinishCheck(),
-            field.Return(),
-        ]
-        space = Reserve(0xcade5, 0xcb04f, "moogle defense victory", field.NOP())
-        space.write(src)
-
-    def add_gating_condition(self):
-        #TODO: if Mog not recruited, hide Arvis via map 30 NPC 1 entrance event (CC/395A)
-        pass
-
-    def mod(self):
-        if self.args.character_gating:
-            self.add_gating_condition()
-
-        self.add_terra_npc() # TODO: hide her by default, maybe by updating the map event or setting the event_byte/event_bit
-
-        #TEST: add an NPC to Blackjack that triggers Marshal battle #TODO REMOVE
+    def marshal_test_mod(self):
+        # Test code to add a Marshal battle NPC to Blackjack
         from data.bosses import name_pack
         src = [
             field.InvokeBattle(name_pack["Marshal"], 17),
@@ -205,19 +151,14 @@ class NarsheMoogleDefense(Event):
         test_npc.speed = 0
         test_npc.set_event_address(test_marshal_battle)
         self.maps.append_npc(0x6, test_npc)
-        # TODO: remove above here (Test code)
 
+    def marshal_npc_mod(self):
         # Change the NPC bit that activates Marshal
         marshal_npc = self.maps.get_npc(self.WOB_MAP_ID, 0x12)
         marshal_npc.event_byte = npc_bit.event_byte(npc_bit.MARSHAL_NARSHE_WOB)
         marshal_npc.event_bit = npc_bit.event_bit(npc_bit.MARSHAL_NARSHE_WOB)
 
-        # ensure that the terra falls in hole event never triggers, as we're reusing the associated event bit
-        space = Reserve(0xca2e5, 0xca2e5, "terra falls in hole event start")
-        space.write(
-            field.Return()
-        )
-
+    def arvis_start_mod(self):
         # Actions after accepting
         src = [
             field.FadeOutScreen(),
@@ -233,9 +174,17 @@ class NarsheMoogleDefense(Event):
         space = Write(Bank.CC, src, "load narshe caves map for Terra event")
         got_her_map_change = space.start_address
 
+        reward_text = ""
+        if self.reward.type == RewardType.CHARACTER:
+            reward_text = "pursuing someone important"
+        elif self.reward.type == RewardType.ESPER:
+            reward_text = "looking for a glowing stone"
+        elif self.reward.type == RewardType.ITEM:
+            reward_text = "looking for a rare treasure"
+
         # Change Arvis Script
         prepared_dialog = 0x21 # reuse "OLD MAN: Make your way out through the mines! I’ll keep these brutes occupied!"
-        self.dialogs.set_text(prepared_dialog, "ARVIS: Took you long enough! Will you help?<line><choice> Yes<line><choice> No<end>")
+        self.dialogs.set_text(prepared_dialog, f"Imperial troops are {reward_text} even as we speak! You must stop them!<line><line> Will you help?<line><choice> Yes<line><choice> No<end>")
         space = Reserve(0xca06f, 0xca07d, "arvis dialog", field.NOP())
         space.write(
              field.DialogBranch(prepared_dialog,
@@ -243,6 +192,7 @@ class NarsheMoogleDefense(Event):
                                 dest2 = field.RETURN)
         )
 
+    def event_start_mod(self):
         #Replace Terra commands in script with new NPC for which we can manipulate the sprite/palette to match the reward
         terra_action_queues = [0xCA2EB, 0xCA2F3, 0xCA31F, 0xCA32D, 0xCA34F, 0xCA362, 0xCA371, 0xCA38B, 0xCA390, 0xCA397, 0xCA3BC]
         for address in terra_action_queues:
@@ -311,10 +261,113 @@ class NarsheMoogleDefense(Event):
         # and so that 003 doesn't cause issues at WoB Narshe entrance
         space = Reserve(0xcaaab, 0xcaaae, "set terra falls event bit & initiated moogle defense bit", field.NOP())
 
-        # Replace Marshal battle
+    def after_battle_mod(self, reward_instructions):
+        # Victory condition (marshal defeated)
+        # Remove moogles from party 
+        src = [ 
+            reward_instructions, 
+
+            field.FadeOutScreen(),
+            field.WaitForFade(),
+
+            field.ClearEventBit(event_bit.TEMP_SONG_OVERRIDE), # allow song to change on map change
+            field.ClearEventBit(npc_bit.MARSHAL_NARSHE_WOB), # Remove Marshal and "Terra" in south caves
+            field.ClearEventBit(npc_bit.TERRA_COLLAPSED_NARSHE_WOB), # Remove collapsed Terra
+
+            Read(0xcaded, 0xcadf2), # load map
+
+            field.HideEntity(0x1B), # the exit block at top of map
+
+            field.SetParty(1),
+            field.Call(field.REMOVE_ALL_CHARACTERS_FROM_ALL_PARTIES),
+        ]
+        for character_idx in range(self.characters.CHARACTER_COUNT):
+            src += [
+                # Restore character appearance, name, and properties
+                field.SetSprite(character_idx, self.characters.get_sprite(character_idx)),
+                field.SetPalette(character_idx, self.characters.get_palette(character_idx)),
+                field.SetName(character_idx, character_idx),
+                field.SetProperties(character_idx, character_idx),
+            ]
+        src += [ 
+            field.Call(field.REFRESH_CHARACTERS_AND_SELECT_PARTY),
+            field.UpdatePartyLeader(),
+            field.ShowEntity(field_entity.PARTY0),
+            field.RefreshEntities(),
+
+            field.FreeScreen(),
+
+            field.FadeInScreen(),
+            field.WaitForFade(),
+
+            field.SetEventBit(event_bit.FINISHED_MOOGLE_DEFENSE),
+            field.FreeMovement(),
+
+            # hide Arvis 
+            field.ClearEventBit(npc_bit.ARVIS_INTRO),
+            field.FinishCheck(),
+            field.Return(),
+        ]
+        space = Reserve(0xcade5, 0xcb04f, "moogle defense victory", field.NOP())
+        space.write(src)
+
+    def add_gating_condition(self):
+        #TODO: if Mog not recruited, hide Arvis via map 30 NPC 1 entrance event (CC/395A)
+        pass
+
+    def character_mod(self, character):
+        sprite = character
+        self.terra_npc.sprite = sprite
+        self.terra_npc.palette = self.characters.get_palette(sprite)
+        self.terra_collapsed_npc.sprite = sprite
+        self.terra_collapsed_npc.palette = self.characters.get_palette(sprite)
+
+        self.after_battle_mod([
+            field.RecruitCharacter(character),
+        ])
+
+    def esper_item_mod(self, esper_item_instructions):
+        #Using thematic Moogle sprite for Esper/Items
+        esper_item_sprite = self.characters.get_sprite(self.characters.MOG)
+        self.terra_npc.sprite = esper_item_sprite
+        self.terra_npc.palette = self.characters.get_palette(self.terra_npc.sprite)
+        self.terra_collapsed_npc.sprite = esper_item_sprite
+        self.terra_collapsed_npc.palette = self.characters.get_palette(self.terra_collapsed_npc.sprite)
+
+        self.after_battle_mod(esper_item_instructions)
+
+    def esper_mod(self, esper):
+        self.esper_item_mod([
+            field.AddEsper(esper),
+            field.Dialog(self.espers.get_receive_esper_dialog(esper)),
+        ])
+
+    def item_mod(self, item):
+        self.esper_item_mod([
+            field.AddItem(item),
+            field.Dialog(self.items.get_receive_dialog(item)),
+        ])
+
+    def mod(self):
+        if self.args.character_gating:
+            self.add_gating_condition()
+
+        self.terra_npc_mod() 
+        #TEST: add an NPC to Blackjack that triggers Marshal battle #TODO REMOVE
+        self.marshal_test_mod()
+
+        self.marshal_npc_mod()
+
+        self.arvis_start_mod()
+        self.event_start_mod()
         self.marshal_battle_mod()
 
-        self.after_battle_mod()
+        if self.reward.type == RewardType.CHARACTER:
+            self.character_mod(self.reward.id)
+        elif self.reward.type == RewardType.ESPER:
+            self.esper_mod(self.reward.id)
+        elif self.reward.type == RewardType.ITEM:
+            self.item_mod(self.reward.id)
 
         self.log_reward(self.reward)
 
