@@ -130,8 +130,9 @@ class EnemyFormations():
             rage_id["Barb-e"],
             rage_id["Retainer"]
         ]
-        self.formations[bosses.name_formation["Marshal"]].enemy_ids[0] = random.choice(possible_minions)
-        self.formations[bosses.name_formation["Marshal"]].enemy_ids[1] = random.choice(possible_minions)
+        random_minion = random.choice(possible_minions)
+        self.formations[bosses.name_formation["Marshal"]].enemy_ids[0] = random_minion
+        self.formations[bosses.name_formation["Marshal"]].enemy_ids[1] = random_minion
 
 
     def add_chupon(self):

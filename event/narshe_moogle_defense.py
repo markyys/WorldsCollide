@@ -93,7 +93,6 @@ class NarsheMoogleDefense(Event):
             field.RefreshEntities(),
             field.UpdatePartyLeader(),
             field.ShowEntity(field_entity.PARTY0),
-            field.RefreshEntities(),
             field.Return(),
         ]
 
@@ -235,7 +234,7 @@ class NarsheMoogleDefense(Event):
         )
 
         # No dialog at cc/a8b3
-        space = Reserve(0xca8b3, 0xca8b6, "dialog: Moogles! Are you saying you want to help me?", field.NOP())
+        space = Reserve(0xca8b2, 0xca8b6, "dialog: Moogles! Are you saying you want to help me?", field.NOP())
 
         # No Kupo!!! dialog
         space = Reserve(0xca8d2, 0xca8d4, "dialog: Kupo!!!", field.NOP())
@@ -251,7 +250,7 @@ class NarsheMoogleDefense(Event):
         # - use party selection screen to select the party (with Moogles filled in)
         self.refresh_characters_and_select_parties_with_moogles_mod()
 
-        space = Reserve(0xca93b, 0xcaa04, "moogle defense party creation", field.NOP())
+        space = Reserve(0xca93b, 0xcaa03, "moogle defense party creation", field.NOP())
         space.write(
             field.Call(self.refresh_characters_and_select_parties_with_moogles),
             field.Branch(space.end_address + 1), # skip nops
