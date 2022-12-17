@@ -133,7 +133,8 @@ class NarsheMoogleDefense(Event):
         # Test code to add a Marshal battle NPC to Blackjack
         from data.bosses import name_pack
         src = [
-            field.InvokeBattle(name_pack["Marshal"], 17),
+            field.LoadMap(30, direction.UP, True, 62, 37),
+            #field.InvokeBattle(name_pack["Marshal"], 17),
             field.FadeInScreen(),
             field.WaitForFade(),
             field.Return(),
@@ -204,8 +205,9 @@ class NarsheMoogleDefense(Event):
         # clear out Terra's fall & flashback, but show "Locke" (party leader) to allow for drop-down
         space = Reserve(0xca3f9, 0xca769, "Terra fall and flashback", field.NOP())
         space.write(
-            
             field.ShowEntity(self.COLLAPSED_TERRA_NPC_ID),
+            field.EntityAct(self.COLLAPSED_TERRA_NPC_ID, True, 
+                field_entity.SetSpriteLayer(0)),
             field.HideEntity(self.MARSHAL_NPC_ID),
             field.ShowEntity(field_entity.PARTY0),
             field.RefreshEntities(),
@@ -235,6 +237,11 @@ class NarsheMoogleDefense(Event):
 
         # No dialog at cc/a8b3
         space = Reserve(0xca8b2, 0xca8b6, "dialog: Moogles! Are you saying you want to help me?", field.NOP())
+        space.write(
+            field.EntityAct(0x11, True, 
+                field_entity.SetSpriteLayer(2),
+            ),
+        )
 
         # No Kupo!!! dialog
         space = Reserve(0xca8d2, 0xca8d4, "dialog: Kupo!!!", field.NOP())
