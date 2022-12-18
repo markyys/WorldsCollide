@@ -4,6 +4,14 @@ from constants.entities import character_id
 import data.direction
 from data.npc import NPC
 
+
+
+# Seed to test:
+# Problem(12/18): Getting rewarded with Esper from next check
+# Seed      vy5vi4xa7pvm
+# Flags     -sl -sc1 terra -sal -stl 30 -rnl -com 10299898982998989898989898 -xpm 99 -lsced 2 -hmced 2 -xgced 2 -ase 0.5 -bbs -drloc shuffle -stloc mix -be -fer 0 -gp 100000 -smc 3 -sws 10 -mca -frm -move bd
+# Hash      Chancellor, Leo, Old Man, Yura
+
 class NarsheMoogleDefense(Event):
     WOB_MAP_ID = 0x33
     MARSHAL_NPC_ID = 0x12
@@ -24,8 +32,8 @@ class NarsheMoogleDefense(Event):
             field.ClearEventBit(npc_bit.MARSHAL_NARSHE_WOB), # do not show marshal
         )
 
-    def refresh_characters_and_select_parties_with_moogles_mod(self):
-        # Method for selecting parties or moogle replacements
+    def _add_moogle_to_party_src(self, party_idx):
+        # Event logic to add a moogle to the given party
 
         # map of characters to replacement moogles. Our logic will be to replace any characters not in our party with their mapped moogle.
         # index is the character (0 - 14) -- note: no Terra, Locke, or Umaro replacement
@@ -33,71 +41,107 @@ class NarsheMoogleDefense(Event):
         MOOGLE_REPLACEMENT = [
             -1, #TERRA
             -1, #LOCKE
-            0x12,
-            0x13,
-            0x14,
-            0x15,
-            0x16,
-            0x17,
-            0x18,
-            0x19,
+            0x12, # CYAN -> KUPEK
+            0x13, # SHADOW -> KUPOP
+            0x14, # EDGAR -> KUMAMA
+            0x15, # SABIN -> KUKU
+            0x16, # CELES -> KUTAN
+            0x17, # STRAGO -> KUPAN
+            0x18, # RELM -> KUSHU
+            0x19, # SETZER -> KURIN
             0x0A, # MOG
-            0x1A,
-            0x1B,
+            0x1A, # GAU -> KURU
+            0x1B, # GOGO -> KAMOG
             -1, #UMARO
         ]
 
-        # create all available characters, select count parties, delete characters not placed into any party
+        # Goes through moogles, checking whether they're already created (either them or their associated character)
+        MOOGLE_CHARACTERS = range(2,13) # range of characters replacable with moogles
         src = [
-            field.FadeOutScreen(),
-            field.WaitForFade(),
-            field.Call(field.DELETE_ALL_CHARACTERS),
+            field.LoadCreatedCharacters(),
         ]
-
-        for character_idx, moogle_id in enumerate(MOOGLE_REPLACEMENT):
-            next_character_branch = f"NEXT_CHARACTER_{character_idx}"
-            if moogle_id == -1:
-                # no moogle; check if the character exists -- If so, create entity. Vanilla logic from CA/C90B
+        for character_idx in MOOGLE_CHARACTERS:
+            moogle_id = MOOGLE_REPLACEMENT[character_idx]
+            src += [
+                # Has the character already been created?
+                field.BranchIfEventBitSet(event_bit.multipurpose(character_idx), f"SKIP_{character_idx}"), 
+                #if not, make it a moogle
+                # Make character look like a moogle
+                field.SetSprite(character_idx, self.characters.get_sprite(self.characters.MOG)),
+                field.SetPalette(character_idx, self.characters.get_palette(self.characters.MOG)),
+                # Give it the name and properties of the moogle
+                field.SetName(character_idx, moogle_id),
+                field.SetProperties(character_idx, moogle_id),
+            ]
+            if self.args.start_average_level:
                 src += [
-                    field.BranchIfEventBitClear(0x2F0 + character_idx, next_character_branch),
-                    field.CreateEntity(character_idx),
-                    next_character_branch,
-                ] 
-            else:
-                # moogle exists -- check if the character exists -- if not, replace with moogle.
-                src += [
-                    field.BranchIfEventBitSet(0x2F0 + character_idx, next_character_branch),
-                    # Ref: CC/A93D to make characters into moogles
-                    # Make character look like a moogle
-                    field.SetSprite(character_idx, self.characters.get_sprite(self.characters.MOG)),
-                    field.SetPalette(character_idx, self.characters.get_palette(self.characters.MOG)),
-                    # Give it the name and properties of the moogle
-                    field.SetName(character_idx, moogle_id),
-                    field.SetProperties(character_idx, moogle_id),
+                    # Average character level via field command - example ref: CC/3A2C
+                    field.AverageLevel(character_idx),
+                    field.RestoreHp(character_idx, 0x7f), # restore all HP
+                    field.RestoreMp(character_idx, 0x7f), # restore all MP
                 ]
-                if self.args.start_average_level:
-                    src += [
-                        # Average character level via field command - example ref: CC/3A2C
-                        field.AverageLevel(character_idx),
-                        field.RestoreHp(character_idx, 0x7f), # restore all HP
-                        field.RestoreMp(character_idx, 0x7f), # restore all HP
-                    ]
-                src += [
-                    next_character_branch,
-                    field.CreateEntity(character_idx),
-                ]
+            src += [
+                field.CreateEntity(character_idx),
+                field.AddCharacterToParty(character_idx, party_idx),
+                field.Branch("RETURN"), # added 1 - we're done
+                f"SKIP_{character_idx}", 
+            ]
         src += [
-            field.RefreshEntities(),
-            field.SelectParties(3),
-            field.Call(field.DELETE_CHARACTERS_NOT_IN_ANY_PARTY),
-            field.RefreshEntities(),
-            field.UpdatePartyLeader(),
-            field.ShowEntity(field_entity.PARTY0),
+            f"RETURN",
             field.Return(),
         ]
 
-        space = Write(Bank.CC, src, "field function refresh characters and select three parties with moogles")
-        self.refresh_characters_and_select_parties_with_moogles = space.start_address
+        return src
+
+    def add_moogles_to_parties(self):
+        # Method for selecting parties or moogle replacements
+
+        self.add_moogle_to_party = [] #note: 0-indexed whereas parties are 1 indexed in code
+        # Create the needed methods for adding a moogle to a party
+        for i in range(1,4):
+            src = self._add_moogle_to_party_src(i)
+            space = Write(Bank.CC, src, f"Add moogle to party {i}")
+            self.add_moogle_to_party.append(space.start_address)
+
+        src = [
+            # field.FadeOutScreen(),
+            # field.WaitForFade(),
+            field.Call(field.DELETE_CHARACTERS_NOT_IN_ANY_PARTY),
+        ]
+        # special logic for party 1, which will already have party members.
+        # Here, we add moogles to fill in gaps
+        src += [
+            field.SetParty(1),
+            field.BranchIfPartySize(1, "ADD_3"),
+            field.BranchIfPartySize(2, "ADD_2"),
+            field.BranchIfPartySize(3, "ADD_1"),
+            field.BranchIfPartySize(4, "ADD_0"),
+            "ADD_3",
+            field.Call(self.add_moogle_to_party[0]),
+            "ADD_2",
+            field.Call(self.add_moogle_to_party[0]),
+            "ADD_1",
+            field.Call(self.add_moogle_to_party[0]),
+            "ADD_0",
+        ]
+
+        # For parties 2 and 3, just iterate 4 times each
+        for party in range(2,4):
+             for party_spot in range(0, 4):
+                 src += [
+                     field.Call(self.add_moogle_to_party[party-1])
+                 ]
+
+        src += [
+            field.RefreshEntities(),
+            field.Call(field.DELETE_CHARACTERS_NOT_IN_ANY_PARTY),
+        ]
+
+        space = Reserve(0xca905, 0xcaa03, "moogle defense explain and moogle defense party creation")
+        space.write(
+            src,
+            field.Branch(space.end_address+1) # skip nops
+        )
 
     def marshal_battle_mod(self):
         # Replace Marshal battle
@@ -226,6 +270,10 @@ class NarsheMoogleDefense(Event):
             space = Reserve(address, address, "locke drop down to protect terra")
             space.write(field_entity.PARTY0)
 
+        # Speed up Marshal coming down stairs
+        space = Reserve(0xca7dd, 0xca7dd, "marshal speed")
+        space.write(field_entity.Speed.FAST)
+
         # Clear guard dialog
         space = Reserve(0xca7ee, 0xca7f0, "dialog: Now we gotcha!", field.NOP())
 
@@ -246,22 +294,8 @@ class NarsheMoogleDefense(Event):
         # No Kupo!!! dialog
         space = Reserve(0xca8d2, 0xca8d4, "dialog: Kupo!!!", field.NOP())
 
-        # Disable cc/a905 - cc/a93a
-        space = Reserve(0xca905, 0xca93a, "moogle defense explain", field.NOP())
-        space.write(
-            field.Branch(space.end_address + 1), # skip nops
-        )
-
-        # Change logic at a93a - aa03 for moogles 
-        # - make sure it doesn't replace characters we have
-        # - use party selection screen to select the party (with Moogles filled in)
-        self.refresh_characters_and_select_parties_with_moogles_mod()
-
-        space = Reserve(0xca93b, 0xcaa03, "moogle defense party creation", field.NOP())
-        space.write(
-            field.Call(self.refresh_characters_and_select_parties_with_moogles),
-            field.Branch(space.end_address + 1), # skip nops
-        )
+        # Change logic for moogle party selection to account for any party variation
+        self.add_moogles_to_parties()
 
         # Clear use of event_bit.12E (TERRA_COLLAPSED_NARHSE_WOB) and event_bit.003 (moogle defense) at cc/aaab so that we can reuse 12E 
         # and so that 003 doesn't cause issues at WoB Narshe entrance
@@ -295,7 +329,7 @@ class NarsheMoogleDefense(Event):
                 field.SetName(character_idx, character_idx),
                 field.SetProperties(character_idx, character_idx),
             ]
-        src += [ 
+        src += [
             field.Call(field.REFRESH_CHARACTERS_AND_SELECT_PARTY),
             field.UpdatePartyLeader(),
             field.ShowEntity(field_entity.PARTY0),

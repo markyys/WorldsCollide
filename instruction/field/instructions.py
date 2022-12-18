@@ -830,6 +830,11 @@ class LoadPartyMembers(_Instruction):
         # caseword bits = characters in party
         super().__init__(0xde)
 
+class LoadCreatedCharacters(_Instruction):
+    def __init__(self):
+        # caseword bits = characters created
+        super().__init__(0xdf)
+
 class LoadRecruitedCharacters(_Instruction):
     def __init__(self):
         # caseword bits = characters recruited
