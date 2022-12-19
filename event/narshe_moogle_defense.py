@@ -99,8 +99,7 @@ class NarsheMoogleDefense(Event):
         self.add_moogle_to_party = [] #note: 0-indexed whereas parties are 1 indexed in code
         # Create the needed methods for adding a moogle to a party
         for i in range(1,4):
-            src = self._add_moogle_to_party_src(i)
-            space = Write(Bank.CC, src, f"Add moogle to party {i}")
+            space = Write(Bank.CC, self._add_moogle_to_party_src(i), f"Add moogle to party {i}")
             self.add_moogle_to_party.append(space.start_address)
 
         src = [
@@ -137,10 +136,10 @@ class NarsheMoogleDefense(Event):
             field.Call(field.DELETE_CHARACTERS_NOT_IN_ANY_PARTY),
         ]
 
-        space = Reserve(0xca905, 0xcaa03, "moogle defense explain and moogle defense party creation")
+        space = Reserve(0xca905, 0xcaa03, "moogle defense party creation", field.NOP())
         space.write(
             src,
-            field.Branch(space.end_address+1) # skip nops
+            field.Branch(space.end_address + 1), # skip nops
         )
 
     def marshal_battle_mod(self):
@@ -213,7 +212,7 @@ class NarsheMoogleDefense(Event):
             field.LoadMap(0x32, direction.UP, True, 55, 11),
             field.FadeInScreen(),
             field.WaitForFade(),
-            field.Call(0xCCA2EB) # 'Got her!' scene
+            field.Branch(0xCCA2EB) # 'Got her!' scene
         ]
         space = Write(Bank.CC, src, "load narshe caves map for Terra event")
         got_her_map_change = space.start_address
