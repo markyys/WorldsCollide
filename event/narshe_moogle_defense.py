@@ -111,6 +111,10 @@ class NarsheMoogleDefense(Event):
         # Here, we add moogles to fill in gaps
         src += [
             field.SetParty(1),
+            # if shadow not in party, remove dog block from him so that KUPOP doesn't have Interceptor
+            field.BranchIfCharacterInParty(self.characters.SHADOW, "HAVE_SHADOW"),
+            field.RemoveStatusEffects(self.characters.SHADOW, field.Status.DOG_BLOCK),
+            "HAVE_SHADOW",
             field.BranchIfPartySize(1, "ADD_3"),
             field.BranchIfPartySize(2, "ADD_2"),
             field.BranchIfPartySize(3, "ADD_1"),
@@ -329,6 +333,9 @@ class NarsheMoogleDefense(Event):
                 field.SetProperties(character_idx, character_idx),
             ]
         src += [
+            # give Shadow Interceptor again
+            field.AddStatusEffects(self.characters.SHADOW, field.Status.DOG_BLOCK),
+            
             field.Call(field.REFRESH_CHARACTERS_AND_SELECT_PARTY),
             field.UpdatePartyLeader(),
             field.ShowEntity(field_entity.PARTY0),
