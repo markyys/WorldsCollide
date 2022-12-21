@@ -15,6 +15,8 @@ from data.npc import NPC
 class NarsheMoogleDefense(Event):
     WOB_MAP_ID = 0x33
     MARSHAL_NPC_ID = 0x12
+    LEFT_MOOGLE_NPC_ID = 0x10
+    RIGHT_MOOGLE_NPC_ID = 0x11
     COLLAPSED_TERRA_NPC_ID = 0x19
 
     def name(self):
@@ -103,8 +105,8 @@ class NarsheMoogleDefense(Event):
             self.add_moogle_to_party.append(space.start_address)
 
         src = [
-            # field.FadeOutScreen(),
-            # field.WaitForFade(),
+            field.FadeOutScreen(),
+            field.WaitForFade(),
             field.Call(field.DELETE_CHARACTERS_NOT_IN_ANY_PARTY),
         ]
         # special logic for party 1, which will already have party members.
@@ -206,6 +208,31 @@ class NarsheMoogleDefense(Event):
         marshal_npc.event_bit = npc_bit.event_bit(npc_bit.MARSHAL_NARSHE_WOB)
 
     def arvis_start_mod(self):
+        # Update Narshe: Other Rooms entrance event
+        # - Hide Arvis if in WoR
+        # - Hide Arvis if character gating and no Mog
+        ARVIS_NPC = 0x11
+        src = [
+            field.BranchIfEventBitClear(event_bit.IN_WOR, "WOB"),
+            field.HideEntity(ARVIS_NPC),
+            "WOB",
+        ]
+        if self.args.character_gating:
+            src += [
+                field.BranchIfEventBitSet(event_bit.character_recruited(self.character_gate()), "RETURN"),
+                field.HideEntity(ARVIS_NPC),
+            ]
+        src += [
+            "RETURN",
+            Read(0xc395a, 0xc3965), # displaced code
+            field.Return(),
+        ]
+        space = Write(Bank.CC, src, "narshe moogle defense character gate")
+        entrance_event = space.start_address
+
+        space = Reserve(0xc395a, 0xc3965, "narshe: other rooms entrance event")
+        space.write(field.Branch(entrance_event))
+
         # Actions after accepting
         src = [
             field.FadeOutScreen(),
@@ -253,8 +280,6 @@ class NarsheMoogleDefense(Event):
         space = Reserve(0xca3f9, 0xca769, "Terra fall and flashback", field.NOP())
         space.write(
             field.ShowEntity(self.COLLAPSED_TERRA_NPC_ID),
-            field.EntityAct(self.COLLAPSED_TERRA_NPC_ID, True, 
-                field_entity.SetSpriteLayer(0)),
             field.HideEntity(self.MARSHAL_NPC_ID),
             field.ShowEntity(field_entity.PARTY0),
             field.RefreshEntities(),
@@ -262,6 +287,10 @@ class NarsheMoogleDefense(Event):
             field.SetEventBit(event_bit.TEMP_SONG_OVERRIDE), # keep song playing
             field.Branch(space.end_address + 1), # skip nops
         )
+
+        # replace overly long pause (~2 seconds) before locke drops down
+        space = Reserve(0xca778, 0xca778, "pre-locke drop pause")
+        space.write(field.Pause(0.50))
 
         # Change Locke actions to Party Leader
         locke_action_queues = [0xca76b, 0xca77b, 0xca786, 
@@ -274,7 +303,7 @@ class NarsheMoogleDefense(Event):
             space.write(field_entity.PARTY0)
 
         # Speed up Marshal coming down stairs
-        space = Reserve(0xca7dd, 0xca7dd, "marshal speed")
+        space = Reserve(0xca7dd, 0xca7dd, "marshal normal")
         space.write(field_entity.Speed.FAST)
 
         # Clear guard dialog
@@ -286,16 +315,26 @@ class NarsheMoogleDefense(Event):
             field.ShowEntity(self.MARSHAL_NPC_ID), # show the Marshal NPC
         )
 
-        # No dialog at cc/a8b3
-        space = Reserve(0xca8b2, 0xca8b6, "dialog: Moogles! Are you saying you want to help me?", field.NOP())
+        # Change moogles starting location to match their location at start of battle
+        space = Reserve(0xca8ab, 0xca8b1, "moogle 11 moves down left", field.NOP())
         space.write(
-            field.EntityAct(0x11, True, 
-                field_entity.SetSpriteLayer(2),
+            # just move down 1 to put at 15,13
+            field.EntityAct(self.RIGHT_MOOGLE_NPC_ID, True,
+                field_entity.Move(direction.DOWN, 1),
             ),
         )
 
-        # No Kupo!!! dialog
-        space = Reserve(0xca8d2, 0xca8d4, "dialog: Kupo!!!", field.NOP())
+        # Remove Locke-Moogle dialog - replace by moving moogle 10 down 1
+        space = Reserve(0xca8b2, 0xca8d4, "dialog: Moogles! Are you saying you want to help me? + Nod + dialog: Kupo!!!", field.NOP())
+        space.write(
+            field.EntityAct(self.LEFT_MOOGLE_NPC_ID, True,
+                field_entity.Turn(direction.DOWN),
+                field_entity.Move(direction.DOWN, 1),
+            )
+        )
+
+        # Remove small pause
+        space = Reserve(0xca8ff, 0xca8ff, "small pause before fade", field.NOP())
 
         # Change logic for moogle party selection to account for any party variation
         self.add_moogles_to_parties()
@@ -357,10 +396,6 @@ class NarsheMoogleDefense(Event):
         space = Reserve(0xcade5, 0xcb04f, "moogle defense victory", field.NOP())
         space.write(src)
 
-    def add_gating_condition(self):
-        #TODO: if Mog not recruited, hide Arvis via map 30 NPC 1 entrance event (CC/395A)
-        pass
-
     def character_mod(self, character):
         sprite = character
         self.terra_npc.sprite = sprite
@@ -395,9 +430,6 @@ class NarsheMoogleDefense(Event):
         ])
 
     def mod(self):
-        if self.args.character_gating:
-            self.add_gating_condition()
-
         self.terra_npc_mod() 
         #TEST: add an NPC to Blackjack that triggers Marshal battle #TODO REMOVE
         self.marshal_test_mod()
