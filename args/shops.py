@@ -131,6 +131,18 @@ def options(args):
     elif args.shop_sell_fraction0:
         sell_fraction = "0"
 
+    breakable_rods = "Available"
+    if args.shops_no_breakable_rods:
+        breakable_rods = "No"
+    elif args.shops_expensive_breakable_rods:
+        breakable_rods = "Expensive"
+
+    super_balls = "Available"
+    if args.shops_no_super_balls:
+        super_balls = "No"
+    elif args.shops_expensive_super_balls:
+        super_balls = "Expensive"
+
     result = [("Inventory", inventory)]
     if args.shop_inventory_shuffle_random:
         result.append(("Random Percent", f"{args.shop_inventory_shuffle_random_percent}%"))

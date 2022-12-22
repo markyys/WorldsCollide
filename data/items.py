@@ -220,9 +220,8 @@ class Items():
         elif self.args.shop_prices_random_percent:
             self.random_prices_percent()
 
-        if self.args.no_ultima:
-            from data.spell_names import name_id as spell_name_id
-            self.remove_learnable_spell(spell_name_id["Ultima"])
+        for a_spell_id in self.args.remove_learnable_spell_ids:
+            self.remove_learnable_spell(a_spell_id)
 
         if self.args.cursed_shield_battles_original:
             self.cursed_shield_battles = 256
@@ -298,6 +297,11 @@ class Items():
             exclude.append(name_id["Exp. Egg"])
         if self.args.no_illuminas:
             exclude.append(name_id["Illumina"])
+
+        from data.movement import AUTO_SPRINT, B_DASH
+        # Sprint Shoes are a literal dead item if any of these options
+        if self.args.no_sprint_shoes or self.args.movement in [AUTO_SPRINT, B_DASH]:
+            exclude.append(name_id["Sprint Shoes"])
         if self.args.no_free_paladin_shields:
             exclude.append(name_id["Paladin Shld"])
             exclude.append(name_id["Cursed Shld"])
