@@ -182,8 +182,8 @@ class NarsheMoogleDefense(Event):
         # Test code to add a Marshal battle NPC to Blackjack
         from data.bosses import name_pack
         src = [
-            field.LoadMap(30, direction.UP, True, 62, 37),
-            #field.InvokeBattle(name_pack["Marshal"], 17),
+            #field.LoadMap(30, direction.UP, True, 62, 37),
+            field.InvokeBattle(name_pack["Marshal"], 17),
             field.FadeInScreen(),
             field.WaitForFade(),
             field.Return(),
@@ -344,6 +344,9 @@ class NarsheMoogleDefense(Event):
         space = Reserve(0xcaaab, 0xcaaae, "set terra falls event bit & initiated moogle defense bit", field.NOP())
 
     def after_battle_mod(self, reward_instructions):
+        # Loss - remove Locke's name from dialog
+        self.dialogs.set_text(1744, "Couldn't hold out…!?<line>Uh oh…<end>")
+
         # Victory condition (marshal defeated)
         # Remove moogles from party 
         src = [ 
