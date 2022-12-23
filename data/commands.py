@@ -34,15 +34,16 @@ class Commands:
         # Remove Morph to ensure only 1 character gets Morph
         # Remove Rage to avoid any issues with Randomized Atma weapon
         # Remove X-Magic as they won't have any Magic
-        moogle_exclusions = [morph_id, name_id["Rage"], name_id["X Magic"]]
+        # Remove Blitz, SwdTech, Dance, and Lore because they won't have abilities within unless a party member does
+        moogle_exclusions = [morph_id, name_id["Rage"], name_id["X Magic"], name_id["Blitz"], name_id["SwdTech"], name_id["Lore"], name_id["Dance"]]
         for exclude in moogle_exclusions:
             try:
                 possible_moogle_commands.remove(exclude)
             except ValueError:
                 pass
-
-        for index in range(Characters.FIRST_MOOGLE, Characters.LAST_MOOGLE + 1):
-            self.characters[index].commands[1] = random.choice(possible_moogle_commands)
+        if len(possible_moogle_commands) > 0:
+            for index in range(Characters.FIRST_MOOGLE, Characters.LAST_MOOGLE + 1):
+                self.characters[index].commands[1] = random.choice(possible_moogle_commands)
 
         # if suplex a train condition exists, guarantee blitz
         import objectives

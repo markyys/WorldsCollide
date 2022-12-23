@@ -208,19 +208,24 @@ class NarsheMoogleDefense(Event):
         marshal_npc.event_bit = npc_bit.event_bit(npc_bit.MARSHAL_NARSHE_WOB)
 
     def arvis_start_mod(self):
+        # Move Arvis NPC
+        ARVIS_NPC_ID = 0x11
+        arvis_npc = self.maps.get_npc(30, ARVIS_NPC_ID)
+        arvis_npc.x = 61
+        arvis_npc.y = 36
+
         # Update Narshe: Other Rooms entrance event
         # - Hide Arvis if in WoR
         # - Hide Arvis if character gating and no Mog
-        ARVIS_NPC = 0x11
         src = [
             field.BranchIfEventBitClear(event_bit.IN_WOR, "WOB"),
-            field.HideEntity(ARVIS_NPC),
+            field.HideEntity(ARVIS_NPC_ID),
             "WOB",
         ]
         if self.args.character_gating:
             src += [
                 field.BranchIfEventBitSet(event_bit.character_recruited(self.character_gate()), "RETURN"),
-                field.HideEntity(ARVIS_NPC),
+                field.HideEntity(ARVIS_NPC_ID),
             ]
         src += [
             "RETURN",
