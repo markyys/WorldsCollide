@@ -59,14 +59,16 @@ class NarsheMoogleDefense(Event):
 
         # Goes through moogles, checking whether they're already created (either them or their associated character)
         MOOGLE_CHARACTERS = range(2,13) # range of characters replacable with moogles
-        src = [
-            field.LoadCreatedCharacters(),
-        ]
+        src = []
         for character_idx in MOOGLE_CHARACTERS:
             moogle_id = MOOGLE_REPLACEMENT[character_idx]
             src += [
-                # Has the character already been created?
-                field.BranchIfEventBitSet(event_bit.multipurpose(character_idx), f"SKIP_{character_idx}"), 
+                # Has the character been recruited (we aren't replacing them due to SetProperties)?
+                field.LoadRecruitedCharacters(),
+                field.BranchIfEventBitSet(event_bit.multipurpose(character_idx), f"SKIP_{character_idx}"),
+                # or, is the character currently in a party (aka, they're a moogle)?
+                field.LoadCreatedCharacters(),
+                field.BranchIfEventBitSet(event_bit.multipurpose(character_idx), f"SKIP_{character_idx}"),
                 #if not, make it a moogle
                 # Make character look like a moogle
                 field.SetSprite(character_idx, self.characters.get_sprite(self.characters.MOG)),
@@ -200,6 +202,39 @@ class NarsheMoogleDefense(Event):
         test_npc.speed = 0
         test_npc.set_event_address(test_marshal_battle)
         self.maps.append_npc(0x6, test_npc)
+
+
+        # Add Item-giver NPC
+        src = []
+        for i in range(0, 10):
+            src += [
+                field.AddItem("Potion", sound_effect = False),
+                field.AddItem("Fenix Down", sound_effect = False),
+                field.AddItem("Revivify", sound_effect = False),
+                field.AddItem("Antidote", sound_effect = False),
+                field.AddItem("Shuriken", sound_effect = False),
+                field.AddItem("Flash", sound_effect = False),
+            ]
+        src += [
+            field.AddItem("Sniper", sound_effect = False),
+            field.AddItem("Scimitar", sound_effect = False),
+            field.AddItem("Force Armor", sound_effect = False),
+            field.AddItem("Force Shld", sound_effect = False),
+            field.AddItem("Hero Ring", sound_effect = True),
+            field.Return()
+        ]
+        space = Write(Bank.CC, src, "TEST Marshal battle")
+        item_giver = space.start_address
+
+        item_giver_npc = NPC()
+        item_giver_npc.x = 17
+        item_giver_npc.y = 4
+        item_giver_npc.sprite = 33
+        item_giver_npc.palette = 2
+        item_giver_npc.direction = direction.DOWN
+        item_giver_npc.speed = 0
+        item_giver_npc.set_event_address(item_giver)
+        self.maps.append_npc(0x6, item_giver_npc)
 
     def marshal_npc_mod(self):
         # Change the NPC bit that activates Marshal
@@ -370,14 +405,18 @@ class NarsheMoogleDefense(Event):
 
             field.SetParty(1),
             field.Call(field.REMOVE_ALL_CHARACTERS_FROM_ALL_PARTIES),
+            field.LoadRecruitedCharacters(),
         ]
         for character_idx in range(self.characters.CHARACTER_COUNT):
             src += [
+                #only restore if character has not been recruited (meaning they were moogled)
+                field.BranchIfEventBitSet(event_bit.multipurpose(character_idx), f"SKIP_{character_idx}"), 
                 # Restore character appearance, name, and properties
                 field.SetSprite(character_idx, self.characters.get_sprite(character_idx)),
                 field.SetPalette(character_idx, self.characters.get_palette(character_idx)),
                 field.SetName(character_idx, character_idx),
                 field.SetProperties(character_idx, character_idx),
+                f"SKIP_{character_idx}",
             ]
         src += [
             # give Shadow Interceptor again
@@ -412,6 +451,11 @@ class NarsheMoogleDefense(Event):
         self.terra_collapsed_npc.palette = self.characters.get_palette(sprite)
 
         self.after_battle_mod([
+            # Restore character appearance, name, and properties
+            field.SetSprite(character, self.characters.get_sprite(character)),
+            field.SetPalette(character, self.characters.get_palette(character)),
+            field.SetName(character, character),
+            field.SetProperties(character, character),
             field.RecruitCharacter(character),
         ])
 
