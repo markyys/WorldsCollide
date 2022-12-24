@@ -4,14 +4,6 @@ from constants.entities import character_id
 import data.direction
 from data.npc import NPC
 
-
-
-# Seed to test:
-# Problem(12/18): Getting rewarded with Esper from next check
-# Seed      vy5vi4xa7pvm
-# Flags     -sl -sc1 terra -sal -stl 30 -rnl -com 10299898982998989898989898 -xpm 99 -lsced 2 -hmced 2 -xgced 2 -ase 0.5 -bbs -drloc shuffle -stloc mix -be -fer 0 -gp 100000 -smc 3 -sws 10 -mca -frm -move bd
-# Hash      Chancellor, Leo, Old Man, Yura
-
 class NarsheMoogleDefense(Event):
     WOB_MAP_ID = 0x33
     MARSHAL_NPC_ID = 0x12
@@ -184,7 +176,6 @@ class NarsheMoogleDefense(Event):
         # Test code to add a Marshal battle NPC to Blackjack
         from data.bosses import name_pack
         src = [
-            #field.LoadMap(30, direction.UP, True, 62, 37),
             field.InvokeBattle(name_pack["Marshal"], 17),
             field.FadeInScreen(),
             field.WaitForFade(),
@@ -243,16 +234,24 @@ class NarsheMoogleDefense(Event):
         marshal_npc.event_bit = npc_bit.event_bit(npc_bit.MARSHAL_NARSHE_WOB)
 
     def arvis_start_mod(self):
+        NARSHE_OTHER_ROOM_MAP_ID = 0x1e
+
         # Move Arvis NPC
         ARVIS_NPC_ID = 0x11
-        arvis_npc = self.maps.get_npc(30, ARVIS_NPC_ID)
+        arvis_npc = self.maps.get_npc(NARSHE_OTHER_ROOM_MAP_ID, ARVIS_NPC_ID)
         arvis_npc.x = 61
         arvis_npc.y = 36
 
         # Update Narshe: Other Rooms entrance event
+        # Hide the 6 NPCs in Mayor's house that share event code with Arvis.
+        src = []
+        for npc_id in range(0x15, 0x1b):
+            src += [
+                field.HideEntity(npc_id)
+            ]
         # - Hide Arvis if in WoR
         # - Hide Arvis if character gating and no Mog
-        src = [
+        src += [
             field.BranchIfEventBitClear(event_bit.IN_WOR, "WOB"),
             field.HideEntity(ARVIS_NPC_ID),
             "WOB",
