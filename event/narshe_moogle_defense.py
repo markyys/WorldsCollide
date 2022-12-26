@@ -410,6 +410,10 @@ class NarsheMoogleDefense(Event):
             src += [
                 #only restore if character has not been recruited (meaning they were moogled)
                 field.BranchIfEventBitSet(event_bit.multipurpose(character_idx), f"SKIP_{character_idx}"), 
+                field.RemoveStatusEffects(character_idx, field.Status.FLOAT | field.Status.DARKNESS | field.Status.ZOMBIE | field.Status.POISON | field.Status.VANISH | field.Status.IMP | field.Status.PETRIFY | field.Status.DEATH),
+                field.RemoveDeath(character_idx), # added due to permadeath situations to make sure the corresponding party member is alive
+                field.RestoreHp(character_idx, 0x7f), # restore all HP
+                field.RestoreMp(character_idx, 0x7f), # restore all MP
                 # Restore character appearance, name, and properties
                 field.SetSprite(character_idx, self.characters.get_sprite(character_idx)),
                 field.SetPalette(character_idx, self.characters.get_palette(character_idx)),
@@ -455,6 +459,10 @@ class NarsheMoogleDefense(Event):
             field.SetPalette(character, self.characters.get_palette(character)),
             field.SetName(character, character),
             field.SetProperties(character, character),
+            field.RemoveStatusEffects(character, field.Status.FLOAT | field.Status.DARKNESS | field.Status.ZOMBIE | field.Status.POISON | field.Status.VANISH | field.Status.IMP | field.Status.PETRIFY | field.Status.DEATH),
+            field.RemoveDeath(character), # added due to permadeath situations to make sure the corresponding party member is alive
+            field.RestoreHp(character, 0x7f), # restore all HP
+            field.RestoreMp(character, 0x7f), # restore all MP
             field.RecruitCharacter(character),
         ])
 
