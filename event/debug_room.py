@@ -2,8 +2,8 @@ from event.event import *
 from data.npc import NPC
 
 class DebugRoom(Event):
-    # Using the Vector Dining Room as our map
-    DINING_ROOM_MAP = 0xfb
+    # Using the 3 Scenarios room as our debug map
+    DEBUG_ROOM = 0x9
 
     def name(self):
         return "Debug Room"
@@ -13,8 +13,8 @@ class DebugRoom(Event):
 
     def remove_npcs_mod(self):
         # Remove all existing NPCs
-        while(self.maps.get_npc_count(self.DINING_ROOM_MAP) > 0):
-            self.maps.remove_npc(self.DINING_ROOM_MAP, 0)
+        while(self.maps.get_npc_count(self.DEBUG_ROOM) > 0):
+            self.maps.remove_npc(self.DEBUG_ROOM, 0)
 
     def _add_recruit_npc(self, character, x, y, direction):
         # Add an NPC to recruit each character
@@ -32,25 +32,25 @@ class DebugRoom(Event):
         recruit_npc.sprite = self.characters.get_sprite(character)
         recruit_npc.palette = self.characters.get_palette(character)
         recruit_npc.set_event_address(space.start_address)
-        self.maps.append_npc(self.DINING_ROOM_MAP, recruit_npc)
+        self.maps.append_npc(self.DEBUG_ROOM, recruit_npc)
 
     def add_recruit_npcs_mod(self):
-        self._add_recruit_npc(self.characters.TERRA, 76, 16, direction.DOWN)
-        self._add_recruit_npc(self.characters.LOCKE, 78, 16, direction.DOWN)
-        self._add_recruit_npc(self.characters.CYAN, 82, 16, direction.DOWN)
-        self._add_recruit_npc(self.characters.SHADOW, 84, 16, direction.DOWN)
-        self._add_recruit_npc(self.characters.EDGAR, 80, 16, direction.DOWN)
-        self._add_recruit_npc(self.characters.SABIN, 71, 16, direction.RIGHT)
-        self._add_recruit_npc(self.characters.CELES, 71, 17, direction.RIGHT)
-        self._add_recruit_npc(self.characters.STRAGO, 71, 18, direction.RIGHT)
-        self._add_recruit_npc(self.characters.RELM, 71, 19, direction.RIGHT)
-        self._add_recruit_npc(self.characters.SETZER, 71, 20, direction.RIGHT)
-        self._add_recruit_npc(self.characters.MOG, 89, 16, direction.LEFT)
-        self._add_recruit_npc(self.characters.GAU, 89, 17, direction.LEFT)
-        self._add_recruit_npc(self.characters.GOGO, 89, 18, direction.LEFT)
-        self._add_recruit_npc(self.characters.UMARO, 89, 19, direction.LEFT)
+        self._add_recruit_npc(self.characters.TERRA,  1, 8, direction.DOWN)
+        self._add_recruit_npc(self.characters.LOCKE,  2, 8, direction.DOWN)
+        self._add_recruit_npc(self.characters.CYAN,   3, 8, direction.DOWN)
+        self._add_recruit_npc(self.characters.SHADOW, 4, 8, direction.DOWN)
+        self._add_recruit_npc(self.characters.EDGAR,  5, 8, direction.DOWN)
+        self._add_recruit_npc(self.characters.SABIN,  6, 8, direction.DOWN)
+        self._add_recruit_npc(self.characters.CELES,  7, 8, direction.DOWN)
+        self._add_recruit_npc(self.characters.STRAGO, 8, 8, direction.DOWN)
+        self._add_recruit_npc(self.characters.RELM,   9, 8, direction.DOWN)
+        self._add_recruit_npc(self.characters.SETZER, 10, 8, direction.DOWN)
+        self._add_recruit_npc(self.characters.MOG,    11, 8, direction.DOWN)
+        self._add_recruit_npc(self.characters.GAU,    12, 8, direction.DOWN)
+        self._add_recruit_npc(self.characters.GOGO,   13, 8, direction.DOWN)
+        self._add_recruit_npc(self.characters.UMARO,  14, 8, direction.DOWN)
 
-    def _add_teleport_npc(self, source_map, source_x, source_y, dest_map, dest_x, dest_y, direction):
+    def _add_teleport_npc(self, source_map, source_x, source_y, direction, dest_map, dest_x, dest_y):
         # Test code to add a Marshal battle NPC to Blackjack
         from data.bosses import name_pack
         src = [
@@ -71,8 +71,8 @@ class DebugRoom(Event):
     def add_teleport_npcs_mod(self):
         # get to and from the debug room via WoB Airship
         BLACKJACK_EXTERIOR_MAP = 0x06
-        self._add_teleport_npc(BLACKJACK_EXTERIOR_MAP, 15, 4, self.DINING_ROOM_MAP, 80, 24, direction.DOWN)
-        self._add_teleport_npc(self.DINING_ROOM_MAP, 80, 25, BLACKJACK_EXTERIOR_MAP, 15, 5, direction.UP)
+        self._add_teleport_npc(BLACKJACK_EXTERIOR_MAP, 15, 4, direction.DOWN, self.DEBUG_ROOM, 8, 9)
+        self._add_teleport_npc(self.DEBUG_ROOM, 8, 10, direction.UP, BLACKJACK_EXTERIOR_MAP, 15, 5)
 
     def mod(self):
         if self.args.debug:
