@@ -204,17 +204,17 @@ class NarsheMoogleDefense(Event):
                 field.AddItem("Revivify", sound_effect = False),
                 field.AddItem("Antidote", sound_effect = False),
                 field.AddItem("Shuriken", sound_effect = False),
-                field.AddItem("Flash", sound_effect = False),
             ]
         src += [
             field.AddItem("Sniper", sound_effect = False),
             field.AddItem("Scimitar", sound_effect = False),
             field.AddItem("Force Armor", sound_effect = False),
             field.AddItem("Force Shld", sound_effect = False),
+            field.AddItem("Flash", sound_effect = False),
             field.AddItem("Hero Ring", sound_effect = True),
             field.Return()
         ]
-        space = Write(Bank.CC, src, "TEST Marshal battle")
+        space = Write(Bank.CC, src, "Item Giver Debug NPC")
         item_giver = space.start_address
 
         item_giver_npc = NPC()
@@ -490,8 +490,9 @@ class NarsheMoogleDefense(Event):
 
     def mod(self):
         self.terra_npc_mod() 
-        #TEST: add an NPC to Blackjack that triggers Marshal battle #TODO REMOVE
-        self.marshal_test_mod()
+
+        if self.args.debug:
+            self.marshal_test_mod()
 
         self.marshal_npc_mod()
 
