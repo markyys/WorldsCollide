@@ -287,17 +287,9 @@ class NarsheMoogleDefense(Event):
         space = Write(Bank.CC, src, "load narshe caves map for Terra event")
         got_her_map_change = space.start_address
 
-        reward_text = ""
-        if self.reward.type == RewardType.CHARACTER:
-            reward_text = "pursuing someone important"
-        elif self.reward.type == RewardType.ESPER:
-            reward_text = "looking for a glowing stone"
-        elif self.reward.type == RewardType.ITEM:
-            reward_text = "looking for a rare treasure"
-
         # Change Arvis Script
         prepared_dialog = 0x21 # reuse "OLD MAN: Make your way out through the mines! I’ll keep these brutes occupied!"
-        self.dialogs.set_text(prepared_dialog, f"Imperial troops are {reward_text} even as we speak! You must stop them!<line><line> Will you help?<line><choice> Yes<line><choice> No<end>")
+        self.dialogs.set_text(prepared_dialog, f"Imperial troops are searching the mines as we speak. They must have found something important!<line>Will you stop them?<line><choice> Yes<line><choice> No<end>")
         space = Reserve(0xca06f, 0xca07d, "arvis dialog", field.NOP())
         space.write(
              field.DialogBranch(prepared_dialog,
