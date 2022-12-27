@@ -289,7 +289,7 @@ class NarsheMoogleDefense(Event):
 
         # Change Arvis Script
         prepared_dialog = 0x21 # reuse "OLD MAN: Make your way out through the mines! I’ll keep these brutes occupied!"
-        self.dialogs.set_text(prepared_dialog, f"Imperial troops are searching the mines as we speak. They must have found something important!<line>Will you stop them?<line><choice> Yes<line><choice> No<end>")
+        self.dialogs.set_text(prepared_dialog, f"Imperial troops are searching the mines as we speak.<line>They must have found something important!<line>Will you stop them?<line><choice> Yes<line><choice> No<end>")
         space = Reserve(0xca06f, 0xca07d, "arvis dialog", field.NOP())
         space.write(
              field.DialogBranch(prepared_dialog,
