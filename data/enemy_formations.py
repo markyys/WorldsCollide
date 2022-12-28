@@ -117,7 +117,6 @@ class EnemyFormations():
         from constants.rages import rage_id
         import random
         possible_minions = [
-            rage_id["Lobo"],
             rage_id["Red Wolf"],
             rage_id["Covert"],
             rage_id["Ogor"],
