@@ -34,7 +34,7 @@ def parse(parser):
     bosses.add_argument("-bnu", "--boss-no-undead", action = "store_true",
                         help = "Undead status removed from bosses")
     bosses.add_argument("-bmkl", "--boss-marshal-keep-lobos", action = "store_true",
-                        help = "With Boss Random/Shuffle, don't replace the Marshal's Lobos")
+                        help = "Don't replace the Marshal's Lobos with randomized enemies")
 
 def process(args):
     if args.mix_bosses_dragons:

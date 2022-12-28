@@ -383,8 +383,7 @@ class NarsheMoogleDefense(Event):
         src = [ 
             reward_instructions, 
 
-            field.FadeOutScreen(),
-            field.WaitForFade(),
+            Read(0xcade5, 0xcadec), # vanilla fade out and pan camera north
 
             field.ClearEventBit(event_bit.TEMP_SONG_OVERRIDE), # allow song to change on map change
             field.ClearEventBit(npc_bit.MARSHAL_NARSHE_WOB), # Remove Marshal and "Terra" in south caves

@@ -173,9 +173,9 @@ class EnemyFormations():
             # but it looks better than having chadarnook's left edge showing on all the other battle backgrounds
             self.set_chadarnook_position_left_screen()
 
-            # Randomize the minions that appear with Marshal
-            if not self.args.boss_marshal_keep_lobos:
-                self.randomize_marshal_minion()
+        # Randomize the minions that appear with Marshal
+        if not self.args.boss_marshal_keep_lobos:
+            self.randomize_marshal_minion()
 
         if self.args.random_encounters_chupon:
             self.add_chupon()
