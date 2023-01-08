@@ -122,6 +122,8 @@ class NarsheMoogleDefense(Event):
             "ADD_1",
             field.Call(self.add_moogle_to_party[0]),
             "ADD_0",
+            # this line fixes the issue in which the party appears twice if spot 0 is empty before recruiting
+            field.HideEntity(field_entity.PARTY0),
         ]
 
         # For parties 2 and 3, just iterate 4 times each
