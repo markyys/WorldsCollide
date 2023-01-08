@@ -147,8 +147,6 @@ class LoadPartiesWithCharacters(_Instruction):
         space = Write(Bank.C0, src, "custom load parties with characters instruction")
         address = space.start_address
 
-        print(f"{space.start_address_snes:x}")
-
         opcode = 0xe5
         _set_opcode_address(opcode, address)
 
