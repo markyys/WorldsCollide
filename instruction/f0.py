@@ -55,6 +55,25 @@ def _set_gray_text_color_mod():
     return space.start_address
 set_gray_text_color = _set_gray_text_color_mod()
 
+def _set_yellow_text_color_mod():
+    # make yellow text available on bg1 by updating palette. Credit to Lenophis
+    src = [
+        0x00, 0x00,
+        0xce, 0x39,
+        0xbf, 0x03,
+    ]
+    space = Reserve(0x18e882, 0x18e887, "bg1 text color palette")
+    space.write(src)
+
+    src = [
+        asm.LDA(0x30, asm.IMM8),
+        asm.STA(0x29, asm.DIR),
+        asm.RTS(),
+    ]
+    space = Write(Bank.F0, src, "f0 set yellow text color in menu")
+    return space.start_address
+set_yellow_text_color = _set_yellow_text_color_mod()
+
 def _boss_formations_mod():
     from data.bosses import normal_formation_name
 
