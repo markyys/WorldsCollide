@@ -294,10 +294,10 @@ class NarsheMoogleDefense(Event):
             field.HideEntity(field_entity.PARTY0),
             field.SetEventBit(npc_bit.MARSHAL_NARSHE_WOB), # Show "Terra" in south caves and Marshal in battle
             field.SetEventBit(npc_bit.TERRA_COLLAPSED_NARSHE_WOB), # Show collapsed "Terra"
-            field.LoadMap(0x32, direction.UP, True, 55, 11),
-            field.FadeInScreen(),
-            field.WaitForFade(),
-            field.Branch(0xCCA2EB) # 'Got her!' scene
+            # field.LoadMap(0x32, direction.UP, True, 55, 11),
+            # field.FadeInScreen(),
+            # field.WaitForFade(),
+            field.Branch(0xCCA3f3) # 'Got her!' scene
         ]
         space = Write(Bank.CC, src, "load narshe caves map for Terra event")
         got_her_map_change = space.start_address
@@ -347,6 +347,12 @@ class NarsheMoogleDefense(Event):
         for address in locke_action_queues:
             space = Reserve(address, address, "locke drop down to protect terra")
             space.write(field_entity.PARTY0)
+
+        # Speed up pauses
+        space = Reserve(0xca79d, 0xca79e, "post-drop pause", field.NOP())
+        space.write(field.Pause(0.75))
+        space = Reserve(0xca7a3, 0xca7a3, "post-drop pause")
+        space.write(field.Pause(0.25))
 
         # Speed up Marshal coming down stairs
         space = Reserve(0xca7dd, 0xca7dd, "marshal normal")
