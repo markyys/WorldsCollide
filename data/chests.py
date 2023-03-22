@@ -194,6 +194,11 @@ class Chests():
 
         chests_asm.scale_gold(gold_bits, self.gold_contents)
 
+    def chest_all_monsters(self):
+        for chest in self.chests:
+            chest.type = Chest.MONSTER
+            chest.contents = random.randint(0,255)
+
     def clear_contents(self):
         for chest in self.chests:
             if chest.type == Chest.ITEM or chest.type == Chest.GOLD:
@@ -274,6 +279,8 @@ class Chests():
             self.random_scaled()
         elif self.args.chest_contents_empty:
             self.clear_contents()
+        elif self.args.chest_all_monsters:
+            self.chest_all_monsters()
         else:
             self.remove_excluded_items()
 

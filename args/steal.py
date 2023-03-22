@@ -10,6 +10,9 @@ def parse(parser):
     steal_chances.add_argument("-sca", "--steal-chances-always", action = "store_true",
                          help = "Steal will always succeed if enemy has an item")
 
+    steal.add_argument("-loot", "--loot", action="store_true",
+                               help="Randomize items stolen and dropped")
+
 def process(args):
     pass
 
@@ -20,6 +23,8 @@ def flags(args):
         flags += " -sch"
     if args.steal_chances_always:
         flags += " -sca"
+    if args.loot:
+        flags += " -loot"
 
     return flags
 
@@ -32,6 +37,7 @@ def options(args):
 
     return [
         ("Chances", steal_chances),
+        ("Loot", args.loot)
     ]
 
 def menu(args):

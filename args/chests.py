@@ -14,6 +14,8 @@ def parse(parser):
                                  help = "Chest contents randomized by tier. Probability of higher tiers begins low and increases as more chests are opened")
     chests_contents.add_argument("-cce", "--chest-contents-empty", action = "store_true",
                                  help = "Chest contents empty")
+    chests_contents.add_argument("-cam", "--chest-all-monsters", action="store_true",
+                                 help="Chest contents all monster-in-a-boxes")
 
     chests.add_argument("-cms", "--chest-monsters-shuffle", action = "store_true",
                         help = "Monsters-in-a-box shuffled but locations unchanged")
@@ -34,6 +36,8 @@ def flags(args):
         flags += " -ccrs"
     elif args.chest_contents_empty:
         flags += " -cce"
+    elif args.chest_all_monsters:
+        flags += " -cam"
 
     if args.chest_monsters_shuffle:
         flags += " -cms"
@@ -52,6 +56,8 @@ def options(args):
         contents_value = "Random Scaled"
     elif args.chest_contents_empty:
         contents_value = "Empty"
+    elif args.chest_all_monsters:
+        contents_value = "All MiaB"
 
     result.append(("Contents", contents_value))
     if args.chest_contents_shuffle_random:

@@ -29,9 +29,10 @@ class Enemies():
     SRBEHEMOTH2_ID = 127
     INVINCIBLE_GUARDIAN_ID = 273
 
-    def __init__(self, rom, args):
+    def __init__(self, rom, args, items=[]):
         self.rom = rom
         self.args = args
+        self.items = items
 
         self.enemy_data = DataArray(self.rom, self.DATA_START, self.DATA_END, self.DATA_SIZE)
         self.enemy_name_data = DataArray(self.rom, self.NAMES_START, self.NAMES_END, self.NAME_SIZE)
@@ -305,6 +306,19 @@ class Enemies():
 
         self.packs.randomize_packs(packs, boss_percent)
 
+    def randomize_loot(self):
+        for enemy in self.enemies:
+            self.set_common_steal(enemy.id, self.items.get_random())
+            self.set_rare_steal(enemy.id, self.items.get_random())
+            self.set_common_drop(enemy.id, self.items.get_random())
+            self.set_rare_drop(enemy.id, self.items.get_random())
+
+    def pad_enemy_packs(self):
+        for pack in self.packs.packs:
+            if pack.formations == [0, 0] and pack.id > 0:
+                # Add random formations to the empty pack
+                pack.formations = [self.formations.get_random_normal(), self.formations.get_random_normal()]
+
     def set_escapable(self):
         import random
 
@@ -329,6 +343,12 @@ class Enemies():
     def mod(self, maps):
         if self.args.boss_normalize_distort_stats:
             self.boss_normalize_distort_stats()
+
+        if self.args.loot:
+            self.randomize_loot()
+
+        if self.args.chest_all_monsters:
+            self.pad_enemy_packs()
 
         if self.args.permadeath:
             self.remove_fenix_downs()
