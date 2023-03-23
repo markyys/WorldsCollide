@@ -23,8 +23,8 @@ Formations to avoid:
 123 :  ['', '']
 124 :  ['Kefka (Thamasa)', 'Kefka (Thamasa)']
 127 :  ['', '']
-128 :  ['Phunbaba 1', 'Phunbaba 1']
 129 :  ['Phunbaba 2', 'Phunbaba 2']
+128 :  ['Phunbaba 1', 'Phunbaba 1']
 
 Bosses:
 6 :  ['Marshal', 'Marshal']

@@ -314,10 +314,13 @@ class Enemies():
             self.set_rare_drop(enemy.id, self.items.get_random())
 
     def pad_enemy_packs(self):
+        from data.enemy_battle_groups import unused_event_battle_groups
         for pack in self.packs.packs:
-            if pack.formations == [0, 0] and pack.id > 0:
-                # Add random formations to the empty pack
-                pack.formations = [self.formations.get_random_normal(), self.formations.get_random_normal()]
+            if pack.FORMATION_COUNT == 2:
+                if (pack.formations == [0, 0] and pack.id > 0) or (pack.id in unused_event_battle_groups):
+                    # Add random formations to the empty pack
+                    this_formation = self.formations.get_random_normal()
+                    pack.formations = [this_formation, this_formation]
 
     def set_escapable(self):
         import random

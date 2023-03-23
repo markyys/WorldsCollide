@@ -195,8 +195,7 @@ class Chests():
         chests_asm.scale_gold(gold_bits, self.gold_contents)
 
     def chest_all_monsters(self):
-        event_battle_groups_to_avoid = [49, 50, 51, 52, 53, 54, 56, 60, 61, 62, 75, 77, 78, 83, 97, 101, 105, 106,
-                                        121, 122, 123, 124, 127, 128, 129]
+        from data.enemy_battle_groups import event_battle_groups_to_avoid
         MIAB_contents = [a for a in range(256) if a not in event_battle_groups_to_avoid]
         for chest in self.chests:
             chest.type = Chest.MONSTER
