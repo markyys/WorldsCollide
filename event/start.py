@@ -72,8 +72,12 @@ class Start(Event):
         # C0/C2A9:	3000   ("norm encounter" frequency ==> looks like "less encounter")
         # C0/C2AB:	C000   ("more encounter" frequency ==> looks right)
         # C0/C2AD:	0000   ("no encounter" frequency ==> looks right)
-        self.rom.set_bytes(0x0c29f, [0x00 for i in range(16)])
-        self.rom.set_bytes(0x0c2bf, [0x00 for i in range(16)])
+        self.rom.set_bytes(0x0c29f, [0x00 for i in range(64)])  # Set all encounter rates to zero
+        rate = 0x10  # 1/3 charm bangle
+        self.rom.set_bytes(0x0c2af, [rate, 0x00, rate, 0x00, rate, 0x00])  # Set World Map -  Moogle Charm encounter rates to non-zero
+
+        # Rename moogle charm to moogle curse: in data.items
+
 
 
     def mod(self):

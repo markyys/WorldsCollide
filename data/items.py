@@ -5,6 +5,7 @@ from constants.items import good_items
 from constants.items import id_name, name_id
 
 import data.items_asm as items_asm
+import data.text as text
 
 class Items():
     ITEM_COUNT = 256
@@ -187,6 +188,20 @@ class Items():
             self.characters.characters[index].init_body = random.choice(tiers[Item.ARMOR][1])
             self.characters.characters[index].init_head = random.choice(tiers[Item.HELMET][1])
 
+    def moogle_curse_description(self):
+        # If using -no-random-encounters, the Moogle Charm becomes the Moogle Curse
+        # (enables random encounters on world map).  Update the name and description.
+        moogle_charm = self.items[name_id["Moogle Charm"]]
+        moogle_charm.name = "Moogle Curse"
+
+        descr_offset = self.rom.get_bytes(0x2d7aa0 + moogle_charm.id * 2, 2)
+        offset = descr_offset[1] * 0x100 + descr_offset[0]
+
+        # new_descr = "No random enemy encounters<end>"
+        new_descr = "Draw monsters on world map<end>"
+        name_bytes = text.get_bytes(new_descr, text.TEXT2)
+        self.rom.set_bytes(0x2d6400 + offset, name_bytes)
+
     def mod(self):
         not_relic_condition = lambda x : x != Item.RELIC
         if self.args.item_equipable_random:
@@ -260,6 +275,9 @@ class Items():
             self.add_receive_dialog(item_id)
 
         self.moogle_starting_equipment()
+
+        if self.args.no_random_encounters:
+            self.moogle_curse_description()
 
     def write(self):
         for item in self.items:
