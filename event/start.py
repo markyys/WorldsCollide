@@ -73,6 +73,7 @@ class Start(Event):
         # C0/C2AB:	C000   ("more encounter" frequency ==> looks right)
         # C0/C2AD:	0000   ("no encounter" frequency ==> looks right)
         self.rom.set_bytes(0x0c29f, [0x00 for i in range(16)])
+        self.rom.set_bytes(0x0c2bf, [0x00 for i in range(16)])
 
 
     def mod(self):
