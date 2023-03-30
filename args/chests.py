@@ -14,8 +14,9 @@ def parse(parser):
                                  help = "Chest contents randomized by tier. Probability of higher tiers begins low and increases as more chests are opened")
     chests_contents.add_argument("-cce", "--chest-contents-empty", action = "store_true",
                                  help = "Chest contents empty")
-    chests_contents.add_argument("-cam", "--chest-all-monsters", action="store_true",
-                                 help="Chest contents all monster-in-a-boxes")
+    chests_contents.add_argument("-cam", "--chest-all-monsters", default = None, type = int,
+                                 metavar = "PERCENT", choices = range(101),
+                                 help="Chest contents all monster-in-a-boxes and given percent bosses")
 
     chests.add_argument("-cms", "--chest-monsters-shuffle", action = "store_true",
                         help = "Monsters-in-a-box shuffled but locations unchanged")
@@ -24,6 +25,9 @@ def process(args):
     if args.chest_contents_shuffle_random is not None:
         args.chest_contents_shuffle_random_percent = args.chest_contents_shuffle_random
         args.chest_contents_shuffle_random = True
+    if args.chest_all_monsters is not None:
+        args.chest_all_monsters_boss_percent = args.chest_all_monsters
+        args.chest_all_monsters = True
 
 def flags(args):
     flags = ""
@@ -37,7 +41,7 @@ def flags(args):
     elif args.chest_contents_empty:
         flags += " -cce"
     elif args.chest_all_monsters:
-        flags += " -cam"
+        flags += f" -cam {args.chest_all_monsters_boss_percent}"
 
     if args.chest_monsters_shuffle:
         flags += " -cms"
@@ -62,6 +66,9 @@ def options(args):
     result.append(("Contents", contents_value))
     if args.chest_contents_shuffle_random:
         result.append(("Random Percent", f"{args.chest_contents_shuffle_random_percent}%"))
+    elif args.chest_all_monsters:
+        result.append(("Boss Percent", f"{args.chest_all_monsters_boss_percent}%"))
+
     result.append(("Monsters-In-A-Box Shuffled", args.chest_monsters_shuffle))
 
     return result

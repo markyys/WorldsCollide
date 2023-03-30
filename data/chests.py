@@ -194,12 +194,17 @@ class Chests():
 
         chests_asm.scale_gold(gold_bits, self.gold_contents)
 
-    def chest_all_monsters(self):
-        from data.enemy_battle_groups import event_battle_groups_to_avoid
-        MIAB_contents = [a for a in range(256) if a not in event_battle_groups_to_avoid]
+    def chest_all_monsters(self, boss_percent):
+        from data.enemy_battle_groups import event_battle_groups_to_avoid, boss_event_battle_groups
+        MIAB_noboss = [a for a in range(256) if a not in event_battle_groups_to_avoid and a not in boss_event_battle_groups]
+        MIAB_boss = [a for a in range(256) if a in boss_event_battle_groups]
         for chest in self.chests:
             chest.type = Chest.MONSTER
-            chest.contents = random.choice(MIAB_contents)
+            is_boss = (random.random()*100 < boss_percent)
+            if is_boss:
+                chest.contents = random.choice(MIAB_boss)
+            else:
+                chest.contents = random.choice(MIAB_noboss)
 
     def clear_contents(self):
         for chest in self.chests:
@@ -282,7 +287,7 @@ class Chests():
         elif self.args.chest_contents_empty:
             self.clear_contents()
         elif self.args.chest_all_monsters:
-            self.chest_all_monsters()
+            self.chest_all_monsters(self.args.chest_all_monsters_boss_percent)
         else:
             self.remove_excluded_items()
 
