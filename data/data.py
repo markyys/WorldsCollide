@@ -40,9 +40,6 @@ class Data:
 
         self.enemies = enemies.Enemies(rom, args, self.items)
         self.enemies.mod(self.maps)
-        #for p in self.enemies.packs.packs:
-        #    forms = [(f, self.enemies.formations.get_name(f)) for f in p.formations]
-        #    print(p.id, ': ', forms)
 
         self.swdtechs = swdtechs.SwdTechs(rom, args, self.characters)
         self.swdtechs.mod()
