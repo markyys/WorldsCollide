@@ -176,7 +176,7 @@ id_palette = {
     233 : "Pacman Ghost-HoxNorf-Pacman",
     234 : "Palom (Adult)-HoxNorf-FF4",
     235 : "Paul-HoxNorf-FF2",
-    236 : "Pirahna Plant-JamesWhite89-Mario",
+    236 : "Piranha Plant-JamesWhite89-Mario",
     237 : "Porom (Adult)-HoxNorf-FF4",
     238 : "Ramza-CtrlxZ-FFT",
     239 : "Ricard-HoxNorf-FF2",
@@ -236,6 +236,17 @@ id_palette = {
     # FFT
     300 : "Alma-HoxNorf-FFT",
     301 : "Orlandeau-ctrlxz-FFT",
+
+    302 : "Alice-HoxNorf-Touhou",
+    303 : "Alphys-LoneRedMage-Undertale",
+    304 : "Amy-HoxNorf-Sonic",
+    305 : "Frisk-LoneRedMage-Undertale",
+    306 : "Gryz-HoxNorf-PS4",
+    307 : "Raja-HoxNorf-PS4",
+    308 : "Reimu (Blue)-HoxNorf-Touhou",
+    309 : "Rune-HoxNorf-PS4",
+    310 : "Toriel-LoneRedMage-Undertale",
+    311 : "Yuyuko-HoxNorf-Touhou",
 }
 
 def get_path(id_):

@@ -137,7 +137,7 @@ id_portrait = {
     229: "Pacman Ghost-JamesWhite89-Pacman",
     230: "Palom (Adult)-HoxNorf-FF4",
     231: "Paul-HoxNorf-FF2",
-    232: "Pirahna Plant-JamesWhite89-Mario",
+    232: "Piranha Plant-JamesWhite89-Mario",
     233: "Porom (Adult)-HoxNorf-FF4",
     234: "Ricard-HoxNorf-FF2",
     235: "Ryu-HoxNorf-SF",
@@ -192,6 +192,28 @@ id_portrait = {
     284 : "Vargas-PocoLoco-FF6",
     285 : "Vincent-Twinees-FF7",
     286 : "Yoshi-Badass-Mario",
+
+    287 : "Alice-HoxNorf-Touhou",
+    288 : "Alma-Unknown-FFT",
+    289 : "Alphys-LoneRedMage-Undertale",
+    290 : "Amy-HoxNorf-Sonic",
+    291 : "Cloud-JamesWhite89-FF7",
+    292 : "Fighter-CtrlxZ-FF1",
+    293 : "Frisk-LoneRedMage-Undertale",
+    294 : "Gryz-HoxNorf-PS4",
+    295 : "Jessie-JamesWhite89-FF7",
+    296 : "Lenna (White Mage)-JamesWhite89-FF5",
+    297 : "Lenna-JamesWhite89-FF5",
+    298 : "Orlandeau-Unknown-FFT",
+    299 : "Porom (Devout)-HoxNorf-FF4",
+    300 : "Raja-HoxNorf-PS4",
+    301 : "Ramza-Unknown-FFT",
+    302 : "Reimu (Blue)-HoxNorf-Touhou",
+    303 : "Rune-HoxNorf-PS4",
+    304 : "Sarisa-JamesWhite89-FF5",
+    305 : "Toriel-LoneRedMage-Undertale",
+    306 : "Yuyuko-HoxNorf-Touhou",
+    
 }
 
 def get_bin_path(id_):
