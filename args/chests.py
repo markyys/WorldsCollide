@@ -69,8 +69,6 @@ def options(args):
     elif args.chest_all_monsters:
         result.append(("Boss Percent", f"{args.chest_all_monsters_boss_percent}%"))
 
-    result.append(("Monsters-In-A-Box Shuffled", args.chest_monsters_shuffle))
-
     return result
 
 def menu(args):
