@@ -313,6 +313,33 @@ class Enemies():
             self.set_common_drop(enemy.id, self.items.get_random())
             self.set_rare_drop(enemy.id, self.items.get_random())
 
+    def shuffle_steals_drops_random(self):
+        import random
+
+        # Assemble the list of steals and drops
+        steals_drops = []
+        for enemy in self.enemies:
+            if len(enemy.name) > 0:
+                loot_list = [enemy.steal_common, enemy.steal_rare, enemy.drop_common, enemy.drop_rare]
+                steals_drops.extend(loot_list)
+
+        # Randomize the requested number
+        random_percent = self.args.shuffle_steals_drops_random_percent / 100.0
+        number_random = int(random_percent * len(steals_drops))
+        which_random = [a for a in range(len(steals_drops))]
+        random.shuffle(which_random)
+        for id in range(number_random):
+            steals_drops[which_random[id]] = self.items.get_random()
+
+        # Shuffle list & reassign to enemies
+        random.shuffle(steals_drops)
+        for enemy in self.enemies:
+            if len(enemy.name) > 0:
+                self.set_common_steal(enemy.id, steals_drops.pop(0))
+                self.set_rare_steal(enemy.id, steals_drops.pop(0))
+                self.set_common_drop(enemy.id, steals_drops.pop(0))
+                self.set_rare_drop(enemy.id, steals_drops.pop(0))
+
     def pad_enemy_packs(self):
         from data.enemy_battle_groups import unused_event_battle_groups
         for pack in self.packs.packs:
@@ -347,8 +374,8 @@ class Enemies():
         if self.args.boss_normalize_distort_stats:
             self.boss_normalize_distort_stats()
 
-        if self.args.loot:
-            self.randomize_loot()
+        if self.args.shuffle_steals_drops:
+            self.shuffle_steals_drops_random()
 
         if self.args.chest_all_monsters:
             self.pad_enemy_packs()
