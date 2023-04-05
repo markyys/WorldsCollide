@@ -28,6 +28,7 @@ def process(args):
     if args.chest_all_monsters is not None:
         args.chest_all_monsters_boss_percent = args.chest_all_monsters
         args.chest_all_monsters = True
+        args.chest_mosters_shuffle = False  # Chest_all_monsters supercedes chest_monsters_shuffle
 
 def flags(args):
     flags = ""
@@ -69,6 +70,9 @@ def options(args):
     elif args.chest_all_monsters:
         result.append(("Boss Percent", f"{args.chest_all_monsters_boss_percent}%"))
 
+    if not args.chest_all_monsters:
+        result.append(("MIAB Shuffled", args.chest_monsters_shuffle))
+
     return result
 
 def menu(args):
@@ -79,7 +83,7 @@ def menu(args):
         del entries[1]                                   # delete random percent line
     else:
         entries[0] = (entries[0][1], "")
-    entries[1] = ("MIAB Shuffled", entries[1][1])
+    
     return (name(), entries)
 
 def log(args):
