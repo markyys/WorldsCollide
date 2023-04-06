@@ -223,7 +223,7 @@ id_sprite = {
     263 : "Figaro Guard-PocoLoco-FF6",
     264 : "Granny-Zozma-FF6",
     265 : "Hojo-LoneRedMage-FF7",
-    266 : "Katarin-Zozma-FF6",
+    266 : "Sanae-HoxNorf-Touhou",
     267 : "Lady-Zozma-FF6",
     268 : "Link-FEOK-LegendOfZelda",
     269 : "LoneWolf-PocoLoco-FF6",
@@ -232,7 +232,7 @@ id_sprite = {
     272 : "Luigi-Badass-Mario",
     273 : "Maduin-PocoLoco-FF6",
     274 : "Mario-Badass-Mario",
-    275 : "Mini-JamesWhite89-FF",
+    275 : "Kain (Holy Dragoon)-CtrlxZ-FF4TAY",
     276 : "NarsheGuard-PocoLoco-FF6",
     277 : "Peach-Halkel-SMRPG",
     278 : "Returner-PocoLoco-FF6",
@@ -263,6 +263,15 @@ id_sprite = {
     308 : "Rune-HoxNorf-PS4",
     309 : "Toriel-LoneRedMage-Undertale",
     310 : "Yuyuko-HoxNorf-Touhou",
+    311 : "Cait Sith-HoxNorf-FF7",
+    312 : "Wren-HoxNorf-PS4",
+    313 : "Nitori-HoxNorf-Touhou",
+    314 : "Donkey Kong-Badass-Mario",
+    315 : "X-Badass-Megaman",
+    316 : "Lugae-Astaroth-FF4",
+    317 : "Gilius-JamesWhite89-GoldenAxe",
+    318 : "Arthur-JamesWhite89-GnG",
+    319 : "Sherlotta-HoxNorf_ScarabEnigma-FFCC",
 }
 
 def get_path(id_):
