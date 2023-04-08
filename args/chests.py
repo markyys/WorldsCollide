@@ -14,14 +14,27 @@ def parse(parser):
                                  help = "Chest contents randomized by tier. Probability of higher tiers begins low and increases as more chests are opened")
     chests_contents.add_argument("-cce", "--chest-contents-empty", action = "store_true",
                                  help = "Chest contents empty")
+    chests_contents.add_argument("-cam", "--chest-all-monsters", default = None, type = int,
+                                 metavar = "PERCENT", choices = range(101),
+                                 help="Chest contents all monster-in-a-boxes and given percent bosses")
 
     chests.add_argument("-cms", "--chest-monsters-shuffle", action = "store_true",
                         help = "Monsters-in-a-box shuffled but locations unchanged")
+
+    chests.add_argument("-ntc", "--no-trash-chests",  action = "store_true",
+                       help="Replace Low Tier Items with gold in chests")
+
+
+
 
 def process(args):
     if args.chest_contents_shuffle_random is not None:
         args.chest_contents_shuffle_random_percent = args.chest_contents_shuffle_random
         args.chest_contents_shuffle_random = True
+    if args.chest_all_monsters is not None:
+        args.chest_all_monsters_boss_percent = args.chest_all_monsters
+        args.chest_all_monsters = True
+        args.chest_mosters_shuffle = False  # Chest_all_monsters supercedes chest_monsters_shuffle
 
 def flags(args):
     flags = ""
@@ -34,9 +47,13 @@ def flags(args):
         flags += " -ccrs"
     elif args.chest_contents_empty:
         flags += " -cce"
+    elif args.chest_all_monsters:
+        flags += f" -cam {args.chest_all_monsters_boss_percent}"
 
     if args.chest_monsters_shuffle:
         flags += " -cms"
+    if args.no_trash_chests:
+        flags += " -ntc"
 
     return flags
 
@@ -52,11 +69,21 @@ def options(args):
         contents_value = "Random Scaled"
     elif args.chest_contents_empty:
         contents_value = "Empty"
+    elif args.chest_all_monsters:
+        contents_value = "All MiaB"
 
     result.append(("Contents", contents_value))
     if args.chest_contents_shuffle_random:
         result.append(("Random Percent", f"{args.chest_contents_shuffle_random_percent}%"))
-    result.append(("Monsters-In-A-Box Shuffled", args.chest_monsters_shuffle))
+    elif args.chest_all_monsters:
+        result.append(("Boss Percent", f"{args.chest_all_monsters_boss_percent}%"))
+
+    if not args.chest_all_monsters:
+        result.append(("MIAB Shuffled", args.chest_monsters_shuffle))
+
+    if args.no_trash_chests:
+        result.append(("No Trash Chests", args.no_trash_chests))
+
 
     return result
 
@@ -68,7 +95,7 @@ def menu(args):
         del entries[1]                                   # delete random percent line
     else:
         entries[0] = (entries[0][1], "")
-    entries[1] = ("MIAB Shuffled", entries[1][1])
+    
     return (name(), entries)
 
 def log(args):

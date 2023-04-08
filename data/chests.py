@@ -1,5 +1,6 @@
 from data.chest import Chest
 import data.chests_asm as chests_asm
+from data.item import Item
 from data.structures import DataArrays
 import random
 
@@ -105,6 +106,27 @@ class Chests():
             elif chest.type == Chest.ITEM:
                 chest.contents = self.items.get_random()
 
+        if self.args.no_trash_chests:
+            if self.args.shop_sell_fraction4:
+                sell_factor = 1/4
+            elif self.args.shop_sell_fraction8:
+                sell_factor = 1 / 8
+            elif self.args.shop_sell_fraction0:
+                sell_factor = 0
+            else:
+                sell_factor = 1/2
+            for chest in possible_chests:
+                if not chest.type == Chest.ITEM:
+                    continue
+                item = Item(chest.contents, self.rom)
+                if item.is_trash:
+                    item_chest_value = int(min((item.price * sell_factor)//100, Chest.MAX_GOLD_VALUE))
+                    if not item.sell_gold_value:
+                        chest.type = Chest.EMPTY
+                    chest.type = Chest.GOLD
+                    chest.contents = item_chest_value
+
+
     def random_tiered(self):
         def get_item(tiers, tier_s_distribution):
             from data.chest_item_tiers import weights
@@ -194,6 +216,18 @@ class Chests():
 
         chests_asm.scale_gold(gold_bits, self.gold_contents)
 
+    def chest_all_monsters(self, boss_percent):
+        from data.enemy_battle_groups import event_battle_groups_to_avoid, boss_event_battle_groups
+        MIAB_noboss = [a for a in range(256) if a not in event_battle_groups_to_avoid and a not in boss_event_battle_groups]
+        MIAB_boss = [a for a in range(256) if a in boss_event_battle_groups]
+        for chest in self.chests:
+            chest.type = Chest.MONSTER
+            is_boss = (random.random()*100 < boss_percent)
+            if is_boss:
+                chest.contents = random.choice(MIAB_boss)
+            else:
+                chest.contents = random.choice(MIAB_noboss)
+
     def clear_contents(self):
         for chest in self.chests:
             if chest.type == Chest.ITEM or chest.type == Chest.GOLD:
@@ -274,6 +308,8 @@ class Chests():
             self.random_scaled()
         elif self.args.chest_contents_empty:
             self.clear_contents()
+        elif self.args.chest_all_monsters:
+            self.chest_all_monsters(self.args.chest_all_monsters_boss_percent)
         else:
             self.remove_excluded_items()
 
