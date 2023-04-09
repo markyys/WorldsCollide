@@ -506,8 +506,12 @@ class NarsheMoogleDefense(Event):
         ])
 
     def esper_item_mod(self, esper_item_instructions):
-        #Using thematic Moogle sprite for Esper/Items
-        esper_item_sprite = self.characters.get_sprite(self.characters.MOG)
+        if self.args.character_gating:
+            #Using thematic Moogle sprite for Esper/Items
+            esper_item_sprite = self.characters.get_sprite(self.characters.MOG)
+        else:
+            # Open world -- use standard sprites
+            esper_item_sprite = self.characters.get_random_esper_item_sprite()
         self.terra_npc.sprite = esper_item_sprite
         self.terra_npc.palette = self.characters.get_palette(self.terra_npc.sprite)
         self.terra_collapsed_npc.sprite = esper_item_sprite
