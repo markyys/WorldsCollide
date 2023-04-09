@@ -195,9 +195,15 @@ class Chests():
         chests_asm.scale_gold(gold_bits, self.gold_contents)
 
     def chest_all_monsters(self, boss_percent):
-        from data.enemy_battle_groups import event_battle_groups_to_avoid, boss_event_battle_groups
-        MIAB_noboss = [a for a in range(256) if a not in event_battle_groups_to_avoid and a not in boss_event_battle_groups]
-        MIAB_boss = [a for a in range(256) if a in boss_event_battle_groups]
+        from data.enemy_battle_groups import event_battle_groups_to_avoid, boss_event_battle_groups, name_event_battle_group_id
+        MIAB_noboss = [a for a in range(256) if a not in event_battle_groups_to_avoid.keys() and a not in boss_event_battle_groups.keys()]
+        MIAB_boss = [a for a in range(256) if a in boss_event_battle_groups.keys()]
+
+        # Respect boss modification flags
+        if not self.args.shuffle_random_phunbaba3:
+            # Remove Phunbaba 3 encounter from the MIAB_boss pool
+            MIAB_boss.remove(name_event_battle_group_id["Phunbaba 3"])
+
         for chest in self.chests:
             chest.type = Chest.MONSTER
             is_boss = (random.random()*100 < boss_percent)
@@ -205,6 +211,7 @@ class Chests():
                 chest.contents = random.choice(MIAB_boss)
             else:
                 chest.contents = random.choice(MIAB_noboss)
+
 
     def clear_contents(self):
         for chest in self.chests:
