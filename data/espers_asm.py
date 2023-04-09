@@ -4,12 +4,16 @@ import instruction.asm as asm
 def mastered_mod(espers):
     # Ported with mods from https://www.ff6hacking.com/forums/thread-4181.html
     # Mods from Madsuir's original:
-    #   1. Used existing X sprite rather than adding the star
-    #   2. Rather than using the space at the right, I replace the ... before the MP
-    #   3. Using F0 freespace
-    #   4. Displaced code is different to deconflict with equipable_mod
+    #   1. Rather than using the space at the right, I replace the ... before the MP
+    #   2. Using F0 freespace
+    #   3. Displaced code is different to deconflict with equipable_mod
     from data.text.text2 import text_value
-    MASTERED_ICON = text_value['<X>']
+    space = Reserve(0x487b0, 0x487be, "add star icon for text2 to unused space")
+    space.write(
+        0x18,0x00,0x3C,0x18,0xFF,0x18,0xFF,0x7E,0x7E,0x3C,0xFF,0x7E,0xFF,0x66 # raw hex for star icon
+    )
+
+    MASTERED_ICON = 0x7f # points to the star icon created above
     SPELL_OFFSET_STORAGE_RAM = 0x0203 # free Menu RAM location used to calculate character spell offset once per Skills menu
     src = [
         asm.PHX(), # save X
