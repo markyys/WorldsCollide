@@ -118,7 +118,7 @@ class Chests():
             for chest in possible_chests:
                 if not chest.type == Chest.ITEM:
                     continue
-                item = Item(chest.contents, self.rom)
+                item = self.items.items[chest.contents]
                 if item.is_trash:
                     item_chest_value = int(min((item.price * sell_factor)//100, Chest.MAX_GOLD_VALUE))
                     if not item.sell_gold_value:
