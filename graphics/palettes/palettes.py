@@ -256,6 +256,17 @@ id_palette = {
     318 : "Gilius-JamesWhite89-GoldenAxe",
     319 : "Arthur-JamesWhite89-GnG",
     320 : "Sherlotta-HoxNorf_ScarabEnigma-FFCC",
+    321 : "Purple Sister-HoxNorf-Neptunia",
+    322 : "Noire-HoxNorf-Neptunia",
+    323 : "Arle-HoxNorf-Madou",
+    324 : "Simon-JamesWhite89-Castlevania",
+    325 : "Aria-HoxNorf-FF3",
+    326 : "Refia-HoxNorf-FF3",
+    327 : "Nakoruru-HoxNorf-SamSho",
+    328 : "Rash-JamesWhite89-Battletoads",
+    329 : "Marle-CtrlxZ-CT",
+    330 : "Relm-HoxNorf-FF6PR",
+    331 : "Tina-CtrlxZ-FF6",
 }
 
 def get_path(id_):
