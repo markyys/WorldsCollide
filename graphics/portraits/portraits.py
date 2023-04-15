@@ -257,6 +257,8 @@ id_portrait = {
     348 : "Rash-JamesWhite89-Battletoads",
     349 : "Marle-CtrlxZ-CT",
     350 : "Tina-CtrlxZ-FF6",
+    351 : "Cloud-asilverthorn-Dissidia",
+    352 : "Sephiroth-asilverthorn-Dissidia",
 }
 
 def get_bin_path(id_):
