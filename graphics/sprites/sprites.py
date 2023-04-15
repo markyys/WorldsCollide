@@ -272,6 +272,17 @@ id_sprite = {
     317 : "Gilius-JamesWhite89-GoldenAxe",
     318 : "Arthur-JamesWhite89-GnG",
     319 : "Sherlotta-HoxNorf_ScarabEnigma-FFCC",
+    320 : "Purple Sister-HoxNorf-Neptunia",
+    321 : "Noire-HoxNorf-Neptunia",
+    322 : "Arle-HoxNorf-Madou",
+    323 : "Simon-JamesWhite89-Castlevania",
+    324 : "Aria-HoxNorf-FF3",
+    325 : "Refia-HoxNorf-FF3",
+    326 : "Nakoruru-HoxNorf-SamSho",
+    327 : "Rash-JamesWhite89-Battletoads",
+    328 : "Marle-CtrlxZ-CT",
+    329 : "Relm-HoxNorf-FF6PR",
+    330 : "Tina-CtrlxZ-FF6",
 }
 
 def get_path(id_):

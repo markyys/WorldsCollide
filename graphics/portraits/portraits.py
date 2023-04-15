@@ -243,6 +243,22 @@ id_portrait = {
     334 : "Terra-Laurel_Gens-FF6PR",
     335 : "Umaro-Laurel_Gens-FF6PR",
     336 : "WedgeVicks-Laurel_Gens-FF6PR",
+    337 : "Purple Sister-HoxNorf-Neptunia",
+    338 : "Noire-JamesWhite89-Neptunia",
+    339 : "Arle-HoxNorf-Madou",
+    340 : "Magus-asilverthorn-CT",
+    341 : "Santa_Olaf-asilverthorn-AW",
+    342 : "Vivi-asilverthorn-FF9",
+    343 : "Zidane-asilverthorn-FF9",
+    344 : "Simon-JamesWhite89-Castlevania",
+    345 : "Aria-JamesWhite89-FF3",
+    346 : "Refia-JamesWhite89-FF3",
+    347 : "Nakoruru-HoxNorf-SamSho",
+    348 : "Rash-JamesWhite89-Battletoads",
+    349 : "Marle-CtrlxZ-CT",
+    350 : "Tina-CtrlxZ-FF6",
+    351 : "Cloud-asilverthorn-Dissidia",
+    352 : "Sephiroth-asilverthorn-Dissidia",
 }
 
 def get_bin_path(id_):
