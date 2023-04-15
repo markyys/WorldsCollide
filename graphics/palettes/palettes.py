@@ -267,6 +267,8 @@ id_palette = {
     329 : "Marle-CtrlxZ-CT",
     330 : "Relm-HoxNorf-FF6PR",
     331 : "Tina-CtrlxZ-FF6",
+    332 : "Luneth-HoxNorf-FF3",
+    333 : "Malin-HoxNorf-KOF",
 }
 
 def get_path(id_):

@@ -259,6 +259,14 @@ id_portrait = {
     350 : "Tina-CtrlxZ-FF6",
     351 : "Cloud-asilverthorn-Dissidia",
     352 : "Sephiroth-asilverthorn-Dissidia",
+    353 : "Lightning-asilverthorn-Dissidia",
+    354 : "Barret-HoxNorf-FF7",
+    355 : "Yuffie-CtrlxZ-KH",
+    356 : "Luneth-JamesWhite89-FF3",
+    357 : "Steiner-HoxNorf-FF9",
+    358 : "Garnet (Long Hair)-HoxNorf-FF9",
+    359 : "Garnet (Short Hair)-HoxNorf-FF9",
+    360 : "Malin-HoxNorf-KOF",
 }
 
 def get_bin_path(id_):
