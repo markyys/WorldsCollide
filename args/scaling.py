@@ -24,7 +24,7 @@ def parse(parser):
                                metavar = ("VALUE"), choices = [x / 10.0 for x in range(5, 55, 5)],
                                help = "Enemies and bosses gain 1 level every %(metavar)s minutes")
     level_scaling.add_argument("-lsboss", "--level-scaling-bosses", default = None, type = float,
-                               metavar = ("VALUE"), choices = [x / 10.0 for x in range(5, 55, 5)],
+                               metavar = ("VALUE"), choices = [x / 10.0 for x in range(5, 105, 5)],
                                help = "Enemies and bosses gain %(metavar)s levels for each boss defeated")
 
     hp_mp_scaling = scaling.add_mutually_exclusive_group()
@@ -47,7 +47,7 @@ def parse(parser):
                                metavar = ("VALUE"), choices = [x / 10.0 for x in range(5, 55, 5)],
                                help = "Enemy and boss hp/mp scales every %(metavar)s minutes")
     hp_mp_scaling.add_argument("-hmboss", "--hp-mp-scaling-bosses", default = None, type = float,
-                               metavar = ("VALUE"), choices = [x / 10.0 for x in range(5, 55, 5)],
+                               metavar = ("VALUE"), choices = [x / 10.0 for x in range(5, 105, 5)],
                                help = "Enemy and boss hp/mp scales %(metavar)s * each boss defeated")
 
     xp_gp_scaling = scaling.add_mutually_exclusive_group()
@@ -70,7 +70,7 @@ def parse(parser):
                                metavar = ("VALUE"), choices = [x / 10.0 for x in range(5, 55, 5)],
                                help = "Enemy and boss exp/gp scales every %(metavar)s minutes")
     xp_gp_scaling.add_argument("-xgboss", "--xp-gp-scaling-bosses", default = None, type = float,
-                               metavar = ("VALUE"), choices = [x / 10.0 for x in range(5, 55, 5)],
+                               metavar = ("VALUE"), choices = [x / 10.0 for x in range(5, 105, 5)],
                                help = "Enemy and boss exp/gp scales %(metavar)s * for each boss defeated")
 
     ability_scaling = scaling.add_mutually_exclusive_group()
