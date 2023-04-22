@@ -23,6 +23,9 @@ def parse(parser):
     level_scaling.add_argument("-lst", "--level-scaling-time", default = None, type = float,
                                metavar = ("VALUE"), choices = [x / 10.0 for x in range(5, 55, 5)],
                                help = "Enemies and bosses gain 1 level every %(metavar)s minutes")
+    level_scaling.add_argument("-lsboss", "--level-scaling-bosses", default = None, type = float,
+                               metavar = ("VALUE"), choices = [x / 10.0 for x in range(5, 105, 5)],
+                               help = "Enemies and bosses gain %(metavar)s levels for each boss defeated")
 
     hp_mp_scaling = scaling.add_mutually_exclusive_group()
     hp_mp_scaling.add_argument("-hma", "--hp-mp-scaling-average", default = None, type = float,
@@ -43,6 +46,9 @@ def parse(parser):
     hp_mp_scaling.add_argument("-hmt", "--hp-mp-scaling-time", default = None, type = float,
                                metavar = ("VALUE"), choices = [x / 10.0 for x in range(5, 55, 5)],
                                help = "Enemy and boss hp/mp scales every %(metavar)s minutes")
+    hp_mp_scaling.add_argument("-hmboss", "--hp-mp-scaling-bosses", default = None, type = float,
+                               metavar = ("VALUE"), choices = [x / 10.0 for x in range(5, 105, 5)],
+                               help = "Enemy and boss hp/mp scales %(metavar)s * each boss defeated")
 
     xp_gp_scaling = scaling.add_mutually_exclusive_group()
     xp_gp_scaling.add_argument("-xga", "--xp-gp-scaling-average", default = None, type = float,
@@ -63,6 +69,9 @@ def parse(parser):
     xp_gp_scaling.add_argument("-xgt", "--xp-gp-scaling-time", default = None, type = float,
                                metavar = ("VALUE"), choices = [x / 10.0 for x in range(5, 55, 5)],
                                help = "Enemy and boss exp/gp scales every %(metavar)s minutes")
+    xp_gp_scaling.add_argument("-xgboss", "--xp-gp-scaling-bosses", default = None, type = float,
+                               metavar = ("VALUE"), choices = [x / 10.0 for x in range(5, 105, 5)],
+                               help = "Enemy and boss exp/gp scales %(metavar)s * for each boss defeated")
 
     ability_scaling = scaling.add_mutually_exclusive_group()
     ability_scaling.add_argument("-ase", "--ability-scaling-element", default = None, type = float,
@@ -91,6 +100,8 @@ def process(args):
         args.level_scaling_factor = args.level_scaling_ced
     elif args.level_scaling_checks:
         args.level_scaling_factor = args.level_scaling_checks
+    elif args.level_scaling_bosses:
+        args.level_scaling_factor = args.level_scaling_bosses    
     elif args.level_scaling_time:
         args.level_scaling_factor = args.level_scaling_time
     else:
@@ -108,6 +119,8 @@ def process(args):
         args.hp_mp_scaling_factor = args.hp_mp_scaling_ced
     elif args.hp_mp_scaling_checks:
         args.hp_mp_scaling_factor = args.hp_mp_scaling_checks
+    elif args.hp_mp_scaling_bosses:
+        args.hp_mp_scaling_factor = args.hp_mp_scaling_bosses
     elif args.hp_mp_scaling_time:
         args.hp_mp_scaling_factor = args.hp_mp_scaling_time
     else:
@@ -125,6 +138,8 @@ def process(args):
         args.xp_gp_scaling_factor = args.xp_gp_scaling_ced
     elif args.xp_gp_scaling_checks:
         args.xp_gp_scaling_factor = args.xp_gp_scaling_checks
+    elif args.xp_gp_scaling_bosses:
+        args.xp_gp_scaling_factor = args.xp_gp_scaling_bosses
     elif args.xp_gp_scaling_time:
         args.xp_gp_scaling_factor = args.xp_gp_scaling_time
     else:
@@ -153,6 +168,8 @@ def flags(args):
         flags += f" -lsced {args.level_scaling_factor:g}"
     elif args.level_scaling_checks:
         flags += f" -lsc {args.level_scaling_factor:g}"
+    elif args.level_scaling_bosses:
+        flags += f" -lsboss {args.level_scaling_factor:g}"
     elif args.level_scaling_time:
         flags += f" -lst {args.level_scaling_factor:g}"
 
@@ -166,6 +183,8 @@ def flags(args):
         flags += f" -hmced {args.hp_mp_scaling_factor:g}"
     elif args.hp_mp_scaling_checks:
         flags += f" -hmc {args.hp_mp_scaling_factor:g}"
+    elif args.hp_mp_scaling_bosses:
+        flags += f" -hmboss {args.hp_mp_scaling_factor:g}"
     elif args.hp_mp_scaling_time:
         flags += f" -hmt {args.hp_mp_scaling_factor:g}"
 
@@ -179,6 +198,8 @@ def flags(args):
         flags += f" -xgced {args.xp_gp_scaling_factor:g}"
     elif args.xp_gp_scaling_checks:
         flags += f" -xgc {args.xp_gp_scaling_factor:g}"
+    elif args.xp_gp_scaling_bosses:
+        flags += f" -xgboss {args.xp_gp_scaling_factor:g}"
     elif args.xp_gp_scaling_time:
         flags += f" -xgt {args.xp_gp_scaling_factor:g}"
 
@@ -211,6 +232,8 @@ def options(args):
         level_scaling = "Characters + Espers + Dragons"
     elif args.level_scaling_checks:
         level_scaling = "Checks"
+    elif args.level_scaling_bosses:
+        level_scaling = "Bosses"
     elif args.level_scaling_time:
         level_scaling = "Time"
 
@@ -229,6 +252,8 @@ def options(args):
         hp_mp_scaling = "Characters + Espers + Dragons"
     elif args.hp_mp_scaling_checks:
         hp_mp_scaling = "Checks"
+    elif args.hp_mp_scaling_bosses:
+        hp_mp_scaling = "Bosses"
     elif args.hp_mp_scaling_time:
         hp_mp_scaling = "Time"
 
@@ -247,6 +272,8 @@ def options(args):
         xp_gp_scaling = "Characters + Espers + Dragons"
     elif args.xp_gp_scaling_checks:
         xp_gp_scaling = "Checks"
+    elif args.xp_gp_scaling_bosses:
+        xp_gp_scaling = "Bosses"
     elif args.xp_gp_scaling_time:
         xp_gp_scaling = "Time"
 
