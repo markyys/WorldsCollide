@@ -19,6 +19,9 @@ def parse(parser):
     graphics.add_argument("-wmhc", "--world-minimap-high-contrast", action = "store_true",
                               help = "World Minimap made Opaque with Minimap icon changed to higher contrast to improve visibility.")
 
+    graphics.add_argument("-ahtc", "--alternate-healing-text-color", action = "store_true",
+                              help = "Makes healing text blue, to be able to distinguish from damage.")
+
 def process(args):
     import graphics.palettes.palettes as palettes
     import graphics.portraits.portraits as portraits
@@ -113,6 +116,9 @@ def flags(args):
         flags += " -frm"
     if args.world_minimap_high_contrast:
         flags += " -wmhc"
+    if args.alternate_healing_text_color:
+        flags += " -ahtc"
+
     return flags
 
 def _truncated_name(name):
