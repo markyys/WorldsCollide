@@ -267,6 +267,20 @@ id_portrait = {
     358 : "Garnet (Long Hair)-HoxNorf-FF9",
     359 : "Garnet (Short Hair)-HoxNorf-FF9",
     360 : "Malin-HoxNorf-KOF",
+    361 : "Terra-Jones-FF6",
+    362 : "Locke-Jones-FF6",
+    363 : "Edgar-Jones-FF6",
+    364 : "Sabin-Jones-FF6",
+    365 : "Celes-Jones-FF6",
+    366 : "Relm-Jones-FF6",
+    367 : "Gau-Jones-FF6",
+    368 : "Umaro-Jones-FF6",
+    369 : "Bartz-metalliguy_Gens-FF5",
+    370 : "Chocobo-metalliguy_Gens-FF5",
+    371 : "Faris-metalliguy_Gens-FF5",
+    372 : "Galuf-metalliguy_Gens-FF5",
+    373 : "Krile-metalliguy_Gens-FF5",
+    374 : "Lenna-metalliguy_Gens-FF5",
 }
 
 def get_bin_path(id_):
