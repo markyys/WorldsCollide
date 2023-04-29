@@ -77,7 +77,7 @@ def options(args):
     
     if args.chest_random_monsters:
         result.append(("MIAB Percent", f"{args.chest_random_monsters_enemy}%"))
-        result.append(("Boss Percent", f"{args.chest_random_monsters_boss}%"))
+        result.append(("  Boss Percent", f"{args.chest_random_monsters_boss}%"))
 
     result.append(("MIAB Shuffled", args.chest_monsters_shuffle))
 
