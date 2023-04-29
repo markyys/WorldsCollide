@@ -281,6 +281,12 @@ id_portrait = {
     372 : "Galuf-metalliguy_Gens-FF5",
     373 : "Krile-metalliguy_Gens-FF5",
     374 : "Lenna-metalliguy_Gens-FF5",
+    375 : "Tohka-HoxNorf-DAL",
+    376 : "Toadette (Explorer)-HoxNorf-Mario",
+    377 : "Blaze-HoxNorf-Sonic",
+    378 : "Xion-Kzinssie-KH",
+    379 : "Gerad-Tsushiy_Gens-FF6",
+    380 : "Gau (Suit)-Tsushiy_Gens-FF6",
 }
 
 def get_bin_path(id_):
