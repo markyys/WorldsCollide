@@ -285,6 +285,9 @@ id_sprite = {
     330 : "Tina-CtrlxZ-FF6",
     331 : "Luneth-HoxNorf-FF3",
     332 : "Malin-HoxNorf-KOF",
+    333 : "Toadette (Explorer)-HoxNorf-Mario",
+    334 : "Blaze-HoxNorf-Sonic",
+    335 : "Xion-Kzinssie-KH",
 }
 
 def get_path(id_):

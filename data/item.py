@@ -1,5 +1,4 @@
 import data.text as text
-from constants.items import TRASH_IDS
 from data.text.text2 import text_value, value_text
 
 class Item():
@@ -21,10 +20,6 @@ class Item():
         self.desc_data = desc_data
 
         self.read()
-
-    @property
-    def is_trash(self):
-        return self.id in TRASH_IDS
 
     def is_equipable(self):
         return self.equipable_characters
@@ -50,11 +45,6 @@ class Item():
 
     def get_desc_data(self):
         return text.get_bytes(self.desc, text.TEXT2)
-
-    @property
-    def sell_gold_value(self):
-        ## half price for sell and //100
-        return self.price//200
 
     def scale_price(self, factor):
         self.price = int(self.price * factor)

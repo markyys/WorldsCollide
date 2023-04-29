@@ -74,6 +74,11 @@ boss_event_battle_groups = {
     125: "Ultros 3",
     130: "Phunbaba 3",
     131: "Phunbaba 4",
+    140: "Guardian",
+    145: "MagiMaster"
+}
+
+dragon_event_battle_groups = {
     132: "Ice Dragon",
     133: "Storm Drgn",
     134: "Dirt Drgn",
@@ -82,8 +87,10 @@ boss_event_battle_groups = {
     137: "Blue Drgn",
     138: "Red Dragon",
     139: "White Drgn",
-    140: "Guardian",
-    145: "MagiMaster"
 }
 
-name_event_battle_group_id = {v: k for k, v in boss_event_battle_groups.items()}
+event_battle_group_name = {}
+event_battle_group_name.update(boss_event_battle_groups)
+event_battle_group_name.update(dragon_event_battle_groups)
+
+name_event_battle_group = {v: k for k, v in event_battle_group_name.items()}
