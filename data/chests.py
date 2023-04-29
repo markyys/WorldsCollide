@@ -216,17 +216,26 @@ class Chests():
 
         chests_asm.scale_gold(gold_bits, self.gold_contents)
 
-    def chest_all_monsters(self, boss_percent):
-        from data.enemy_battle_groups import event_battle_groups_to_avoid, boss_event_battle_groups, name_event_battle_group_id
-        MIAB_noboss = [a for a in range(256) if a not in event_battle_groups_to_avoid.keys() and a not in boss_event_battle_groups.keys()]
-        MIAB_boss = [a for a in range(256) if a in boss_event_battle_groups.keys()]
+    def chest_random_monsters(self, enemy_percent, boss_percent):
+        from data.enemy_battle_groups import event_battle_groups_to_avoid, boss_event_battle_groups, event_battle_group_name, dragon_event_battle_groups, name_event_battle_group, unused_event_battle_groups
+        MIAB_noboss = [a for a in range(256) if a not in event_battle_groups_to_avoid.keys() and a not in event_battle_group_name.keys() and a not in unused_event_battle_groups.keys()]
+        if self.args.mix_bosses_dragons:
+            MIAB_boss = [a for a in range(256) if a in boss_event_battle_groups.keys() or a in dragon_event_battle_groups.keys()]
+        else:
+            MIAB_boss = [a for a in range(256) if a in boss_event_battle_groups.keys()]
 
         # Respect boss modification flags
         if not self.args.shuffle_random_phunbaba3:
             # Remove Phunbaba 3 encounter from the MIAB_boss pool
-            MIAB_boss.remove(name_event_battle_group_id["Phunbaba 3"])
+            MIAB_boss.remove(name_event_battle_group["Phunbaba 3"])
 
-        for chest in self.chests:
+        randomizable_types = [Chest.EMPTY, Chest.ITEM, Chest.GOLD]
+        possible_chests = [chest for chest in self.chests if ((chest.type in randomizable_types))]
+        num_monster_chests = int(len(possible_chests) * ((enemy_percent) / 100.0))
+        #gets the specific chests that will be randomized
+        random_chests = random.sample(possible_chests, num_monster_chests)  
+
+        for chest in random_chests:
             chest.type = Chest.MONSTER
             is_boss = (random.random()*100 < boss_percent)
             if is_boss:
@@ -314,13 +323,15 @@ class Chests():
             self.random_scaled()
         elif self.args.chest_contents_empty:
             self.clear_contents()
-        elif self.args.chest_all_monsters:
-            self.chest_all_monsters(self.args.chest_all_monsters_boss_percent)
         else:
             self.remove_excluded_items()
 
         if self.args.chest_monsters_shuffle:
             self.shuffle([Chest.MONSTER])
+
+        # add randomized MIABs after other contents randomization/shuffle is complete
+        if self.args.chest_random_monsters_enemy > 0:
+            self.chest_random_monsters(self.args.chest_random_monsters_enemy, self.args.chest_random_monsters_boss)
 
         self.copy_thamasa_chests()
 
@@ -343,6 +354,7 @@ class Chests():
         from data.item_names import id_name
         from data.item import Item
         from textwrap import wrap
+        from data.enemy_battle_groups import event_battle_group_name
 
         lcolumn = []
         if self.args.chest_contents_random_scaled:
@@ -370,8 +382,12 @@ class Chests():
                     elif chest.type == Chest.GOLD:
                         contents.append(f"{chest.contents * 100} GP")
                     elif chest.type == Chest.MONSTER:
-                        # TODO how to get enemy name?
-                        contents.append("MIAB")
+                        if chest.contents in event_battle_group_name:
+                            # if it's a boss/dragon, append it
+                            contents.append(f"MIAB({event_battle_group_name[chest.contents]})")
+                        else:
+                            # TODO how to get enemy name?
+                            contents.append("MIAB")
                     elif chest.type == Chest.EMPTY:
                         contents.append("Empty")
 

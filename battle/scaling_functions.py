@@ -25,7 +25,7 @@ class ScalingFunctions():
             self.level = self.ced
         elif args.level_scaling_checks:
             self.level = self.checks
-        elif args.level_scaling_bosses:
+        elif args.level_scaling_bosses_dragons:
             self.level = self.bosses_dragons
         elif args.level_scaling_time:
             self.level = self.time
@@ -42,7 +42,7 @@ class ScalingFunctions():
             self.hp_mp = self.ced
         elif args.hp_mp_scaling_checks:
             self.hp_mp = self.checks
-        elif args.hp_mp_scaling_bosses:
+        elif args.hp_mp_scaling_bosses_dragons:
             self.hp_mp = self.bosses_dragons
         elif args.hp_mp_scaling_time:
             self.hp_mp = self.time
@@ -59,7 +59,7 @@ class ScalingFunctions():
             self.xp_gp = self.ced
         elif args.xp_gp_scaling_checks:
             self.xp_gp = self.checks
-        elif args.xp_gp_scaling_bosses:
+        elif args.xp_gp_scaling_bosses_dragons:
             self.xp_gp = self.bosses_dragons
         elif args.xp_gp_scaling_time:
             self.xp_gp = self.time
