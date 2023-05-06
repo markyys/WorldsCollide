@@ -67,7 +67,7 @@ class NarsheMoogleDefense(Event):
                 field.SetPalette(character_idx, self.characters.get_palette(self.characters.MOG)),
                 # Give it the name and properties of the moogle
                 field.SetName(character_idx, moogle_id),
-                field.SetProperties(character_idx, moogle_id),
+                field.SetEquipmentAndCommands(character_idx, moogle_id),
             ]
             if self.args.start_average_level:
                 src += [
@@ -457,7 +457,7 @@ class NarsheMoogleDefense(Event):
                 field.SetSprite(character_idx, self.characters.get_sprite(character_idx)),
                 field.SetPalette(character_idx, self.characters.get_palette(character_idx)),
                 field.SetName(character_idx, character_idx),
-                field.SetProperties(character_idx, character_idx),
+                field.SetEquipmentAndCommands(character_idx, character_idx),
                 f"SKIP_{character_idx}",
             ]
         src += [
@@ -497,7 +497,7 @@ class NarsheMoogleDefense(Event):
             field.SetSprite(character, self.characters.get_sprite(character)),
             field.SetPalette(character, self.characters.get_palette(character)),
             field.SetName(character, character),
-            field.SetProperties(character, character),
+            field.SetEquipmentAndCommands(character, character),
             field.RemoveStatusEffects(character, field.Status.FLOAT | field.Status.DARKNESS | field.Status.ZOMBIE | field.Status.POISON | field.Status.VANISH | field.Status.IMP | field.Status.PETRIFY | field.Status.DEATH),
             field.RemoveDeath(character), # added due to permadeath situations to make sure the corresponding party member is alive
             field.RestoreHp(character, 0x7f), # restore all HP
