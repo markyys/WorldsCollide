@@ -62,7 +62,7 @@ class SetEquipmentAndCommands(_Instruction):
     def __init__(self, to_character, from_character):
         from instruction.c0 import character_data_offset
 
-        # subset of SetProperties vanilla command (0x40), which only sets equipment and commands
+        # subset of SetProperties vanilla command (0x40), which only sets equipment, commands, and character ID
         src = [
             #C0/A07C:	20AD9D  	JSR $9DAD		
             asm.JSR(character_data_offset, asm.ABS),
@@ -137,7 +137,6 @@ class SetEquipmentAndCommands(_Instruction):
         ]
         space = Write(Bank.C0, src, "custom swap equipment and commands command")
         address = space.start_address
-        print(f"{space.start_address_snes:x}")
 
         opcode = 0xa3
         _set_opcode_address(opcode, address)
