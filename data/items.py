@@ -199,13 +199,6 @@ class Items():
             self.characters.characters[index].init_body = random.choice(tiers[Item.ARMOR][1])
             self.characters.characters[index].init_head = random.choice(tiers[Item.HELMET][1])
 
-    def moogle_curse(self):
-        # If using -no-random-encounters, the Moogle Charm becomes the Moogle Curse
-        # (enables random encounters on world map).  Update the name and description.
-        moogle_charm = self.items[name_id["Moogle Charm"]]
-        moogle_charm.name = "Moogle Curse"
-        moogle_charm.desc = "Draw monsters on world map<end>"
-
     def mod(self):
         not_relic_condition = lambda x : x != Item.RELIC
         if self.args.item_equipable_random:
@@ -279,9 +272,6 @@ class Items():
             self.add_receive_dialog(item_id)
 
         self.moogle_starting_equipment()
-
-        if self.args.no_random_encounters:
-            self.moogle_curse()
 
     def write(self):
         for item in self.items:

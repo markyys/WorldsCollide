@@ -1,4 +1,6 @@
 unused_event_battle_groups = {
+    9:   "B.Day Suit/Officer",
+    10:  "Merchant/B.Day Suit",
 	49:  "Empty",
     50:  "Empty",
     51:  "Empty",
@@ -6,6 +8,7 @@ unused_event_battle_groups = {
     54:  "Empty",
     56:  "Empty",
     58:  "Lv60 Magic event battle",
+    59:  "Terra vs Officer",
     60:  "Empty",
     61:  "Empty",
     62:  "Empty",
