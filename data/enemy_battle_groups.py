@@ -1,7 +1,7 @@
 unused_event_battle_groups = {
     9:   "B.Day Suit/Officer",
     10:  "Merchant/B.Day Suit",
-	49:  "Empty",
+    49:  "Empty",
     50:  "Empty",
     51:  "Empty",
     52:  "Empty",
