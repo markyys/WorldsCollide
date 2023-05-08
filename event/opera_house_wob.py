@@ -56,7 +56,7 @@ class OperaHouseWOB(Event):
 
         if self.reward.type == RewardType.CHARACTER:
             self.character_mod(self.reward.id)
-            self.character_music_mod(self.reward.id if self.args.replace_character_check_themes else SETZER)
+            self.character_music_mod(self.reward.id)
         elif self.reward.type == RewardType.ESPER:
             self.esper_mod(self.reward.id)
             self.character_music_mod(SETZER)

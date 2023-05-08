@@ -183,9 +183,14 @@ def _other_options_log(args):
     if args.world_minimap_high_contrast:
         world_minimap = "High Contrast"
 
+    healing_text = "Original"
+    if args.alternate_healing_text_color:
+        healing_text = "Blue"
+
     entries = [
         ("Remove Flashes", remove_flashes),
         ("World Minimap", world_minimap),
+        ("Healing Text", healing_text),
     ]
 
     for entry in entries:
