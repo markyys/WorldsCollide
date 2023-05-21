@@ -1,10 +1,14 @@
 unused_event_battle_groups = {
-	49:  "Empty",
+    9:   "B.Day Suit/Officer",
+    10:  "Merchant/B.Day Suit",
+    49:  "Empty",
     50:  "Empty",
     51:  "Empty",
     52:  "Empty",
     54:  "Empty",
     56:  "Empty",
+    58:  "Lv60 Magic event battle",
+    59:  "Terra vs Officer",
     60:  "Empty",
     61:  "Empty",
     62:  "Empty",
@@ -19,6 +23,7 @@ unused_event_battle_groups = {
     105:  "Empty",
     106:  "Empty",
     111: "White Drgn (repeat)",
+    115:  "Terra flashback battle with 3 Soldiers",
     120:  "Tritoch (repeat)",
     121:  "Empty",
     122:  "Empty",
@@ -74,6 +79,11 @@ boss_event_battle_groups = {
     125: "Ultros 3",
     130: "Phunbaba 3",
     131: "Phunbaba 4",
+    140: "Guardian",
+    145: "MagiMaster"
+}
+
+dragon_event_battle_groups = {
     132: "Ice Dragon",
     133: "Storm Drgn",
     134: "Dirt Drgn",
@@ -82,8 +92,10 @@ boss_event_battle_groups = {
     137: "Blue Drgn",
     138: "Red Dragon",
     139: "White Drgn",
-    140: "Guardian",
-    145: "MagiMaster"
 }
 
-name_event_battle_group_id = {v: k for k, v in boss_event_battle_groups.items()}
+event_battle_group_name = {}
+event_battle_group_name.update(boss_event_battle_groups)
+event_battle_group_name.update(dragon_event_battle_groups)
+
+name_event_battle_group = {v: k for k, v in event_battle_group_name.items()}
