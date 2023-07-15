@@ -94,6 +94,8 @@ category_types["Auto"].append(ResultType(63, "Auto Overcast", "Auto Overcast", N
 category_types["Auto"].append(ResultType(64, "Auto Dark", "Auto Dark", None))
 category_types["Auto"].append(ResultType(65, "Auto Clear", "Auto Clear", None))
 category_types["Auto"].append(ResultType(66, "Auto Imp", "Auto Imp", None))
+category_types["Item"].append(ResultType(67, "Throwables", "Throwables", None))
+category_types["Item"].append(ResultType(68, "Restoratives", "Restoratives", None))
 
 categories = list(category_types.keys())
 
