@@ -172,10 +172,6 @@ class Espers():
         for esper in self.espers:
             esper.randomize_rates()
 
-    def randomize_rates_tiered(self):
-        for esper in self.espers:
-            esper.randomize_rates_tiered()
-
     def shuffle_bonuses(self):
         bonuses = []
         for esper in self.espers:
@@ -277,18 +273,18 @@ class Espers():
     def mod(self, dialogs):
         self.receive_dialogs_mod(dialogs)
 
+        if self.args.esper_spells_random_rates or self.args.esper_spells_shuffle_random_rates:
+            self.randomize_rates()
+
+        if len(self.starting_espers):
+            self.randomize_rates()
+
         if self.args.esper_spells_shuffle or self.args.esper_spells_shuffle_random_rates:
             self.shuffle_spells()
         elif self.args.esper_spells_random:
             self.randomize_spells()
         elif self.args.esper_spells_random_tiered:
             self.randomize_spells_tiered()
-
-        if self.args.esper_learnrates_random:
-            self.randomize_rates()
-
-        if self.args.esper_learnrates_random_tiered:
-            self.randomize_rates_tiered()
 
         if self.args.esper_bonuses_shuffle:
             self.shuffle_bonuses()
@@ -323,7 +319,6 @@ class Espers():
 
         if self.args.esper_multi_summon:
             self.multi_summon()
-
 
     def write(self):
         if self.args.spoiler_log:
