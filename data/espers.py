@@ -284,6 +284,13 @@ class Espers():
         elif self.args.esper_spells_random_tiered:
             self.randomize_spells_tiered()
 
+        if self.args.esper_spells_random or self.args.esper_spells_random_tiered:
+            # if random, replace the spells
+            self.replace_flagged_learnables()
+        else:
+            # otherwise (original or shuffled), remove them
+            self.remove_flagged_learnables()
+
         if self.args.esper_learnrates_random:
             self.randomize_rates()
 
@@ -313,13 +320,6 @@ class Espers():
 
         if self.args.permadeath:
             self.phoenix_life3()
-
-        if self.args.esper_spells_random or self.args.esper_spells_random_tiered:
-            # if random, replace the spells
-            self.replace_flagged_learnables()
-        else:
-            # otherwise (original or shuffled), remove them
-            self.remove_flagged_learnables()
 
         if self.args.esper_multi_summon:
             self.multi_summon()
