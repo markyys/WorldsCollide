@@ -8,7 +8,11 @@ class LoneWolf(Event):
         return self.characters.MOG
 
     def init_rewards(self):
-        self.reward1 = self.add_reward(RewardType.CHARACTER | RewardType.ESPER | RewardType.ITEM)
+        if self.args.no_free_characters_espers:
+            self.reward1 = self.add_reward(RewardType.ITEM)
+        else:
+            self.reward1 = self.add_reward(RewardType.CHARACTER | RewardType.ESPER | RewardType.ITEM)
+        
         self.reward2 = self.add_reward(RewardType.ITEM)
 
     def init_event_bits(self, space):
