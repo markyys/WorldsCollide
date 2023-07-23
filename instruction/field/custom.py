@@ -25,6 +25,125 @@ def _add_esper_increment():
     space.write(asm.JMP(increment_found, asm.ABS))
 _add_esper_increment()
 
+class RemoveDeath(_Instruction):
+    def __init__(self, character):
+        import instruction.field as field
+        from instruction.c0 import character_data_offset
+
+        self.current_status = 0x1614 # character status effects address
+        self.death_mask = field.Status.DEATH >> 8
+        # add a special command specifically for removing death. 
+        # This is used in special events (like Moogle Defense), where we want to revive even with permadeath
+        # Code based on C0/AE2D - AE44 (gen. act. 88 to Remove status effects)
+        src = [
+            asm.JSR(character_data_offset, asm.ABS),
+            asm.CPY(0x0250, asm.IMM16),
+            asm.BCS("DONE"),
+            asm.A16(),
+            asm.LDA(self.current_status, asm.ABS_Y),
+            asm.AND(~self.death_mask, asm.IMM16), # clear the DEATH bit
+            asm.STA(self.current_status, asm.ABS_Y),
+            asm.TDC(),
+            asm.A8(),
+            "DONE",
+            asm.LDA(0x02, asm.IMM8),        # command size
+            asm.JMP(0x9b5c, asm.ABS),       # next command
+        ]
+        space = Write(Bank.C0, src, "custom remove_death command")
+        address = space.start_address
+
+        opcode = 0x6f
+        _set_opcode_address(opcode, address)
+
+        RemoveDeath.__init__ = lambda self, character : super().__init__(opcode, character)
+        self.__init__(character)
+
+class SetEquipmentAndCommands(_Instruction):
+    def __init__(self, to_character, from_character):
+        from instruction.c0 import character_data_offset
+
+        # subset of SetProperties vanilla command (0x40), which only sets equipment, commands, and character ID
+        src = [
+            #C0/A07C:	20AD9D  	JSR $9DAD		
+            asm.JSR(character_data_offset, asm.ABS),
+            # C0/A07F:	A916    	LDA #$16
+            asm.LDA(0x16, asm.IMM8),
+            # C0/A081:	8D0242  	STA $4202
+            asm.STA(0x4202, asm.ABS),
+            # C0/A084:	A5EC    	LDA $EC
+            asm.LDA(0xEC, asm.DIR),
+            # C0/A086:	8D0342  	STA $4203
+            asm.STA(0x4203, asm.ABS),
+            # C0/A089:	EA      	NOP
+            asm.NOP(),
+            # C0/A08A:	EA      	NOP
+            asm.NOP(),
+            # C0/A08B:	EA      	NOP
+            asm.NOP(),
+            # C0/A08C:	AE1642  	LDX $4216
+            asm.LDX(0x4216, asm.ABS),
+            # Commands
+            # C0/A08F:	BFA27CED	LDA $ED7CA2,X	(command 1)
+            asm.LDA(0xED7CA2, asm.LNG_X),
+            # C0/A093:	991616  	STA $1616,Y
+            asm.STA(0x1616, asm.ABS_Y),
+            # C0/A096:	BFA37CED	LDA $ED7CA3,X	(command 2)
+            asm.LDA(0xED7CA3, asm.LNG_X),
+            # C0/A09A:	991716  	STA $1617,Y
+            asm.STA(0x1617, asm.ABS_Y),
+            # C0/A09D:	BFA47CED	LDA $ED7CA4,X	(command 3)
+            asm.LDA(0xED7CA4, asm.LNG_X),
+            # C0/A0A1:	991816  	STA $1618,Y
+            asm.STA(0x1618, asm.ABS_Y),
+            # C0/A0A4:	BFA57CED	LDA $ED7CA5,X	(command 4)
+            asm.LDA(0xED7CA5, asm.LNG_X),
+            # C0/A0A8:	991916  	STA $1619,Y
+            asm.STA(0x1619, asm.ABS_Y),
+            # Equipment
+            # C0/A0CC:	BFAF7CED	LDA $ED7CAF,X	(R-hand)
+            asm.LDA(0xED7CAF, asm.LNG_X),
+            # C0/A0D0:	991F16  	STA $161F,Y
+            asm.STA(0x161F, asm.ABS_Y),
+            # C0/A0D3:	BFB07CED	LDA $ED7CB0,X	(L-hand)
+            asm.LDA(0xED7CB0, asm.LNG_X),
+            # C0/A0D7:	992016  	STA $1620,Y
+            asm.STA(0x1620, asm.ABS_Y),
+            # C0/A0DA:	BFB17CED	LDA $ED7CB1,X	(Body)
+            asm.LDA(0xED7CB1, asm.LNG_X),
+            # C0/A0DE:	992116  	STA $1621,Y
+            asm.STA(0x1621, asm.ABS_Y),
+            # C0/A0E1:	BFB27CED	LDA $ED7CB2,X	(Head)
+            asm.LDA(0xED7CB2, asm.LNG_X),
+            # C0/A0E5:	992216  	STA $1622,Y
+            asm.STA(0x1622, asm.ABS_Y),
+            # C0/A0E8:	BFB37CED	LDA $ED7CB3,X	(Relic 1)
+            asm.LDA(0xED7CB3, asm.LNG_X),
+            # C0/A0EC:	992316  	STA $1623,Y
+            asm.STA(0x1623, asm.ABS_Y),
+            # C0/A0EF:	BFB47CED	LDA $ED7CB4,X	(Relic 2)
+            asm.LDA(0xED7CB4, asm.LNG_X),
+            # C0/A0F3:	992416  	STA $1624,Y
+            asm.STA(0x1624, asm.ABS_Y),
+
+            # C0/A10D:	A5EC    	LDA $EC        (load parameter)
+            asm.LDA(0xec, asm.DIR),
+            # C0/A10F:	990016  	STA $1600,Y    (save character ID)
+            asm.STA(0x1600, asm.ABS_Y),
+
+            # C0/A17A:	A903    	LDA #$03
+            asm.LDA(0x03, asm.IMM8),        # command size
+            # C0/A17C:	4C5C9B  	JMP $9B5C
+            asm.JMP(0x9b5c, asm.ABS),       # next command
+        ]
+        space = Write(Bank.C0, src, "custom swap equipment and commands command")
+        address = space.start_address
+
+        opcode = 0xa3
+        _set_opcode_address(opcode, address)
+
+        SetEquipmentAndCommands.__init__ = lambda self, to_character, from_character : super().__init__(opcode, to_character, from_character)
+        self.__init__(to_character, from_character)
+
 class ToggleWorlds(_Instruction):
     def __init__(self):
         fade_load_map = 0xab47
@@ -67,6 +186,58 @@ class LoadEsperFound(_Instruction):
 
         LoadEsperFound.__init__ = lambda self, esper : super().__init__(opcode, esper)
         self.__init__(esper)
+
+class LoadPartiesWithCharacters(_Instruction):
+    ''' Sets bits 0-2 in event word when those parties have characters.'''
+    def __init__(self):
+        import data.event_bit as event_bit
+        result_byte = event_bit.address(event_bit.multipurpose(0))
+        src = [
+            asm.STZ(result_byte, asm.ABS),
+            asm.LDX(0x0000, asm.IMM16),
+            "START_CHARACTER_LOOP",
+            asm.LDA(0x1850, asm.ABS_X), # load the character data 
+            asm.AND(0x47, asm.IMM8),    # isolate the enabled bit and party bits (note: there are 3 party bits, but we only use 2.)
+            "CHECK_PARTY_1",
+            asm.CMP(0x41, asm.IMM8),
+            asm.BNE("CHECK_PARTY_2"),
+            # character enabled and in party 1
+            asm.LDA(result_byte, asm.ABS),
+            asm.ORA(0x01, asm.IMM8), # set bit 0 in the result to indicate party 1 has an enabled character
+            asm.STA(result_byte, asm.ABS),
+            asm.BRA("NEXT_CHARACTER"),
+            "CHECK_PARTY_2",
+            asm.CMP(0x42, asm.IMM8),
+            asm.BNE("CHECK_PARTY_3"),
+            # character enabled and in party 2
+            asm.LDA(result_byte, asm.ABS),
+            asm.ORA(0x02, asm.IMM8), # set bit 1 in the result to indicate party 2 has an enabled character 
+            asm.STA(result_byte, asm.ABS),
+            asm.BRA("NEXT_CHARACTER"),
+            "CHECK_PARTY_3",
+            asm.CMP(0x43, asm.IMM8),
+            asm.BNE("NEXT_CHARACTER"),
+            # character enabled and in party 3
+            asm.LDA(result_byte, asm.ABS),
+            asm.ORA(0x04, asm.IMM8), # set bit 2 in the result to indicate party 3 has an enabled character
+            asm.STA(result_byte, asm.ABS),
+            # end of loop iteration -- increment X for another go
+            "NEXT_CHARACTER",
+            asm.INX(),
+            asm.CPX(0x000f, asm.IMM16), # did we check all 16 characters?
+            asm.BNE("START_CHARACTER_LOOP"), # if not, check the next one
+            asm.LDA(0x01, asm.IMM8),        # command size
+            asm.JMP(0x9b5c, asm.ABS),       # next command
+        ]
+
+        space = Write(Bank.C0, src, "custom load parties with characters instruction")
+        address = space.start_address
+
+        opcode = 0xe5
+        _set_opcode_address(opcode, address)
+
+        LoadPartiesWithCharacters.__init__ = lambda self : super().__init__(opcode)
+        self.__init__()
 
 class RecruitCharacter(_Instruction):
     def __init__(self, character):

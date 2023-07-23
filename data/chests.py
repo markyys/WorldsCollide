@@ -50,10 +50,14 @@ class Chests():
         from data.chest_item_tiers import tiers, tier_s_distribution
         self.item_tiers = tiers
 
-        # remove excluded items from tier s
-        # remaining item weights raised proportionally to their original weight
-        #   e.g. if original weights were [0.10, 0.50, 0.40] and 0.50 removed, the remaining ones become [0.20, 0.80]
+        # remove excluded items from tiers
         excluded_items = self.items.get_excluded()
+        for idx, tier in enumerate(self.item_tiers):
+            tier = [(item) for item in tier if item not in excluded_items]
+            self.item_tiers[idx] = tier
+
+        # for S-tier, remaining item weights raised proportionally to their original weight
+        #   e.g. if original weights were [0.10, 0.50, 0.40] and 0.50 removed, the remaining ones become [0.20, 0.80]
         self.item_tier_s_distribution = [(item_weight[0], item_weight[1]) for item_weight in tier_s_distribution
                                          if item_weight[0] not in excluded_items]
 
@@ -190,6 +194,36 @@ class Chests():
 
         chests_asm.scale_gold(gold_bits, self.gold_contents)
 
+    def chest_random_monsters(self, enemy_percent, boss_percent):
+        from data.enemy_battle_groups import event_battle_groups_to_avoid, boss_event_battle_groups, event_battle_group_name, dragon_event_battle_groups, name_event_battle_group
+        MIAB_noboss = [a for a in range(256) if a not in event_battle_groups_to_avoid.keys() and a not in event_battle_group_name.keys()]
+        if self.args.mix_bosses_dragons:
+            MIAB_boss = [a for a in range(256) if a in boss_event_battle_groups.keys() or a in dragon_event_battle_groups.keys()]
+        else:
+            MIAB_boss = [a for a in range(256) if a in boss_event_battle_groups.keys()]
+
+        # Respect boss modification flags
+        if not self.args.shuffle_random_phunbaba3:
+            # Remove Phunbaba 3 encounter from the MIAB_boss pool
+            MIAB_boss.remove(name_event_battle_group["Phunbaba 3"])
+
+        randomizable_types = [Chest.EMPTY, Chest.ITEM, Chest.GOLD]
+        # Remove chests in the Zone Eater crushing ceiling room from the pool.
+        ze_crush_room_chests = [chest for chest in self.map_chests[0x118] if chest.x != 1]
+        possible_chests = [chest for chest in self.chests if ((chest.type in randomizable_types)) and
+                           chest not in ze_crush_room_chests]
+        num_monster_chests = int(len(possible_chests) * ((enemy_percent) / 100.0))
+        #gets the specific chests that will be randomized
+        random_chests = random.sample(possible_chests, num_monster_chests)  
+
+        for chest in random_chests:
+            chest.type = Chest.MONSTER
+            is_boss = (random.random()*100 < boss_percent)
+            if is_boss:
+                chest.contents = random.choice(MIAB_boss)
+            else:
+                chest.contents = random.choice(MIAB_noboss)
+
     def clear_contents(self):
         for chest in self.chests:
             if chest.type == Chest.ITEM or chest.type == Chest.GOLD:
@@ -276,6 +310,10 @@ class Chests():
         if self.args.chest_monsters_shuffle:
             self.shuffle([Chest.MONSTER])
 
+        # add randomized MIABs after other contents randomization/shuffle is complete
+        if self.args.chest_random_monsters_enemy > 0:
+            self.chest_random_monsters(self.args.chest_random_monsters_enemy, self.args.chest_random_monsters_boss)
+
         self.copy_thamasa_chests()
 
         # update duplicates last after other chest mods finished
@@ -297,6 +335,7 @@ class Chests():
         from data.item_names import id_name
         from data.item import Item
         from textwrap import wrap
+        from data.enemy_battle_groups import event_battle_group_name
 
         lcolumn = []
         if self.args.chest_contents_random_scaled:
@@ -324,8 +363,12 @@ class Chests():
                     elif chest.type == Chest.GOLD:
                         contents.append(f"{chest.contents * 100} GP")
                     elif chest.type == Chest.MONSTER:
-                        # TODO how to get enemy name?
-                        contents.append("MIAB")
+                        if chest.contents in event_battle_group_name:
+                            # if it's a boss/dragon, append it
+                            contents.append(f"MIAB({event_battle_group_name[chest.contents]})")
+                        else:
+                            # TODO how to get enemy name?
+                            contents.append("MIAB")
                     elif chest.type == Chest.EMPTY:
                         contents.append("Empty")
 
