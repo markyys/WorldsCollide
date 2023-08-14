@@ -25,12 +25,13 @@ class Character():
         self.init_magic_evasion = init_data[14]
         self.init_right_hand    = init_data[15]
         self.init_left_hand     = init_data[16]
-        self.init_body          = init_data[17]
-        self.init_head          = init_data[18]
+        self.init_body          = init_data[18] # https://discord.com/channels/666661907628949504/931737764205047858/1069220818300698675
+        self.init_head          = init_data[17]
         self.init_relic1        = init_data[19]
         self.init_relic2        = init_data[20]
         self._init_run_success  = init_data[21] & 0x03
         self._init_level_factor = (init_data[21] & 0x0c) >> 2
+        self._cant_reequip      = (init_data[21] & 0x10) >> 4
 
     def init_data(self):
         from data.characters import Characters
@@ -50,12 +51,13 @@ class Character():
         init_data[14]    = self.init_magic_evasion
         init_data[15]    = self.init_right_hand
         init_data[16]    = self.init_left_hand
-        init_data[17]    = self.init_body
-        init_data[18]    = self.init_head
+        init_data[18]    = self.init_body
+        init_data[17]    = self.init_head
         init_data[19]    = self.init_relic1
         init_data[20]    = self.init_relic2
         init_data[21]    = self._init_run_success
         init_data[21]   |= self._init_level_factor   << 2
+        init_data[21]   |= self._cant_reequip        << 4
 
         return init_data
 
@@ -104,4 +106,4 @@ class Character():
               f"{self.init_vigor}, {self.init_speed}, {self.init_stamina}, {self.init_magic}, {self.init_attack}, "
               f"{self.init_defense}, {self.init_magic_defense}, {self.init_evasion}, {self.init_magic_evasion}, "
               f"{self.init_right_hand}, {self.init_left_hand}, {self.init_body}, {self.init_head}, "
-              f"{self.init_relic1}, {self.init_relic2}, {self._init_run_success}, {self._init_level_factor}")
+              f"{self.init_relic1}, {self.init_relic2}, {self._init_run_success}, {self._init_level_factor}, {self._cant_reequip}")

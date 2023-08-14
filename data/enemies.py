@@ -20,23 +20,29 @@ class Enemies():
     ITEMS_END = 0xf35ff
     ITEMS_SIZE = 4
 
+    SPECIAL_NAMES_START = 0xfd0d0
+    SPECIAL_NAMES_END = 0xfdfdf
+    SPECIAL_NAMES_SIZE = 10
+
     DRAGON_COUNT = 8
 
     SRBEHEMOTH2_ID = 127
     INVINCIBLE_GUARDIAN_ID = 273
 
-    def __init__(self, rom, args):
+    def __init__(self, rom, args, items=[]):
         self.rom = rom
         self.args = args
+        self.items = items
 
         self.enemy_data = DataArray(self.rom, self.DATA_START, self.DATA_END, self.DATA_SIZE)
         self.enemy_name_data = DataArray(self.rom, self.NAMES_START, self.NAMES_END, self.NAME_SIZE)
         self.enemy_item_data = DataArray(self.rom, self.ITEMS_START, self.ITEMS_END, self.ITEMS_SIZE)
+        self.enemy_special_name_data = DataArray(self.rom, self.SPECIAL_NAMES_START, self.SPECIAL_NAMES_END, self.SPECIAL_NAMES_SIZE)
 
         self.enemies = []
         self.bosses = []
         for enemy_index in range(len(self.enemy_data)):
-            enemy = Enemy(enemy_index, self.enemy_data[enemy_index], self.enemy_name_data[enemy_index], self.enemy_item_data[enemy_index])
+            enemy = Enemy(enemy_index, self.enemy_data[enemy_index], self.enemy_name_data[enemy_index], self.enemy_item_data[enemy_index], self.enemy_special_name_data[enemy_index])
             self.enemies.append(enemy)
 
             if enemy_index in bosses.enemy_name and enemy_index not in bosses.removed_enemy_name:
@@ -120,7 +126,7 @@ class Enemies():
         self.enemies[ultros3_id].hp = self.enemies[ultros3_id].hp // 2
 
         # increase hp of some early bosses (especially ones which are normally not fought with a full party)
-        hp4x = ["Leader"]
+        hp4x = ["Leader", "Marshal"]
         hp3x = ["Rizopas", "Piranha", "TunnelArmr"]
         hp2x = ["Ipooh", "GhostTrain", "Kefka (Narshe)", "Dadaluma", "Ifrit", "Shiva", "Number 024",
                 "Number 128", "Left Blade", "Right Blade", "Left Crane", "Right Crane", "Nerapa"]
@@ -269,6 +275,21 @@ class Enemies():
 
         # NOTE: any remaining formations (due to extra_formations) are lost
 
+    def chupon_encounters(self, maps):
+        # find all packs that are randomly encountered in zones
+        packs = []
+        for zone in self.zones.zones:
+            if self.skip_shuffling_zone(maps, zone):
+                continue
+
+            for x in range(zone.PACK_COUNT):
+                if self.skip_shuffling_pack(zone.packs[x], zone.encounter_rates[x]):
+                    continue
+
+                packs.append(zone.packs[x])
+
+        self.packs.chupon_packs(packs)
+        
     def randomize_encounters(self, maps):
         # find all packs that are randomly encountered in zones
         packs = []
@@ -284,6 +305,54 @@ class Enemies():
                 packs.append(zone.packs[x])
 
         self.packs.randomize_packs(packs, boss_percent)
+
+    def randomize_loot(self):
+        for enemy in self.enemies:
+            self.set_common_steal(enemy.id, self.items.get_random())
+            self.set_rare_steal(enemy.id, self.items.get_random())
+            self.set_common_drop(enemy.id, self.items.get_random())
+            self.set_rare_drop(enemy.id, self.items.get_random())
+
+    def shuffle_steals_drops_random(self):
+        import random
+        from data.bosses import final_battle_enemy_name
+
+        # Assemble the list of steals and drops
+        steals_drops = []
+        for enemy in self.enemies:
+            if len(enemy.name) > 0:
+                loot_list = [enemy.steal_common, enemy.steal_rare]
+                if enemy.id not in final_battle_enemy_name.keys():
+                    loot_list += [enemy.drop_common, enemy.drop_rare]
+                steals_drops.extend(loot_list)
+
+        # Randomize the requested number
+        random_percent = self.args.shuffle_steals_drops_random_percent / 100.0
+        number_random = int(random_percent * len(steals_drops))
+        which_random = [a for a in range(len(steals_drops))]
+        random.shuffle(which_random)
+        for id in range(number_random):
+            steals_drops[which_random[id]] = self.items.get_random()
+
+        # Shuffle list & reassign to enemies
+        random.shuffle(steals_drops)
+        for enemy in self.enemies:
+            if len(enemy.name) > 0:
+                self.set_common_steal(enemy.id, steals_drops.pop(0))
+                self.set_rare_steal(enemy.id, steals_drops.pop(0))
+                if enemy.id not in final_battle_enemy_name.keys():
+                    self.set_common_drop(enemy.id, steals_drops.pop(0))
+                    self.set_rare_drop(enemy.id, steals_drops.pop(0))
+
+    def pad_enemy_packs(self):
+        from data.enemy_battle_groups import unused_event_battle_groups
+        for pack in self.packs.packs:
+            if pack.FORMATION_COUNT == 2:
+                # pack formation 0, 0 is Lobo -- it fills out unused spaces. Id 0, though, is MIAB Lobo, which we want to keep.
+                if (pack.formations == [0, 0] and pack.id > 0) or (pack.id in unused_event_battle_groups):
+                    # Add random formations to the empty pack
+                    this_formation = self.formations.get_random_normal()
+                    pack.formations = [this_formation, this_formation]
 
     def set_escapable(self):
         import random
@@ -310,6 +379,13 @@ class Enemies():
         if self.args.boss_normalize_distort_stats:
             self.boss_normalize_distort_stats()
 
+        if self.args.shuffle_steals_drops:
+            self.shuffle_steals_drops_random()
+
+        if self.args.chest_random_monsters_enemy > 0:
+            # add more random groups to the otherwise limited event battle groups (all that's available for MIAB)
+            self.pad_enemy_packs()
+
         if self.args.permadeath:
             self.remove_fenix_downs()
 
@@ -326,6 +402,8 @@ class Enemies():
 
         if self.args.random_encounters_shuffle:
             self.shuffle_encounters(maps)
+        elif self.args.random_encounters_chupon:
+            self.chupon_encounters(maps)
         elif not self.args.random_encounters_original:
             self.randomize_encounters(maps)
 
@@ -353,10 +431,12 @@ class Enemies():
             self.enemy_data[enemy_index] = self.enemies[enemy_index].data()
             self.enemy_name_data[enemy_index] = self.enemies[enemy_index].name_data()
             self.enemy_item_data[enemy_index] = self.enemies[enemy_index].item_data()
+            self.enemy_special_name_data[enemy_index] = self.enemies[enemy_index].special_name_data()
 
         self.enemy_data.write()
         self.enemy_name_data.write()
         self.enemy_item_data.write()
+        self.enemy_special_name_data.write()
 
         self.formations.write()
         self.packs.write()

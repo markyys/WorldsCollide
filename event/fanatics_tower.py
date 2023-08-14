@@ -15,6 +15,7 @@ class FanaticsTower(Event):
         self.strago_npc_id = 0x13
         self.strago_npc = self.maps.get_npc(0x16a, self.strago_npc_id)
 
+        self.gau_magic_mod()
         self.relm_event_mod()
         self.tower_top_mod()
         self.magimaster_battle_mod()
@@ -31,6 +32,11 @@ class FanaticsTower(Event):
 
         self.log_reward(self.reward1)
         self.log_reward(self.reward2)
+
+    def gau_magic_mod(self):
+        # normally only the Fight command replaces magic, causing Gau to only have Item.
+        # NOP the logic that blanks out everything except Magic + Item
+        Reserve(0x2538c, 0x2538d, "fanatics tower magic cmd", field.NOP())
 
     def relm_event_mod(self):
         # normally there are 4 event tiles surrounding player when they enter map and if player steps on one
@@ -136,7 +142,16 @@ class FanaticsTower(Event):
             field.InvokeBattle(boss_pack_id),
         )
 
+    def character_music_mod(self, character):
+        from music.song_utils import get_character_theme
+
+        space = Reserve(0xc5327, 0xc5328, "Play Song Relm")
+        space.write([
+            field.StartSong(get_character_theme(character)),
+        ])
+
     def character_mod(self, character):
+        self.character_music_mod(character)
         self.strago_npc.sprite = character
         self.strago_npc.palette = self.characters.get_palette(character)
 

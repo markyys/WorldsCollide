@@ -42,7 +42,7 @@ class OwzerMansion(Event):
         self.log_reward(self.reward)
 
     def flash_mod(self):
-        space = Reserve(0xb4d10, 0xb4d11, "owzer mansion flash", field.NOP())
+        space = Reserve(0xb4d10, 0xb4d11, "owzer mansion flash", field.FlashScreen(field.Flash.NONE))
 
     def dialog_mod(self):
         space = Reserve(0xb4d0d, 0xb4d0f, "owzer mansion help that painting!!", field.NOP())
@@ -109,7 +109,16 @@ class OwzerMansion(Event):
                 field.InvokeBattle(boss_pack_id, battle_background),
             )
 
+    def character_music_mod(self, character):
+        from music.song_utils import get_character_theme
+
+        space = Reserve(0xb4d1f, 0xb4d20, "Play Song Relm")
+        space.write([
+            field.StartSong(get_character_theme(character)),
+        ])
+
     def character_mod(self, character):
+        self.character_music_mod(character)
         self.relm_npc.sprite = character
         self.relm_npc.palette = self.characters.get_palette(character)
 
