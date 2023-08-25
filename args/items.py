@@ -115,6 +115,11 @@ def process(args):
     if args.no_illuminas and name_id["Illumina"] in args.item_rewards_ids:
         args.item_rewards_ids.remove(name_id["Illumina"])
 
+    # Make dead checks award "empty" if the item reward list is empty (e.g. all items were supposed to be Illuminas and
+    # the No Illumina flag is on)
+    if len(args.item_rewards_ids) < 1:
+        args.item_rewards_ids.append(name_id["Empty"])
+
     args._process_min_max("cursed_shield_battles")
     args.cursed_shield_battles_original = args.cursed_shield_battles_min == 256 and \
                                           args.cursed_shield_battles_max == 256

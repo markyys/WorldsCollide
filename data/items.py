@@ -59,6 +59,11 @@ class Items():
     if args.no_illuminas and name_id["Illumina"] in GOOD:
         GOOD.remove(name_id["Illumina"])
 
+    # Make dead checks award "empty" if the item reward list is empty (e.g. all items were supposed to be Illuminas and
+    # the No Illumina flag is on)
+    if len(GOOD) < 1:
+        GOOD.append(name_id["Empty"])
+
     def __init__(self, rom, args, dialogs, characters):
         self.rom = rom
         self.args = args
