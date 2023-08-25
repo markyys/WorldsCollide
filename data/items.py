@@ -49,7 +49,15 @@ class Items():
 
     GOOD = args.item_rewards_ids
 
-    1
+    if not args.stronger_atma_weapon and name_id["Atma Weapon"] in GOOD \
+            and any(s.lower().strip() in args.item_rewards.split(',') for s in ('standard','premium')):
+        GOOD.remove(name_id["Atma Weapon"])
+    if args.no_free_paladin_shields and name_id["Paladin Shld"] in GOOD:
+        GOOD.remove(name_id["Paladin Shld"])
+    if args.no_exp_eggs and name_id["Exp. Egg"] in GOOD:
+        GOOD.remove(name_id["Exp. Egg"])
+    if args.no_illuminas and name_id["Illumina"] in GOOD:
+        GOOD.remove(name_id["Illumina"])
 
     def __init__(self, rom, args, dialogs, characters):
         self.rom = rom

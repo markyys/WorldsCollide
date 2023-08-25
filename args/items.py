@@ -1,57 +1,57 @@
 def name():
     return "Items"
 
+
 def parse(parser):
     from data.characters import Characters
     items = parser.add_argument_group("Items")
 
     items_equipable = items.add_mutually_exclusive_group()
     items_equipable.add_argument("-ier", "--item-equipable-random",
-                                 default = None, type = int, nargs = 2, metavar = ("MIN", "MAX"),
-                                 choices = range(Characters.CHARACTER_COUNT + 1),
-                                 help = "Each item equipable by between %(metavar)s random characters")
+                                 default=None, type=int, nargs=2, metavar=("MIN", "MAX"),
+                                 choices=range(Characters.CHARACTER_COUNT + 1),
+                                 help="Each item equipable by between %(metavar)s random characters")
     items_equipable.add_argument("-iebr", "--item-equipable-balanced-random",
-                                 default = None, type = int, metavar = "VALUE",
-                                 choices = range(Characters.CHARACTER_COUNT + 1),
-                                 help = "Each item equipable by %(metavar)s random characters. Total number of items equipable by each character is balanced")
+                                 default=None, type=int, metavar="VALUE",
+                                 choices=range(Characters.CHARACTER_COUNT + 1),
+                                 help="Each item equipable by %(metavar)s random characters. Total number of items equipable by each character is balanced")
     items_equipable.add_argument("-ieor", "--item-equipable-original-random",
-                                 default = None, type = int, metavar = "PERCENT", choices = range(-100, 101),
-                                 help = "Characters have a %(metavar)s chance of being able to equip each item they could not previously equip. If %(metavar)s negative, characters have a -%(metavar)s chance of not being able to equip each item they could previously equip")
+                                 default=None, type=int, metavar="PERCENT", choices=range(-100, 101),
+                                 help="Characters have a %(metavar)s chance of being able to equip each item they could not previously equip. If %(metavar)s negative, characters have a -%(metavar)s chance of not being able to equip each item they could previously equip")
     items_equipable.add_argument("-iesr", "--item-equipable-shuffle-random",
-                                 default = None, type = int, metavar = "PERCENT", choices = range(-100, 101),
-                                 help = "Shuffle character equipment. After randomization, characters have a %(metavar)s chance of being able to equip each item they could not previously equip. If %(metavar)s negative, characters have a -%(metavar)s chance of not being able to equip each item they could previously equip")
+                                 default=None, type=int, metavar="PERCENT", choices=range(-100, 101),
+                                 help="Shuffle character equipment. After randomization, characters have a %(metavar)s chance of being able to equip each item they could not previously equip. If %(metavar)s negative, characters have a -%(metavar)s chance of not being able to equip each item they could previously equip")
 
     items_equipable_relic = items.add_mutually_exclusive_group()
     items_equipable_relic.add_argument("-ierr", "--item-equipable-relic-random",
-                                       default = None, type = int, nargs = 2, metavar = ("MIN", "MAX"),
-                                       choices = range(Characters.CHARACTER_COUNT + 1),
-                                       help = "Each relic equipable by between %(metavar)s random characters")
+                                       default=None, type=int, nargs=2, metavar=("MIN", "MAX"),
+                                       choices=range(Characters.CHARACTER_COUNT + 1),
+                                       help="Each relic equipable by between %(metavar)s random characters")
     items_equipable_relic.add_argument("-ierbr", "--item-equipable-relic-balanced-random",
-                                       default = None, type = int, metavar = "VALUE",
-                                       choices = range(Characters.CHARACTER_COUNT + 1),
-                                       help = "Each relic equipable by %(metavar)s random characters. Total number of relics equipable by each character is balanced")
+                                       default=None, type=int, metavar="VALUE",
+                                       choices=range(Characters.CHARACTER_COUNT + 1),
+                                       help="Each relic equipable by %(metavar)s random characters. Total number of relics equipable by each character is balanced")
     items_equipable_relic.add_argument("-ieror", "--item-equipable-relic-original-random",
-                                       default = None, type = int, metavar = "PERCENT", choices = range(-100, 101),
-                                       help = "Characters have a %(metavar)s chance of being able to equip each relic they could not previously equip. If %(metavar)s negative, characters have a -%(metavar)s chance of not being able to equip each relic they could previously equip")
+                                       default=None, type=int, metavar="PERCENT", choices=range(-100, 101),
+                                       help="Characters have a %(metavar)s chance of being able to equip each relic they could not previously equip. If %(metavar)s negative, characters have a -%(metavar)s chance of not being able to equip each relic they could previously equip")
     items_equipable_relic.add_argument("-iersr", "--item-equipable-relic-shuffle-random",
-                                       default = None, type = int, metavar = "PERCENT", choices = range(-100, 101),
-                                       help = "Shuffle character relics. After randomization, characters have a %(metavar)s chance of being able to equip each item they could not previously equip. If %(metavar)s negative, characters have a -%(metavar)s chance of not being able to equip each item they could previously equip")
+                                       default=None, type=int, metavar="PERCENT", choices=range(-100, 101),
+                                       help="Shuffle character relics. After randomization, characters have a %(metavar)s chance of being able to equip each item they could not previously equip. If %(metavar)s negative, characters have a -%(metavar)s chance of not being able to equip each item they could previously equip")
 
-    items.add_argument("-ir", "--item-rewards", type = str,
-                       help = "Choose which items will be received as check rewards")
+    items.add_argument("-ir", "--item-rewards", type=str,
+                       help="Choose which items will be received as check rewards")
 
-    items.add_argument("-csb", "--cursed-shield-battles", default = [256, 256], type = int,
-                       nargs = 2, metavar = ("MIN", "MAX"), choices = range(257),
-                       help = "Number of battles required to uncurse the cursed shield")
+    items.add_argument("-csb", "--cursed-shield-battles", default=[256, 256], type=int,
+                       nargs=2, metavar=("MIN", "MAX"), choices=range(257),
+                       help="Number of battles required to uncurse the cursed shield")
 
-    items.add_argument("-mca", "--moogle-charm-all", action = "store_true",
-                       help = "All characters can wear Moogle Charm relics which prevent random battles. Overrides Equipable option")
-    items.add_argument("-stra", "--swdtech-runic-all", action = "store_true",
-                       help = "All weapons enable swdtech and runic")
+    items.add_argument("-mca", "--moogle-charm-all", action="store_true",
+                       help="All characters can wear Moogle Charm relics which prevent random battles. Overrides Equipable option")
+    items.add_argument("-stra", "--swdtech-runic-all", action="store_true",
+                       help="All weapons enable swdtech and runic")
 
-    items.add_argument("-saw", "--stronger-atma-weapon", action = "store_true",
-                       help = "Atma Weapon moved to higher tier and divisor reduced from 64 to 32")
-
+    items.add_argument("-saw", "--stronger-atma-weapon", action="store_true",
+                       help="Atma Weapon moved to higher tier and divisor reduced from 64 to 32")
 
 
 def process(args):
@@ -105,7 +105,8 @@ def process(args):
     args.item_rewards_ids = list(set(args.item_rewards_ids))
     args.item_rewards_ids.sort()
 
-    if not args.stronger_atma_weapon and name_id["Atma Weapon"] in args.item_rewards_ids:
+    if not args.stronger_atma_weapon and name_id["Atma Weapon"] in args.item_rewards_ids \
+            and any(s.lower().strip() in args.item_rewards.split(',') for s in ('standard', 'premium')):
         args.item_rewards_ids.remove(name_id["Atma Weapon"])
     if args.no_free_paladin_shields and name_id["Paladin Shld"] in args.item_rewards_ids:
         args.item_rewards_ids.remove(name_id["Paladin Shld"])
@@ -115,8 +116,9 @@ def process(args):
         args.item_rewards_ids.remove(name_id["Illumina"])
 
     args._process_min_max("cursed_shield_battles")
-    args.cursed_shield_battles_original = args.cursed_shield_battles_min == 256 and\
+    args.cursed_shield_battles_original = args.cursed_shield_battles_min == 256 and \
                                           args.cursed_shield_battles_max == 256
+
 
 def flags(args):
     flags = ""
@@ -155,6 +157,7 @@ def flags(args):
 
     return flags
 
+
 def options(args):
     equipable = "Original"
     if args.item_equipable_random:
@@ -188,12 +191,14 @@ def options(args):
         ("Item Rewards", args.item_rewards_ids),
     ]
 
+
 def _format_items_log_entries(item_ids):
     from constants.items import id_name
     item_entries = []
     for item_id in item_ids:
         item_entries.append(("", id_name[item_id]))
     return item_entries
+
 
 def menu(args):
     from menus.flags_reward_items import FlagsRewardItems
@@ -218,6 +223,7 @@ def menu(args):
             pass
 
     return (name(), entries)
+
 
 def log(args):
     from log import format_option
