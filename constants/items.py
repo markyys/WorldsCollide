@@ -268,6 +268,7 @@ good_items = [
     "ValiantKnife",
     "Illumina",
     "Ragnarok",
+    "Atma Weapon",
     "Pearl Lance",
     "Aura Lance",
     "Magus Rod",
@@ -293,6 +294,22 @@ good_items = [
     "Gem Box",
     "Dragon Horn",
     "Marvel Shoes",
+    "Exp. Egg",
+]
+
+better_items = [
+    "ValiantKnife",
+    "Illumina",
+    "Ragnarok",
+    "Atma Weapon",
+    "Fixed Dice",
+    "Flame Shld",
+    "Ice Shld",
+    "Thunder Shld",
+    "Paladin Shld",
+    "Minerva",
+    "Genji Glove",
+    "Offering",
     "Exp. Egg",
 ]
 

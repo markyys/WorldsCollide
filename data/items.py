@@ -2,7 +2,7 @@ import args, random
 from data.item import Item
 from data.structures import DataList
 
-from constants.items import good_items
+from constants.items import good_items, better_items
 from constants.items import id_name, name_id
 
 import data.items_asm as items_asm
@@ -21,15 +21,35 @@ class Items():
     DESC_START = 0x2d6400
     DESC_END = 0x2d779f
 
-    GOOD = [name_id[name] for name in good_items]
-    if args.stronger_atma_weapon:
-        GOOD.append(name_id["Atma Weapon"])
-    if args.no_free_paladin_shields:
-        GOOD.remove(name_id["Paladin Shld"])
-    if args.no_exp_eggs:
-        GOOD.remove(name_id["Exp. Egg"])
-    if args.no_illuminas:
-        GOOD.remove(name_id["Illumina"])
+    'process high tier items here'
+    args.item_rewards_ids = []
+
+    if args.item_rewards:
+        # Split the comma-separated string
+        for a_item_id in args.item_rewards.split(','):
+            # look for strings first
+            a_item_id = a_item_id.lower().strip()
+            if a_item_id == 'standard':
+                args.item_rewards_ids = [name_id[name] for name in good_items]
+            elif a_item_id == 'premium':
+                args.item_rewards_ids = [name_id[name] for name in better_items]
+            else:
+                item_ids_lower = {k.lower(): v for k, v in name_id.items()}
+                if a_item_id in item_ids_lower:
+                    args.item_rewards_ids.append(item_ids_lower[a_item_id])
+                else:
+                    # assuming it's a number... it'll error out if not
+                    args.item_rewards_ids.append(int(a_item_id))
+        # remove duplicates and sort
+    else:
+        args.item_rewards_ids = [name_id[name] for name in good_items]
+
+    args.item_rewards_ids = list(set(args.item_rewards_ids))
+    args.item_rewards_ids.sort()
+
+    GOOD = args.item_rewards_ids
+
+    1
 
     def __init__(self, rom, args, dialogs, characters):
         self.rom = rom

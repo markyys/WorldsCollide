@@ -37,6 +37,9 @@ def parse(parser):
                                        default = None, type = int, metavar = "PERCENT", choices = range(-100, 101),
                                        help = "Shuffle character relics. After randomization, characters have a %(metavar)s chance of being able to equip each item they could not previously equip. If %(metavar)s negative, characters have a -%(metavar)s chance of not being able to equip each item they could previously equip")
 
+    items.add_argument("-ir", "--item-rewards", type = str,
+                       help = "Choose which items will be received as check rewards")
+
     items.add_argument("-csb", "--cursed-shield-battles", default = [256, 256], type = int,
                        nargs = 2, metavar = ("MIN", "MAX"), choices = range(257),
                        help = "Number of battles required to uncurse the cursed shield")
@@ -52,6 +55,9 @@ def parse(parser):
 
 
 def process(args):
+    from constants.items import good_items, better_items
+    from constants.items import id_name, name_id
+
     args._process_min_max("item_equipable_random")
     if args.item_equipable_balanced_random is not None:
         args.item_equipable_balanced_random_value = args.item_equipable_balanced_random
@@ -73,6 +79,40 @@ def process(args):
     if args.item_equipable_relic_shuffle_random is not None:
         args.item_equipable_relic_shuffle_random_percent = args.item_equipable_relic_shuffle_random
         args.item_equipable_relic_shuffle_random = True
+
+    args.item_rewards_ids = []
+
+    if args.item_rewards:
+        # Split the comma-separated string
+        for a_item_id in args.item_rewards.split(','):
+            # look for strings first
+            a_item_id = a_item_id.lower().strip()
+            if a_item_id == 'standard':
+                args.item_rewards_ids = [name_id[name] for name in good_items]
+            elif a_item_id == 'premium':
+                args.item_rewards_ids = [name_id[name] for name in better_items]
+            else:
+                item_ids_lower = {k.lower(): v for k, v in name_id.items()}
+                if a_item_id in item_ids_lower:
+                    args.item_rewards_ids.append(item_ids_lower[a_item_id])
+                else:
+                    # assuming it's a number... it'll error out if not
+                    args.item_rewards_ids.append(int(a_item_id))
+        # remove duplicates and sort
+    else:
+        args.item_rewards_ids = [name_id[name] for name in good_items]
+
+    args.item_rewards_ids = list(set(args.item_rewards_ids))
+    args.item_rewards_ids.sort()
+
+    if not args.stronger_atma_weapon and name_id["Atma Weapon"] in args.item_rewards_ids:
+        args.item_rewards_ids.remove(name_id["Atma Weapon"])
+    if args.no_free_paladin_shields and name_id["Paladin Shld"] in args.item_rewards_ids:
+        args.item_rewards_ids.remove(name_id["Paladin Shld"])
+    if args.no_exp_eggs and name_id["Exp. Egg"] in args.item_rewards_ids:
+        args.item_rewards_ids.remove(name_id["Exp. Egg"])
+    if args.no_illuminas and name_id["Illumina"] in args.item_rewards_ids:
+        args.item_rewards_ids.remove(name_id["Illumina"])
 
     args._process_min_max("cursed_shield_battles")
     args.cursed_shield_battles_original = args.cursed_shield_battles_min == 256 and\
@@ -99,6 +139,9 @@ def flags(args):
     elif args.item_equipable_relic_shuffle_random:
         flags += f" -iersr {args.item_equipable_relic_shuffle_random_percent}"
 
+    if args.item_rewards:
+        flags += f" -ir {args.item_rewards}"
+
     if args.cursed_shield_battles_min != 256 or args.cursed_shield_battles_max != 256:
         flags += f" -csb {args.cursed_shield_battles_min} {args.cursed_shield_battles_max}"
 
@@ -109,7 +152,6 @@ def flags(args):
 
     if args.stronger_atma_weapon:
         flags += " -saw"
-
 
     return flags
 
@@ -143,9 +185,19 @@ def options(args):
         ("Moogle Charm All", args.moogle_charm_all),
         ("SwdTech Runic All", args.swdtech_runic_all),
         ("Stronger Atma Weapon", args.stronger_atma_weapon),
+        ("Item Rewards", args.item_rewards_ids),
     ]
 
+def _format_items_log_entries(item_ids):
+    from constants.items import id_name
+    item_entries = []
+    for item_id in item_ids:
+        item_entries.append(("", id_name[item_id]))
+    return item_entries
+
 def menu(args):
+    from menus.flags_reward_items import FlagsRewardItems
+
     entries = options(args)
     for index, entry in enumerate(entries):
         key, value = entry
@@ -154,6 +206,8 @@ def menu(args):
                 key = "Equip"
             elif key == "Equipable Relics":
                 key = "EquipR"
+            elif key == "Item Rewards":
+                entries[index] = ("Item Rewards", FlagsRewardItems(value))  # flags sub-menu
             elif key == "Cursed Shield Battles":
                 key = "Cursed Shield"
             value = value.replace("Balanced Random", "Balanced")
@@ -162,6 +216,7 @@ def menu(args):
             entries[index] = (key, value)
         except:
             pass
+
     return (name(), entries)
 
 def log(args):
@@ -169,7 +224,20 @@ def log(args):
     log = [name()]
 
     entries = options(args)
-    for entry in entries:
+    '''for entry in entries:
         log.append(format_option(*entry))
+    '''
+    for entry in entries:
+        key, value = entry
+        if key == "Item Rewards":
+            if len(value) == 0:
+                entry = (key, "None")
+            else:
+                entry = (key, "")  # The entries will show up on subsequent lines
+            log.append(format_option(*entry))
+            for item_entry in _format_items_log_entries(value):
+                log.append(format_option(*item_entry))
+        else:
+            log.append(format_option(*entry))
 
     return log
