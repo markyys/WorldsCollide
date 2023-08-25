@@ -114,6 +114,10 @@ def process(args):
         args.item_rewards_ids.remove(name_id["Exp. Egg"])
     if args.no_illuminas and name_id["Illumina"] in args.item_rewards_ids:
         args.item_rewards_ids.remove(name_id["Illumina"])
+    if args.no_sprint_shoes and name_id["Sprint Shoes"] in args.item_rewards_ids:
+        args.item_rewards_ids.remove(name_id["Sprint Shoes"])
+    if args.no_moogle_charms and name_id["Moogle Charm"] in args.item_rewards_ids:
+        args.item_rewards_ids.remove(name_id["Moogle Charm"])
 
     # Make dead checks award "empty" if the item reward list is empty (e.g. all items were supposed to be Illuminas and
     # the No Illumina flag is on)
