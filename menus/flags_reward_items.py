@@ -22,10 +22,10 @@ class FlagsRewardItems(scroll_area.ScrollArea):
 
     def _format_items_menu(item_ids):
         from constants.items import id_name
-        COLUMN_WIDTHS = [13, 12]
+        COLUMN_WIDTHS = [13, 13]
         item_lines = []
 
-        # Step through each spell by the number of columns
+        # Step through each item by the number of columns
         for item_idx in range(0, len(item_ids), len(COLUMN_WIDTHS)):
             current_line = ''
             # Populate each column on the line
@@ -37,16 +37,49 @@ class FlagsRewardItems(scroll_area.ScrollArea):
                     padding = COLUMN_WIDTHS[col] - len(item_str)
                     current_line += f"{item_str}{' ' * padding}"
                 else:
-                    # No spell, add padding
+                    # No item, add padding
                     current_line += f"{' ' * COLUMN_WIDTHS[col]}"
             # Write the line
             item_lines.append(current_line)
         return item_lines
 
     def _get_item_icon(item_id):
-        from constants.spells import black_magic_ids, gray_magic_ids, white_magic_ids
+        from constants.items import DIRKS, SWORDS, LANCES, KNIVES, KATANAS, RODS, BRUSHES, \
+            STARS, SPECIAL, GAMBLER, CLAWS, SHIELDS, HELMETS, ARMORS, TOOLS, SKEANS, RELICS
         from data.text.text2 import text_value
         icon = ''
-        # Potentially this could be used to get the appropriate icon for each item type using the same code from
-        # the remove learnable spells menu class
+        if item_id in DIRKS or item_id in KNIVES:
+            icon = chr(text_value['<dirk icon>'])
+        elif item_id in SWORDS:
+            icon = chr(text_value['<sword icon>'])
+        elif item_id in LANCES:
+            icon = chr(text_value['<lance icon>'])
+        elif item_id in KATANAS:
+            icon = chr(text_value['<katana icon>'])
+        elif item_id in RODS:
+            # for some reason, the Rod icon causes submenus to not work
+            icon = ''
+            #icon = chr(text_value['<rod icon'])
+        elif item_id in BRUSHES:
+            icon = chr(text_value['<brush icon>'])
+        elif item_id in STARS:
+            icon = chr(text_value['<stars icon'])
+        elif item_id in SPECIAL:
+            icon = chr(text_value['<special icon>'])
+        elif item_id in GAMBLER:
+            icon = chr(text_value['<gambler icon>'])
+        elif item_id in CLAWS:
+            icon = chr(text_value['<claw icon>'])
+        elif item_id in SHIELDS:
+            icon = chr(text_value['<shield icon>'])
+        elif item_id in HELMETS:
+            icon = chr(text_value['<helmet icon>'])
+        elif item_id in ARMORS:
+            icon = chr(text_value['<armor icon>'])
+        elif item_id in TOOLS:
+            icon = chr(text_value['<tool icon>'])
+        elif item_id in SKEANS:
+            icon = chr(text_value['<skean icon>'])
+        elif item_id in RELICS:
+            icon = chr(text_value['<relic icon>'])
         return icon

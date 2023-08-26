@@ -98,16 +98,19 @@ def process(args):
                 else:
                     # assuming it's a number... it'll error out if not
                     args.item_rewards_ids.append(int(a_item_id))
-        # remove duplicates and sort
     else:
         args.item_rewards_ids = [name_id[name] for name in good_items]
 
+    # remove duplicates and sort
     args.item_rewards_ids = list(set(args.item_rewards_ids))
     args.item_rewards_ids.sort()
 
-    if not args.stronger_atma_weapon and name_id["Atma Weapon"] in args.item_rewards_ids \
-            and any(s.lower().strip() in args.item_rewards.split(',') for s in ('standard', 'premium')):
-        args.item_rewards_ids.remove(name_id["Atma Weapon"])
+    # Remove Atma Weapon is it's not Stronger and we're in standard/premium
+    if not args.stronger_atma_weapon and name_id["Atma Weapon"] in args.item_rewards_ids and args.item_rewards:
+        if any(s.lower().strip() in args.item_rewards.split(',') for s in ('standard', 'premium')):
+            args.item_rewards_ids.remove(name_id["Atma Weapon"])
+
+    # Remove excluded items
     if args.no_free_paladin_shields and name_id["Paladin Shld"] in args.item_rewards_ids:
         args.item_rewards_ids.remove(name_id["Paladin Shld"])
     if args.no_exp_eggs and name_id["Exp. Egg"] in args.item_rewards_ids:
