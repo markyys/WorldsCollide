@@ -82,33 +82,33 @@ def process(args):
 
     args.item_rewards_ids = []
 
-    if args.item_rewards:
-        # Split the comma-separated string
-        for a_item_id in args.item_rewards.split(','):
-            # look for strings first
-            a_item_id = a_item_id.lower().strip()
-            if a_item_id == 'standard':
-                args.item_rewards_ids = [name_id[name] for name in good_items]
-            elif a_item_id == 'premium':
-                args.item_rewards_ids = [name_id[name] for name in better_items]
+    if not args.item_rewards:
+        args.item_rewards = 'standard'
+
+    # Split the comma-separated string
+    for a_item_id in args.item_rewards.split(','):
+        # look for strings first
+        a_item_id = a_item_id.lower().strip()
+        if a_item_id == 'standard':
+            args.item_rewards_ids = [name_id[name] for name in good_items]
+        elif a_item_id == 'premium':
+            args.item_rewards_ids = [name_id[name] for name in better_items]
+        else:
+            item_ids_lower = {k.lower(): v for k, v in name_id.items()}
+            if a_item_id in item_ids_lower:
+                args.item_rewards_ids.append(item_ids_lower[a_item_id])
             else:
-                item_ids_lower = {k.lower(): v for k, v in name_id.items()}
-                if a_item_id in item_ids_lower:
-                    args.item_rewards_ids.append(item_ids_lower[a_item_id])
-                else:
-                    # assuming it's a number... it'll error out if not
-                    args.item_rewards_ids.append(int(a_item_id))
-    else:
-        args.item_rewards_ids = [name_id[name] for name in good_items]
+                # assuming it's a number... it'll error out if not
+                args.item_rewards_ids.append(int(a_item_id))
 
     # remove duplicates and sort
     args.item_rewards_ids = list(set(args.item_rewards_ids))
     args.item_rewards_ids.sort()
 
     # Remove Atma Weapon is it's not Stronger and we're in standard/premium
-    if not args.stronger_atma_weapon and name_id["Atma Weapon"] in args.item_rewards_ids and args.item_rewards:
-        if any(s.lower().strip() in args.item_rewards.split(',') for s in ('standard', 'premium')):
-            args.item_rewards_ids.remove(name_id["Atma Weapon"])
+    if not args.stronger_atma_weapon and name_id["Atma Weapon"] in args.item_rewards_ids \
+       and any(s.lower().strip() in args.item_rewards.split(',') for s in ('standard', 'premium')):
+        args.item_rewards_ids.remove(name_id["Atma Weapon"])
 
     # Remove excluded items
     if args.no_free_paladin_shields and name_id["Paladin Shld"] in args.item_rewards_ids:
