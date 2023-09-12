@@ -14,6 +14,8 @@ def parse(parser):
                                  default = None, type = int, metavar = "VALUE",
                                  choices = range(Characters.CHARACTER_COUNT + 1),
                                  help = "Each item equipable by %(metavar)s random characters. Total number of items equipable by each character is balanced")
+    items_equipable.add_argument("-ietr", "--item-equipable-tiered-random",action = "store_true",
+                                 help = "Equipment is categorized by tier and chance of being equipable by a character is chosen at random. Higher tier equipment is less likely to be equipable.")
     items_equipable.add_argument("-ieor", "--item-equipable-original-random",
                                  default = None, type = int, metavar = "PERCENT", choices = range(-100, 101),
                                  help = "Characters have a %(metavar)s chance of being able to equip each item they could not previously equip. If %(metavar)s negative, characters have a -%(metavar)s chance of not being able to equip each item they could previously equip")
@@ -30,6 +32,8 @@ def parse(parser):
                                        default = None, type = int, metavar = "VALUE",
                                        choices = range(Characters.CHARACTER_COUNT + 1),
                                        help = "Each relic equipable by %(metavar)s random characters. Total number of relics equipable by each character is balanced")
+    items_equipable_relic.add_argument("-iertr", "--item-equipable-relic-tiered-random", action="store_true",
+                                       help="Relics are categorized by tier and chance of being equipable by a character is chosen at random. Higher tier relics are less likely to be equipable.")
     items_equipable_relic.add_argument("-ieror", "--item-equipable-relic-original-random",
                                        default = None, type = int, metavar = "PERCENT", choices = range(-100, 101),
                                        help = "Characters have a %(metavar)s chance of being able to equip each relic they could not previously equip. If %(metavar)s negative, characters have a -%(metavar)s chance of not being able to equip each relic they could previously equip")
@@ -85,6 +89,8 @@ def flags(args):
         flags += f" -ier {args.item_equipable_random_min} {args.item_equipable_random_max}"
     elif args.item_equipable_balanced_random:
         flags += f" -iebr {args.item_equipable_balanced_random_value}"
+    elif args.item_equipable_tiered_random:
+        flags += f" -ietr"
     elif args.item_equipable_original_random:
         flags += f" -ieor {args.item_equipable_original_random_percent}"
     elif args.item_equipable_shuffle_random:
@@ -94,6 +100,8 @@ def flags(args):
         flags += f" -ierr {args.item_equipable_relic_random_min} {args.item_equipable_relic_random_max}"
     elif args.item_equipable_relic_balanced_random:
         flags += f" -ierbr {args.item_equipable_relic_balanced_random_value}"
+    elif args.item_equipable_relic_tiered_random:
+        flags += f" -iertr"
     elif args.item_equipable_relic_original_random:
         flags += f" -ieror {args.item_equipable_relic_original_random_percent}"
     elif args.item_equipable_relic_shuffle_random:
@@ -119,6 +127,8 @@ def options(args):
         equipable = f"Random {args.item_equipable_random_min}-{args.item_equipable_random_max}"
     elif args.item_equipable_balanced_random:
         equipable = f"Balanced Random {args.item_equipable_balanced_random_value}"
+    elif args.item_equipable_tiered_random:
+        equipable = f"Tiered Random"
     elif args.item_equipable_original_random:
         equipable = f"Original + Random {args.item_equipable_original_random_percent}%"
     elif args.item_equipable_shuffle_random:
@@ -129,6 +139,8 @@ def options(args):
         equipable_relics = f"Random {args.item_equipable_relic_random_min}-{args.item_equipable_relic_random_max}"
     elif args.item_equipable_relic_balanced_random:
         equipable_relics = f"Balanced Random {args.item_equipable_relic_balanced_random_value}"
+    elif args.item_equipable_relic_tiered_random:
+        equipable_relics = f"Tiered Random"
     elif args.item_equipable_relic_original_random:
         equipable_relics = f"Original + Random {args.item_equipable_relic_original_random_percent}%"
     elif args.item_equipable_relic_shuffle_random:
@@ -157,6 +169,7 @@ def menu(args):
             elif key == "Cursed Shield Battles":
                 key = "Cursed Shield"
             value = value.replace("Balanced Random", "Balanced")
+            value = value.replace("Tiered Random", "Tiered")
             value = value.replace("Original + Random", "Original + ")
             value = value.replace("Shuffle + Random", "Shuffle + ")
             entries[index] = (key, value)

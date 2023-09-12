@@ -8,9 +8,10 @@ from constants.items import id_name, name_id
 import data.items_asm as items_asm
 import data.text as text
 
+
 class Items():
     ITEM_COUNT = 256
-    EMPTY = 0xff # item 255 is empty
+    EMPTY = 0xff  # item 255 is empty
 
     BREAKABLE_RODS = range(53, 59)
     ELEMENTAL_SHIELDS = range(96, 99)
@@ -45,8 +46,8 @@ class Items():
 
     def read(self):
         self.items = []
-        self.type_items = {Item.TOOL : [], Item.WEAPON : [], Item.ARMOR : [],
-                           Item.SHIELD : [], Item.HELMET : [], Item.RELIC : [], Item.ITEM : []}
+        self.type_items = {Item.TOOL: [], Item.WEAPON: [], Item.ARMOR: [],
+                           Item.SHIELD: [], Item.HELMET: [], Item.RELIC: [], Item.ITEM: []}
 
         for item_index in range(self.ITEM_COUNT):
             item = Item(item_index, self.rom, self.desc_data[item_index])
@@ -81,8 +82,8 @@ class Items():
 
                 if len(possible_characters) < characters_per_item:
                     # fewer possibilities left than number of characters needed for each item
-                    character_group = possible_characters # add remaining possible characters to current group
-                    possible_characters = list(range(Characters.CHARACTER_COUNT)) # add all characters back into pool
+                    character_group = possible_characters  # add remaining possible characters to current group
+                    possible_characters = list(range(Characters.CHARACTER_COUNT))  # add all characters back into pool
 
                     # select characters at random from possible pool until
                     # character_group contains characters_per_item unique characters
@@ -100,6 +101,26 @@ class Items():
                     for character in character_group:
                         possible_characters.remove(character)
                         item.add_equipable_character(self.characters.playable[character])
+
+    def equipable_tiered(self, type_condition):
+        from data.chest_item_tiers import tiers
+
+        tier_mins = [13, 11, 7, 4, 1]
+        tier_maxes = [14, 12, 10, 6, 3]
+
+        for item in self.items:
+            if item.is_equipable() and item.id != self.EMPTY and type_condition(item.type):
+                for i, tier in enumerate(tiers):
+                    if item.id in tier:
+                        item_tier = i - 5
+                        break
+
+                item.remove_all_equipable_characters()
+
+                num_chars = random.randint(tier_mins[item_tier], tier_maxes[item_tier])
+                rand_chars = random.sample(self.characters.playable, num_chars)
+                for character in rand_chars:
+                    item.add_equipable_character(character)
 
     def equipable_original_random(self, type_condition, percent):
         if percent == 0:
@@ -165,7 +186,7 @@ class Items():
             price_percent = random.randint(self.args.shop_prices_random_percent_min,
                                            self.args.shop_prices_random_percent_max) / 100.0
             value = int(item.price * price_percent)
-            item.price = max(min(value, 2**16 - 1), 0)
+            item.price = max(min(value, 2 ** 16 - 1), 0)
 
     def expensive_breakable_rods(self):
         self.items[name_id["Poison Rod"]].scale_price(3)
@@ -200,23 +221,27 @@ class Items():
             self.characters.characters[index].init_head = random.choice(tiers[Item.HELMET][1])
 
     def mod(self):
-        not_relic_condition = lambda x : x != Item.RELIC
+        not_relic_condition = lambda x: x != Item.RELIC
         if self.args.item_equipable_random:
             self.equipable_random(not_relic_condition, self.args.item_equipable_random_min,
-                                                       self.args.item_equipable_random_max)
+                                  self.args.item_equipable_random_max)
         elif self.args.item_equipable_balanced_random:
             self.equipable_balanced_random(not_relic_condition, self.args.item_equipable_balanced_random_value)
+        elif self.args.item_equipable_tiered_random:
+            self.equipable_tiered(not_relic_condition)
         elif self.args.item_equipable_original_random:
             self.equipable_original_random(not_relic_condition, self.args.item_equipable_original_random_percent)
         elif self.args.item_equipable_shuffle_random:
             self.equipable_shuffle_random(not_relic_condition, self.args.item_equipable_shuffle_random_percent)
 
-        relic_condition = lambda x : x == Item.RELIC
+        relic_condition = lambda x: x == Item.RELIC
         if self.args.item_equipable_relic_random:
             self.equipable_random(relic_condition, self.args.item_equipable_relic_random_min,
-                                                   self.args.item_equipable_relic_random_max)
+                                  self.args.item_equipable_relic_random_max)
         elif self.args.item_equipable_relic_balanced_random:
             self.equipable_balanced_random(relic_condition, self.args.item_equipable_relic_balanced_random_value)
+        elif self.args.item_equipable_relic_tiered_random:
+            self.equipable_tiered(relic_condition)
         elif self.args.item_equipable_relic_original_random:
             self.equipable_original_random(relic_condition, self.args.item_equipable_relic_original_random_percent)
         elif self.args.item_equipable_relic_shuffle_random:
@@ -294,7 +319,7 @@ class Items():
     def get_type(self, id):
         return self.items[id].type
 
-    def get_items(self, exclude = None, item_types = None):
+    def get_items(self, exclude=None, item_types=None):
         if exclude is None:
             exclude = []
         exclude.append(self.EMPTY)
@@ -303,12 +328,12 @@ class Items():
             item_list = [item.id for item in self.items]
         else:
             try:
-                assert(item_types >= 0 and item_types < Item.ITEM_TYPE_COUNT)
+                assert (item_types >= 0 and item_types < Item.ITEM_TYPE_COUNT)
                 item_list = [item.id for item in self.type_items[item_types]]
             except ValueError:
                 item_list = []
                 for item_type in item_types:
-                    assert(item_type >= 0 and item_type < Item.ITEM_TYPE_COUNT)
+                    assert (item_type >= 0 and item_type < Item.ITEM_TYPE_COUNT)
                     item_list.extend([item.id for item in self.type_items[item_type]])
 
         item_list = [item_id for item_id in item_list if item_id not in exclude]
@@ -336,7 +361,7 @@ class Items():
 
         return exclude
 
-    def get_random(self, exclude = None, item_types = None):
+    def get_random(self, exclude=None, item_types=None):
         if exclude is None:
             exclude = []
         exclude.extend(self.get_excluded())
