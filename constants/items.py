@@ -3,6 +3,24 @@ EMPTY = 0xff
 
 BREAKABLE_RODS = range(53, 59)
 ELEMENTAL_SHIELDS = range(96, 99)
+DIRKS = range(0, 10)
+SWORDS = range(10, 29)
+LANCES = range(29, 37)
+KNIVES = range(37, 43)
+KATANAS = range(43, 51)
+RODS = range(51, 61)
+BRUSHES = range(61, 65)
+STARS = range(65, 68)
+SPECIAL = range(68, 77)
+GAMBLER = range(77, 83)
+CLAWS = range(83, 90)
+SHIELDS = range(90, 105)
+HELMETS = range(105, 132)
+ARMORS = range(132, 163)
+TOOLS = range(163, 171)
+SKEANS = range(171, 176)
+RELICS = range(176, 231)
+
 
 id_name = {
     0   : "Dirk",
