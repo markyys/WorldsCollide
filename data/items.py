@@ -109,7 +109,7 @@ class Items():
         tier_maxes = [14, 12, 10, 6, 3]
 
         for item in self.items:
-            if item.is_equipable() and item.id != self.EMPTY and type_condition(item.type):
+            if item.is_equipable() and item.id != self.EMPTY and item.id != 102 and type_condition(item.type):
                 for i, tier in enumerate(tiers):
                     if item.id in tier:
                         item_tier = i - 5
@@ -121,6 +121,8 @@ class Items():
                 rand_chars = random.sample(self.characters.playable, num_chars)
                 for character in rand_chars:
                     item.add_equipable_character(character)
+        # force Cursed Shld equips to match Paladin Shld equips
+        self.items[102].equipable_characters = self.items[103].equipable_characters
 
     def equipable_original_random(self, type_condition, percent):
         if percent == 0:
