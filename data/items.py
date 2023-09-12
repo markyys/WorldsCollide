@@ -119,8 +119,14 @@ class Items():
 
                 num_chars = random.randint(tier_mins[item_tier], tier_maxes[item_tier])
                 rand_chars = random.sample(self.characters.playable, num_chars)
+
+                # if Paladin Shld is only equipable by Gogo and/or Umaro, instead reroll for 3 characters
+                if item.id == 103 and all(obj.id in [13, 14] for obj in rand_chars):
+                    rand_chars = random.sample(self.characters.playable, 3)
+
                 for character in rand_chars:
                     item.add_equipable_character(character)
+
         # force Cursed Shld equips to match Paladin Shld equips
         self.items[102].equipable_characters = self.items[103].equipable_characters
 
