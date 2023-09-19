@@ -53,7 +53,7 @@ def get_separator(label):
 
     return separator
 
-def format_option(option, value, unique_name):
+def format_option(option, value, unique_name = ''):
     from constants.standard_flags import standard_flags
     standard_flag = standard_flags.get(unique_name)
     if(standard_flag != str(value)):
