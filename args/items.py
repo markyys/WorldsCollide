@@ -58,6 +58,8 @@ def parse(parser):
                        help="Atma Weapon moved to higher tier and divisor reduced from 64 to 32")
 
 
+
+
 def process(args):
     from constants.items import good_items, better_items
     from constants.items import id_name, name_id
@@ -174,6 +176,7 @@ def flags(args):
 
     if args.stronger_atma_weapon:
         flags += " -saw"
+
 
     return flags
 

@@ -8,7 +8,6 @@ from constants.items import id_name, name_id
 import data.items_asm as items_asm
 import data.text as text
 
-
 class Items():
     ITEM_COUNT = 256
     EMPTY = 0xff  # item 255 is empty
