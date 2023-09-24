@@ -259,7 +259,7 @@ def log(args):
         log.append(format_option(*entry))
     '''
     for entry in entries:
-        key, value = entry
+        key, value, unique_name = entry
         if key == "Item Rewards":
             if len(value) == 0:
                 entry = (key, "None")
