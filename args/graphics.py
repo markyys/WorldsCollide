@@ -22,6 +22,9 @@ def parse(parser):
     graphics.add_argument("-ahtc", "--alternate-healing-text-color", action = "store_true",
                               help = "Makes healing text blue, to be able to distinguish from damage.")
 
+    graphics.add_argument("-lpb", "--less-poison-blur", action = "store_true",
+                             help = "Reduces pixellation while walking when poisoned.")
+
 def process(args):
     import graphics.palettes.palettes as palettes
     import graphics.portraits.portraits as portraits
@@ -118,6 +121,8 @@ def flags(args):
         flags += " -wmhc"
     if args.alternate_healing_text_color:
         flags += " -ahtc"
+    if args.less_poison_blur:
+        flags += " -lpb"
 
     return flags
 
@@ -191,6 +196,7 @@ def _other_options_log(args):
         ("Remove Flashes", remove_flashes, "remove_flashes"),
         ("World Minimap", world_minimap, "world_minimap"),
         ("Healing Text", healing_text, "healing_text"),
+        ("Less Poison Blur", args.less_poison_blur, "less_poison_blur"),
     ]
 
     for entry in entries:
