@@ -3,14 +3,12 @@
 ## look for section beginning with "nicer_poison(fout):"
 from memory.space import Reserve
 import instruction.asm as asm
-import args
 
 ### reduce poison pixellation effect while walking
 ### does not affect poison sound effect while on overworld map
 class LessPoisonBlur:
     def __init__(self):
-        if args.less_poison_blur:
-            self.mod()
+        self.mod()
 
     def mod(self):
         # make poison pixelation effect 1/10 of it's vanilla amount in dungeons/towns
