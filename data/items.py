@@ -2,7 +2,7 @@ import args, random
 from data.item import Item
 from data.structures import DataList
 
-from constants.items import good_items
+from constants.items import good_items, better_items
 from constants.items import id_name, name_id
 
 import data.items_asm as items_asm
@@ -22,15 +22,7 @@ class Items():
     DESC_START = 0x2d6400
     DESC_END = 0x2d779f
 
-    GOOD = [name_id[name] for name in good_items]
-    if args.stronger_atma_weapon:
-        GOOD.append(name_id["Atma Weapon"])
-    if args.no_free_paladin_shields:
-        GOOD.remove(name_id["Paladin Shld"])
-    if args.no_exp_eggs:
-        GOOD.remove(name_id["Exp. Egg"])
-    if args.no_illuminas:
-        GOOD.remove(name_id["Illumina"])
+    GOOD = args.item_rewards_ids
 
     def __init__(self, rom, args, dialogs, characters):
         self.rom = rom
