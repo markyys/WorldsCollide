@@ -298,6 +298,12 @@ id_portrait = {
     389 : "Cleon-HoxNorf-PB4",
     390 : "Koishi-HoxNorf-Touhou",
     391 : "Reimu3-HoxNorf-Touhou",
+    392 : "Yamame-HoxNorf-Touhou",
+    393 : "Suika-HoxNorf-Touhou",
+    394 : "Eirin-HoxNorf-Touhou",
+    395 : "Riku-HoxNorf-KH",
+    396 : "Umaro (Morph)-CDude-FF6",
+    397 : "Daryl-IvaarForkbeard-FF6",
 }
 
 def get_bin_path(id_):
