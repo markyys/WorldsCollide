@@ -282,6 +282,11 @@ id_palette = {
     344 : "Cleon (Player 1)-HoxNorf-PB4",
     345 : "Cleon (Player 2)-HoxNorf-PB4",
     346 : "Koishi-HoxNorf-Touhou",
+    347 : "Yamame-HoxNorf-Touhou",
+    348 : "Suika-HoxNorf-Touhou",
+    349 : "Eirin-HoxNorf-Touhou",
+    350 : "Riku-HoxNorf-KH",
+    351 : "Daryl-IvaarForkbeard_Odbarc-FF6",
 }
 
 def get_path(id_):

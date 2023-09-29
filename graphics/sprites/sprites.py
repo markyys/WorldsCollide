@@ -297,6 +297,11 @@ id_sprite = {
     342 : "Doom Guy-JamesWhite89-Doom",
     343 : "Cleon-HoxNorf-PB4",
     344 : "Koishi-HoxNorf-Touhou",
+    345 : "Yamame-HoxNorf-Touhou",
+    346 : "Suika-HoxNorf-Touhou",
+    347 : "Eirin-HoxNorf-Touhou",
+    348 : "Riku-HoxNorf-KH",
+    349 : "Daryl-IvaarForkbeard_Odbarc-FF6",
 }
 
 def get_path(id_):
