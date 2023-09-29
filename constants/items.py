@@ -315,7 +315,30 @@ good_items = [
     "Exp. Egg",
 ]
 
-better_items = [
+stronger_items = [
+    "ValiantKnife",
+    "Illumina",
+    "Ragnarok",
+    "Atma Weapon",
+    "Aura Lance",
+    "Fixed Dice",
+    "Flame Shld",
+    "Ice Shld",
+    "Thunder Shld",
+    "Paladin Shld",
+    "Force Shld",
+    "Cat Hood",
+    "Force Armor",
+    "Minerva",
+    "BehemothSuit",
+    "Snow Muffler",
+    "Genji Glove",
+    "Offering",
+    "Dragon Horn",
+    "Exp. Egg",
+]
+
+premium_items = [
     "ValiantKnife",
     "Illumina",
     "Ragnarok",

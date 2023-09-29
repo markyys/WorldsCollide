@@ -53,15 +53,12 @@ def parse(parser):
                        help="All characters can wear Moogle Charm relics which prevent random battles. Overrides Equipable option")
     items.add_argument("-stra", "--swdtech-runic-all", action="store_true",
                        help="All weapons enable swdtech and runic")
-
     items.add_argument("-saw", "--stronger-atma-weapon", action="store_true",
                        help="Atma Weapon moved to higher tier and divisor reduced from 64 to 32")
 
 
-
-
 def process(args):
-    from constants.items import good_items, better_items
+    from constants.items import good_items, stronger_items, premium_items
     from constants.items import id_name, name_id
 
     args._process_min_max("item_equipable_random")
@@ -95,10 +92,14 @@ def process(args):
     for a_item_id in args.item_rewards.split(','):
         # look for strings first
         a_item_id = a_item_id.lower().strip()
-        if a_item_id == 'standard':
+        if a_item_id == 'none':
+            args.item_rewards_ids = []
+        elif a_item_id == 'standard':
             args.item_rewards_ids = [name_id[name] for name in good_items]
+        elif a_item_id == 'stronger':
+            args.item_rewards_ids = [name_id[name] for name in stronger_items]
         elif a_item_id == 'premium':
-            args.item_rewards_ids = [name_id[name] for name in better_items]
+            args.item_rewards_ids = [name_id[name] for name in premium_items]
         else:
             item_ids_lower = {k.lower(): v for k, v in name_id.items()}
             if a_item_id in item_ids_lower:
@@ -113,7 +114,7 @@ def process(args):
 
     # Remove Atma Weapon is it's not Stronger and we're in standard/premium
     if not args.stronger_atma_weapon and name_id["Atma Weapon"] in args.item_rewards_ids \
-       and any(s.lower().strip() in args.item_rewards.split(',') for s in ('standard', 'premium')):
+       and any(s.lower().strip() in args.item_rewards.split(',') for s in ('none', 'standard', 'stronger', 'premium')):
         args.item_rewards_ids.remove(name_id["Atma Weapon"])
 
     # Remove excluded items
@@ -176,7 +177,6 @@ def flags(args):
 
     if args.stronger_atma_weapon:
         flags += " -saw"
-
 
     return flags
 
