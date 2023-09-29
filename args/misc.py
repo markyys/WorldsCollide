@@ -9,7 +9,7 @@ def parse(parser):
     misc.add_argument("-ond", "--original-name-display", action = "store_true",
                       help = "Display original character names in party and party select menus")
     misc.add_argument("-rr", "--random-rng", action = "store_true",
-                      help = "Randomize in-game RNG table. Affects Setzer's Slots, Auction House, Ebot's Rock, ...")
+                      help = "(DEPRECATED) Randomize in-game RNG table. Affects Setzer's Slots, Auction House, Ebot's Rock, ...")
     misc.add_argument("-rc", "--random-clock", action = "store_true",
                       help = "Randomize clock's correct time and NPC clues in Zozo")
     misc.add_argument("-scan", "--scan-all", action = "store_true",
@@ -73,8 +73,6 @@ def flags(args):
         flags += f" -move {args.movement}"
     if args.original_name_display:
         flags += " -ond"
-    if args.random_rng:
-        flags += " -rr"
     if args.random_clock:
         flags += " -rc"
     if args.scan_all:
@@ -155,7 +153,6 @@ def options(args):
     return [
         ("Movement", movement),
         ("Original Name Display", args.original_name_display),
-        ("Random RNG", args.random_rng),
         ("Random Clock", args.random_clock),
         ("Scan All", args.scan_all),
         ("Warp All", args.warp_all),
