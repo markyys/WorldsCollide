@@ -142,7 +142,7 @@ def menu(args):
         elif key == "No Free Characters/Espers":
             entries[index] = ("No Free Chars/Espers", entry[1], unique_name)
         elif key == "Remove Learnable Spells":
-            entries[index] = ("Remove L. Spells", FlagsRemoveLearnableSpells(value), unique_name) # flags sub-menu
+            entries[index] = ("Remove Spells", FlagsRemoveLearnableSpells(value), unique_name) # flags sub-menu
 
     return (name(), entries)
 
