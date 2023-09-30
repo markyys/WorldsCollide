@@ -225,7 +225,6 @@ standard_flags = {
     "movement": "AUTO_SPRINT",
     "original_name_display": "True",
     "random_rng": "True",
-    "random_clock": "False",
     "scan_all": "False",
     "warp_all": "False",
     "event_timers": "None",

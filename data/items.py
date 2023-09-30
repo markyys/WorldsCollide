@@ -2,7 +2,7 @@ import args, random
 from data.item import Item
 from data.structures import DataList
 
-from constants.items import good_items, better_items
+from constants.items import good_items, stronger_items, premium_items
 from constants.items import id_name, name_id
 
 import data.items_asm as items_asm

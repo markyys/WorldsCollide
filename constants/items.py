@@ -14,6 +14,7 @@ STARS = range(65, 68)
 SPECIAL = range(68, 77)
 GAMBLER = range(77, 83)
 CLAWS = range(83, 90)
+WEAPONS = range(0,90)
 SHIELDS = range(90, 105)
 HELMETS = range(105, 132)
 ARMORS = range(132, 163)
@@ -315,7 +316,30 @@ good_items = [
     "Exp. Egg",
 ]
 
-better_items = [
+stronger_items = [
+    "ValiantKnife",
+    "Illumina",
+    "Ragnarok",
+    "Atma Weapon",
+    "Aura Lance",
+    "Fixed Dice",
+    "Flame Shld",
+    "Ice Shld",
+    "Thunder Shld",
+    "Paladin Shld",
+    "Force Shld",
+    "Cat Hood",
+    "Force Armor",
+    "Minerva",
+    "BehemothSuit",
+    "Snow Muffler",
+    "Genji Glove",
+    "Offering",
+    "Dragon Horn",
+    "Exp. Egg",
+]
+
+premium_items = [
     "ValiantKnife",
     "Illumina",
     "Ragnarok",

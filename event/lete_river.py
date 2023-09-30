@@ -76,7 +76,7 @@ class LeteRiver(Event):
             )
 
     def before_ultros_mod(self):
-        space = Reserve(0xb05a5, 0xb05e3, "lete river heal party, here we go", field.NOP())
+        space = Reserve(0xb05a5, 0xb05e3, "lete river heal party, here we go", field.NOP()) # unused dialog 0166 -- Here we go! This raft'll take us to Narshe!
         if self.args.character_gating:
             space.write(
                 field.ReturnIfEventBitClear(event_bit.character_recruited(self.character_gate())),
@@ -85,7 +85,7 @@ class LeteRiver(Event):
             field.Branch(space.end_address + 1), # skip nops
         )
 
-        space = Reserve(0xb0617, 0xb063c, "lete river tutorial", field.NOP())
+        space = Reserve(0xb0617, 0xb063c, "lete river tutorial", field.NOP()) # unused dialog 0169
 
         # skip setting started raft ride bit to avoid side effects (terra/edgar/banon party in narshe)
         space = Reserve(0xb066f, 0xb0670, "lete river set started raft ride bit", field.NOP())
@@ -97,7 +97,7 @@ class LeteRiver(Event):
             field.BranchIfEventBitSet(event_bit.RODE_RAFT_LETE_RIVER, 0xb092b),
         )
 
-        space = Reserve(0xb08ea, 0xb08ec, "lete river what is it?", field.NOP())
+        space = Reserve(0xb08ea, 0xb08ec, "lete river what is it?", field.NOP()) # unused dialog 0142 What? WHAT IS IT?
 
     def ultros_mod(self):
         boss_pack_id = self.get_boss("Ultros 1")
@@ -121,7 +121,7 @@ class LeteRiver(Event):
         space = Write(Bank.CB, src, "lete river after ultros")
         after_ultros = space.start_address
 
-        space = Reserve(0xb0916, 0xb091a, "lete river call after ultros", field.NOP())
+        space = Reserve(0xb0916, 0xb091a, "lete river call after ultros", field.NOP()) # unused dialog 0171 SABIN!!!
         space.write(
             field.Call(after_ultros),
         )
