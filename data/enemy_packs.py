@@ -3,12 +3,12 @@ from data.structures import DataArray
 import data.bosses as bosses
 
 class EnemyPacks():
-    # the first 256 enemy packs are groups of 4 formations
+    # the first 256 enemy packs are groups of 4 formations -- these are the Battle -> "Random Battle Groups" in ff6tools
     PACK4_START = 0xf4800
     PACK4_END = 0xf4fff
     PACK4_SIZE = 8
 
-    # the next 256 enemy packs are groups of 2 formations
+    # the next 256 enemy packs are groups of 2 formations -- these are the Battle -> "Event Battle Groups" in ff6tools
     PACK2_START = 0xf5000
     PACK2_END = 0xf53ff
     PACK2_SIZE = 4
@@ -243,11 +243,14 @@ class EnemyPacks():
         import random
         for pack_id in packs:
             if random.random() < boss_percent:
+                formation = self.formations.get_random_boss(exclude_bosses) # outside of the below for loop, this ensures that there's no variability within fixed encounters within the same seed
                 for formation_index in range(self.packs[pack_id].FORMATION_COUNT):
-                    self.packs[pack_id].formations[formation_index] = self.formations.get_random_boss(exclude_bosses)
+                    self.packs[pack_id].formations[formation_index] = formation
             else:
+                formation = self.formations.get_random_normal() # outside of the below for loop, this ensures that there's no variability within fixed encounters within the same seed
                 for formation_index in range(self.packs[pack_id].FORMATION_COUNT):
-                    self.packs[pack_id].formations[formation_index] = self.formations.get_random_normal()
+                    # TODO: update get_random_normal to use more of the otherwise unused Fixed encounters
+                    self.packs[pack_id].formations[formation_index] = formation
 
     def chupon_packs(self, packs):
         # Replace all packs with the CHUPON formation
@@ -256,10 +259,11 @@ class EnemyPacks():
                 self.packs[pack_id].formations[formation_index] = self.formations.CHUPON
 
     def randomize_fixed(self):
+        # TODO: assign each check enough unused "packs" to eliminate variability within the same seed
         lete_river = [263, 264] # nautiloid, exocite, pterodon
         imperial_camp = [272, 298, 300, 269, 270] # soldier, dogs, templar/soldier, final 3 battles
         doma_wob = [299] # soldier
-        phantom_train = [303] # ghost (siegfried unrandomized for style)
+        phantom_train = [303] # ghost (siegfried [365] unrandomized for style)
         serpent_trench = [275, 276, 277] # anguiform, actaneon, aspik
         narshe_battle = [278, 279, 280] # brown and green soldiers, rider
         opera_house = [281] # sewer rat, vermin
@@ -352,6 +356,17 @@ class EnemyPacks():
             for formation_index in range(pack.FORMATION_COUNT):
                 pack.extra_formations[formation_index] = False
 
+    def pad_enemy_packs(self):
+        # add more random groups to the otherwise limited event battle groups
+        from data.enemy_battle_groups import unused_event_battle_groups
+        for pack in self.packs:
+            if pack.FORMATION_COUNT == 2:
+                # pack formation 0, 0 is Lobo -- it fills out unused spaces. Id 0, though, is MIAB Lobo, which we want to keep.
+                if (pack.formations == [0, 0] and pack.id > 0) or (pack.id in unused_event_battle_groups):
+                    # Add random formations to the empty pack
+                    this_formation = self.formations.get_random_normal()
+                    pack.formations = [this_formation, this_formation]
+
     def mod(self):
         self.event_boss_replacements = {
             self.DOOM_GAZE: self.DOOM_GAZE,
@@ -366,6 +381,8 @@ class EnemyPacks():
         self._handle_original_shuffle_dragons()
         self._handle_original_shuffle_statues()
 
+        self.pad_enemy_packs()
+
         if not self.args.fixed_encounters_original:
             self.randomize_fixed()
 
@@ -378,6 +395,13 @@ class EnemyPacks():
 
         # after modification, generate names
         self._update_names()
+
+        # DEBUG: print out event battle groups that are still different -- this likely indicates that it's unused in WC
+        for i, pack in enumerate(self.packs):
+            if pack.FORMATION_COUNT == 2:
+                if pack.formations[0] != pack.formations[1]:
+                    print(f"{i-256} {hex(i-256)}: {pack.formations[0]} {pack.formations[1]}")
+
 
     def write(self):
         pack_index = 0
