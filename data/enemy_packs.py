@@ -264,7 +264,7 @@ class EnemyPacks():
         imperial_camp = [272, 298, 300, 269, 270] # soldier, dogs, templar/soldier, final 3 battles
         doma_wob = [299] # soldier
         phantom_train = [303] # ghost (siegfried [365] unrandomized for style)
-        serpent_trench = [275, 276, 277] # anguiform, actaneon, aspik
+        serpent_trench = [275, 276, 277, 410, 411, 412, 413] # anguiform, actaneon, aspik, unused, unused, unused, unused
         narshe_battle = [278, 279, 280] # brown and green soldiers, rider
         opera_house = [281] # sewer rat, vermin
         vector = [257, 285, 284] # guards, garm, commando, protoarmor, pipsqueak
@@ -381,7 +381,7 @@ class EnemyPacks():
         self._handle_original_shuffle_dragons()
         self._handle_original_shuffle_statues()
 
-        self.pad_enemy_packs()
+        self.pad_enemy_packs() # keep this before randomized_fixed, as this pads with normal enemies, whereas that may add bosses
 
         if not self.args.fixed_encounters_original:
             self.randomize_fixed()
