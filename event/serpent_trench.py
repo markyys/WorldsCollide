@@ -35,7 +35,6 @@ class SerpentTrench(Event):
         # to increase the variety of encounters, we are adding 4 more and swapping 2 of the 276 and 2 of the 277s
         # 410 - 413 are otherwise unused fixed encounters
 
-        battle_background = 35 # Underwater
         replaced_encounters = [
             (410, 0xA8BB7), 
             (411, 0xA8C25),

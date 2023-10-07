@@ -266,13 +266,13 @@ class EnemyPacks():
         phantom_train = [303] # ghost (siegfried [365] unrandomized for style)
         serpent_trench = [275, 276, 277, 410, 411, 412, 413] # anguiform, actaneon, aspik, unused, unused, unused, unused
         narshe_battle = [278, 279, 280] # brown and green soldiers, rider
-        opera_house = [281] # sewer rat, vermin
+        opera_house = [281, 414] # sewer rat/vermin, unused
         vector = [257, 285, 284] # guards, garm, commando, protoarmor, pipsqueak
         mine_cart = [297, 400] # mag roaders
         imperial_base = [295, 296] # soldier and magitek
         sealed_cave = [405] # ninja
-        burning_house = [301, 287] # balloon (x4, x3)
-        iaf = [382] # sky armor / spit fire
+        burning_house = [301, 287, 415] # balloon (x4, x3), unused
+        iaf = [382, 416] # sky armor / spit fire, unused
         floating_continent_escape = [397, 398, 399] # naughty
         owzer_mansion = [402, 403, 407, 404] # dahling, nightshade, souldancer, still life
         moogle_defense = [261] # vomammoth
