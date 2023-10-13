@@ -1,6 +1,7 @@
 from data.character_sprites import PORTRAIT_CHARACTERS, SPRITE_CHARACTERS, DEFAULT_CHARACTER_PORTRAITS, DEFAULT_CHARACTER_SPRITES
 from data.character_palettes import SPRITE_PALETTE_COUNT, DEFAULT_CHARACTER_PALETTES, DEFAULT_CHARACTER_SPRITE_PALETTES
 from data.characters import Characters
+from PIL import ImageColor
 
 def parse(parser):
     graphics = parser.add_argument_group("Graphics")
@@ -21,6 +22,9 @@ def parse(parser):
 
     graphics.add_argument("-ahtc", "--alternate-healing-text-color", action = "store_true",
                               help = "Makes healing text blue, to be able to distinguish from damage.")
+    
+    graphics.add_argument("-atma", "--atma-color", type = str,
+                            help = "Customize the color of the Atma Weapon.")
 
 def process(args):
     import graphics.palettes.palettes as palettes
@@ -96,6 +100,41 @@ def process(args):
     else:
         args.sprite_palettes = DEFAULT_CHARACTER_SPRITE_PALETTES
 
+    args.atma_colors_rgb = None
+    if args.atma_color:
+        # Populate the args.atma_colors_rgb with the specified 3 or 4 colors. This argument goes in order from outside into the middle white.
+        # first check for presets -- these will override the value for the hex color parsing below
+        atma_color = args.atma_color.lower().strip()
+        if atma_color == 'blue':
+            args.atma_color = None # just put back to default
+        elif atma_color == 'purple':
+            atma_color = "#29005b.#7903c2.#c269fd"
+        elif atma_color == 'red':
+            atma_color = "#7a0d07.#fc1b0f.#f96b63"
+        elif atma_color == 'orange':
+            atma_color = "#9e530e.#e27814.#e2a061"
+        elif atma_color == 'yellow':
+            atma_color = "#9e8300.#ffd800.#ffe97c"
+        elif atma_color == 'green':
+            atma_color = "#004406.#007f0e.#39a340"
+        elif atma_color == 'dark':
+            atma_color = '#cccccc.#707070.#3F3F3F.#000000'
+        elif atma_color == 'white':
+            atma_color = '#444444.#b7b7b7.#cecece'
+
+    # Now, check for the hex strings (either set above via presets or by the user for a custom color)
+    if args.atma_color:
+        # Ensure there are 3 or 4, '.' separated
+        atma_colors_hex = atma_color.split('.')
+        if(len(atma_colors_hex) != 3 and len(atma_colors_hex) != 4):
+            raise ValueError(f"Invalid number of atma color arguments ({len(atma_colors_hex)}) should be 3 or 4")
+        
+        # parse the 3 or 4 colors into args.atma_colors_rgb. By using PIL, we're supporting a variety of color specifications, including hex or words ("red")
+        args.atma_colors_rgb = []
+        for hex_atma in atma_colors_hex:
+            args.atma_colors_rgb.append(ImageColor.getcolor(hex_atma, "RGB"))
+        
+
 def flags(args):
     flags = ""
 
@@ -118,6 +157,8 @@ def flags(args):
         flags += " -wmhc"
     if args.alternate_healing_text_color:
         flags += " -ahtc"
+    if args.atma_color:
+        flags += " -atma " + args.atma_color
 
     return flags
 

@@ -219,6 +219,31 @@ class Items():
             self.characters.characters[index].init_body = random.choice(tiers[Item.ARMOR][1])
             self.characters.characters[index].init_head = random.choice(tiers[Item.HELMET][1])
 
+    def atma_weapon_color(self):
+        # TODO: remove -- put this fully into items_asm
+        # Set the atma weapon palette to the given RGB
+        # https://www.ff6hacking.com/wiki/doku.php?id=ff3:ff3us:doc:asm:list:battle_animation_palette -- it's palette 31
+
+        from graphics.bgr15 import BGR15
+        # args.atma_colors_rgb should have 3 or 4 entries, each containing an RGB tuple
+
+        if(len(args.atma_colors_rgb) != 3 and len(args.atma_colors_rgb) != 4):
+            raise ValueError(f"Invalid number of atma color arguments ({len(args.atma_colors_rgb)}) should be 3 or 4")
+        
+        # first rgb is the outside color
+        outer_bgr = BGR15()
+        outer_bgr.rgb = list(args.atma_colors_rgb[0]) 
+        middle_bgr = BGR15()
+        middle_bgr.rgb = list(args.atma_colors_rgb[1])
+        inner_bgr = BGR15()
+        inner_bgr.rgb = list(args.atma_colors_rgb[2])
+        white_bgr = None
+        if(len(args.atma_colors_rgb) == 4):
+            white_bgr = BGR15()
+            white_bgr.rgb = list(args.atma_colors_rgb[3])
+        
+        items_asm.atma_weapon_palette(outer_bgr, middle_bgr, inner_bgr, white_bgr)
+
     def mod(self):
         not_relic_condition = lambda x: x != Item.RELIC
         if self.args.item_equipable_random:
@@ -296,6 +321,9 @@ class Items():
             self.add_receive_dialog(item_id)
 
         self.moogle_starting_equipment()
+
+        if self.args.atma_colors_rgb:
+            self.atma_weapon_color()
 
     def write(self):
         for item in self.items:

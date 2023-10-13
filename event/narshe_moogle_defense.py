@@ -227,6 +227,7 @@ class NarsheMoogleDefense(Event):
             field.AddItem("Cherub Down", sound_effect = False),
             field.AddItem("Cure Ring", sound_effect = False),
             field.AddItem("Hero Ring", sound_effect = True),
+            field.AddItem("Atma Weapon", sound_effect = False),
             field.Return()
         ]
         space = Write(Bank.CC, src, "Item Giver Debug NPC")
