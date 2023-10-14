@@ -304,6 +304,13 @@ id_portrait = {
     395 : "Riku-HoxNorf-KH",
     396 : "Umaro (Morph)-CDude-FF6",
     397 : "Daryl-IvaarForkbeard-FF6",
+    398 : "Samus-Unknown-Metroid",
+    399 : "Ridley-JamesWhite89-Metroid",
+    400 : "Marth-HoxNorf-FE",
+    401 : "Lenna (Knight)-JamesWhite89-FF5",
+    402 : "Lenna (Thief)-JamesWhite89-FF5",
+    403 : "Lenna (Summoner)-JamesWhite89-FF5",
+    404 : "Lenna (Beastmaster)-JamesWhite89-FF5",
 }
 
 def get_bin_path(id_):
