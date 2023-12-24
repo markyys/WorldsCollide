@@ -7,7 +7,7 @@ class Airship(Event):
     def init_event_bits(self, space):
         space.write(
             field.SetEventBit(event_bit.LEARNED_TO_FLY_AIRSHIP),
-            field.SetEventBit(event_bit.AIRSHIP_VISIBLE),
+            #field.SetEventBit(event_bit.AIRSHIP_VISIBLE), #TODO: "Grounded" mode testing
             field.SetEventBit(event_bit.AIRSHIP_FLYING),
 
             field.ClearEventBit(npc_bit.SETZER_BLACKJACK_COIN_TOSS),
