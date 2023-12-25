@@ -1,6 +1,7 @@
 # NOTE: (address - 1e80) * 0x8 + bit
 # e.g. (1eb7 - 1e80) * 0x8 + 0x1 = 1b9 (airship visible)
 #      (1f43 - 1e80) * 0x8 + 0x3 = 61b (characters on narshe battlefield)
+# Unlike npc_bit, these match what you find in ff6tools (once converted to hex)
 
 DISABLE_SAVE_POINT_TUTORIAL = 0x133
 DISABLE_CHOCOBO_TUTORIAL = 0x134
@@ -172,6 +173,7 @@ GOT_RAIDEN = 0x2dd
 FOUND_ANCIENT_CASTLE = 0x2df
 GOT_ODIN = 0x0c8
 SUPLEXED_TRAIN = 0x2b0 # custom, previously unused but set in nikeah entrance event
+FIGARO_CASTLE_MOVABLE = 0x048
 
 DEFEATED_NARSHE_DRAGON = 0x11a # custom
 DEFEATED_MT_ZOZO_DRAGON = 0x11b # custom

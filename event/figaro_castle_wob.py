@@ -18,6 +18,7 @@ class FigaroCastleWOB(Event):
             field.SetEventBit(event_bit.MET_KEFKA_FIGARO_CASTLE),
             field.ClearEventBit(event_bit.NAMED_EDGAR),
             field.ClearEventBit(npc_bit.GUARDS_FIGARO_CASTLE),
+            field.SetEventBit(event_bit.FIGARO_CASTLE_MOVABLE), # TODO: grounded mode testing -- make Figaro castle movable
         )
 
     def mod(self):
