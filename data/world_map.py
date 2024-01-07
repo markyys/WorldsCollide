@@ -51,6 +51,14 @@ class WorldMap:
         space = Reserve(addr, addr+len(minimap_palette_bytes)-1, "floating continent palette")
         space.write(minimap_palette_bytes)
 
+    def fast_chocobo_mod(self):
+        # Double the speed of the chocobo (from 1/8 airship to 1/4)
+        space = Reserve(0x2e6ff6, 0x2e6ff6, "chocobo max speed lower byte")
+        space.write(0x02) #default: 0x01; airship (near ee6c8e): 0x08
+
     def mod(self):
         if self.args.world_minimap_high_contrast:
             self.world_minimap_high_contrast_mod()
+
+        if self.args.fast_chocobo:
+            self.fast_chocobo_mod()

@@ -18,6 +18,8 @@ def parse(parser):
                       help = "All characters start with Warp learned. Warp costs 0 MP. Useful for seeds that limit Warp Stone access")
     misc.add_argument("-npctips", "--npc-dialog-tips", action = "store_true",
                       help = "NPC provide general game tips")
+    misc.add_argument("-fastchoc", "--fast-chocobo", action = "store_true",
+                      help = "Chocobos are twice as fast")
 
     from data.movement import ALL
     movement = misc.add_mutually_exclusive_group()
@@ -77,6 +79,8 @@ def flags(args):
         flags += " -warp"
     if args.npc_dialog_tips:
         flags += " -npctips"
+    if args.fast_chocobo:
+        flags += " -fastchoc"
 
     ### NPC tips
     if args.npc_dialog_tips:
@@ -154,6 +158,7 @@ def options(args):
         ("Event Timers", event_timers, "event_timers"),
         ("Y NPC", y_npc, "y_npc"),
         ("NPC Tips", args.npc_dialog_tips, "npc_dialog_tips"),
+        ("Fast Chocobo", args.fast_chocobo, "fast_chocobo")
     ]
 
 def menu(args):
