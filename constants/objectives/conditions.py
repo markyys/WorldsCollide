@@ -3,33 +3,47 @@ from constants.entities import id_character
 from constants.espers import id_esper
 
 from collections import namedtuple
-ConditionType = namedtuple("ConditionType", ["name", "string_function", "value_range", "min_max"])
+ConditionType = namedtuple("ConditionType", ["name", "string_function", "value_range", "min_max", "result_exceptions"])
 
+# result_exceptions lists the results that cannot be selected for this condition. 
+#  It is intended to prevent selection of this condition for an objective on the website and to cause an error during seed generation if specified.
+#  Leave empty ([]) if there are no exceptions
 types = [
-    ConditionType("None", "", None, False),
-    ConditionType("Random", "Random", ["r"], False),
+    ConditionType("None", "", None, False, []),
+    ConditionType("Random", "Random", ["r"], False, []),
     ConditionType("Characters", lambda count : f"Recruit {count} Characters",
-                  list(range(1, len(id_character) + 1)), True),
+                  list(range(1, len(id_character) + 1)), True, 
+                  lambda count: []),
     ConditionType("Character", lambda character : f"Recruit {id_character[character].capitalize()}",
-                  ["r"] + sorted(id_character, key = id_character.get), False),
+                  ["r"] + sorted(id_character, key = id_character.get), False, 
+                  lambda character: []),
     ConditionType("Espers", lambda count : f"Find {count} Espers",
-                  list(range(1, len(id_esper) + 1)), True),
+                  list(range(1, len(id_esper) + 1)), True,
+                  lambda count: []),
     ConditionType("Esper", lambda esper : f"Find {id_esper[esper]}",
-                  ["r"] + sorted(id_esper, key = id_esper.get), False),
+                  ["r"] + sorted(id_esper, key = id_esper.get), False,
+                  lambda esper: []),
     ConditionType("Dragons", lambda count : f"Defeat {count} Dragons",
-                  list(range(1, len(dragon_bit) + 1)), True),
+                  list(range(1, len(dragon_bit) + 1)), True,
+                  lambda count: []),
     ConditionType("Dragon", lambda dragon : f"Defeat {dragon_bit[dragon].name}",
-                  ["r"] + list(range(len(dragon_bit))), False),
+                  ["r"] + list(range(len(dragon_bit))), False,
+                  lambda dragon: []),
     ConditionType("Bosses", lambda count : f"Defeat {count} Bosses",
-                  list(range(1, len(boss_bit) + 1)), True),
+                  list(range(1, len(boss_bit) + 1)), True,
+                  lambda count: []),
     ConditionType("Boss", lambda boss : f"Defeat {boss_bit[boss].name}",
-                  ["r"] + list(range(len(boss_bit))), False),
+                  ["r"] + list(range(len(boss_bit))), False,
+                  lambda boss: []),
     ConditionType("Checks", lambda count : f"Complete {count} Checks",
-                  list(range(1, len(check_bit) + 1)), True),
+                  list(range(1, len(check_bit) + 1)), True,
+                  lambda count: []),
     ConditionType("Check", lambda check : f"{check_bit[check].name}",
-                  ["r"] + list(range(len(check_bit))), False),
+                  ["r"] + list(range(len(check_bit))), False,
+                  lambda check : check_bit[check].result_exceptions),
     ConditionType("Quest", lambda quest : f"{quest_bit[quest].name}",
-                  ["r"] + list(range(len(quest_bit))), False),
+                  ["r"] + list(range(len(quest_bit))), False,
+                  lambda quest : quest_bit[quest].result_exceptions),
 ]
 
 name_type = {_type.name : _type for _type in types}

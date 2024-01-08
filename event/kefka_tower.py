@@ -1,4 +1,5 @@
 from event.event import *
+from constants.objectives.results import UNLOCK_FINAL_KEFKA_NAME
 import args
 
 class KefkaTower(Event):
@@ -14,7 +15,7 @@ class KefkaTower(Event):
         )
 
         import objectives
-        self.unlock_final_kefka_result_name = "Unlock Final Kefka"
+        self.unlock_final_kefka_result_name = UNLOCK_FINAL_KEFKA_NAME
         if self.unlock_final_kefka_result_name not in objectives.results:
             space.write(
                 field.SetEventBit(event_bit.UNLOCKED_FINAL_KEFKA),

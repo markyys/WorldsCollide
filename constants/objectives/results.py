@@ -8,13 +8,15 @@ from constants.spells import id_spell
 from collections import namedtuple
 ResultType = namedtuple("ResultType", ["id", "name", "format_string", "value_range"])
 
+UNLOCK_FINAL_KEFKA_NAME = "Unlock Final Kefka"
+
 category_types = {
     "Random" : [
         ResultType(0, "Random", "Random", None),
     ],
     "Kefka's Tower" : [
         ResultType(1, "Kefka's Tower", "Random", None),
-        ResultType(2, "Unlock Final Kefka", "Unlock Final Kefka", None),
+        ResultType(2, UNLOCK_FINAL_KEFKA_NAME, UNLOCK_FINAL_KEFKA_NAME, None),
         ResultType(3, "Unlock KT Skip", "Unlock KT Skip", None),
     ],
     "Auto" : [

@@ -20,11 +20,12 @@ def process(args):
             self.args = args
 
     class Condition:
-        def __init__(self, name, string_function, value_range, min_max, args):
+        def __init__(self, name, string_function, value_range, min_max, result_exceptions, args):
             self.name = name
             self.string_function = string_function
             self.value_range = value_range
             self.min_max = min_max
+            self.result_exceptions = result_exceptions
             self.args = args
 
     class Objective:
@@ -78,6 +79,7 @@ def process(args):
             conditions = []
             while value_index < len(values) and len(conditions) < MAX_CONDITIONS:
                 condition_type = condition_types[values[value_index]]
+                #TODO: check the result_exceptions and cause a warning (maybe error if we don't want to give people a workaround) if it's being used on an incompatible objective
                 value_index += 1
 
                 if condition_type.name == "None":
