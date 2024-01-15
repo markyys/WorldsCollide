@@ -2,7 +2,6 @@ import data.event_bit as event_bit
 import data.npc_bit as npc_bit
 import data.battle_bit as battle_bit
 from data.bosses import normal_formation_name, dragon_formation_name
-from constants.objectives.results import UNLOCK_FINAL_KEFKA_NAME
 
 from collections import namedtuple
 # result_exceptions lists the results that cannot be selected for this condition. 
@@ -13,7 +12,7 @@ NameBit = namedtuple("NameBit", ["name", "bit", "result_exceptions"])
 check_bit = [
     NameBit("Ancient Castle", event_bit.GOT_RAIDEN, []),
     NameBit("Ancient Castle Dragon", event_bit.DEFEATED_ANCIENT_CASTLE_DRAGON, []),
-    NameBit("Baren Falls", event_bit.NAMED_GAU, [UNLOCK_FINAL_KEFKA_NAME]), # TODO: just a test -- making Baren Falls unable to unlock final kefka
+    NameBit("Baren Falls", event_bit.NAMED_GAU, ["Unlock Final Kefka"]), # TODO: just a test -- making Baren Falls unable to unlock final kefka
     NameBit("Burning House", event_bit.DEFEATED_FLAME_EATER, []),
     NameBit("Collapsing House", event_bit.FINISHED_COLLAPSING_HOUSE, []),
     NameBit("Daryl's Tomb", event_bit.DEFEATED_DULLAHAN, []),
@@ -63,7 +62,7 @@ check_bit = [
     NameBit("South Figaro Prisoner", event_bit.FREED_CELES, []),
     NameBit("South Figaro Cave", event_bit.DEFEATED_TUNNEL_ARMOR, []),
     NameBit("Tritoch Cliff", event_bit.GOT_TRITOCH, []),
-    NameBit("Tzen Thief", event_bit.BOUGHT_ESPER_TZEN, []),
+    NameBit("Tzen Thief", event_bit.BOUGHT_ESPER_TZEN, ["Unlock Final Kefka", "Illumina"]), # TODO: just a test -- making this unable to unlock final kefka
     NameBit("Umaro's Cave", event_bit.RECRUITED_UMARO_WOR, []),
     NameBit("Veldt", event_bit.VELDT_REWARD_OBTAINED, []),
     NameBit("Veldt Cave", event_bit.DEFEATED_SR_BEHEMOTH, []),

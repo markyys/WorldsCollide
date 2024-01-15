@@ -4,6 +4,7 @@ from constants.lores import id_lore
 from constants.rages import id_rage
 from constants.swdtechs import id_swdtech
 from constants.spells import id_spell
+from constants.objectives.condition_bits import check_bit
 
 from collections import namedtuple
 ResultType = namedtuple("ResultType", ["id", "name", "format_string", "value_range"])
@@ -118,3 +119,13 @@ for category in category_types:
 names = list(name_type.keys())
 
 types = [_type for name, _type in name_type.items()]
+
+
+# Get the number of check exceptions for each result
+name_count_check_exceptions = {}
+for name in names:
+    count = 0
+    for check in check_bit:
+        if name in check.result_exceptions:
+            count += 1
+    name_count_check_exceptions[name] = count

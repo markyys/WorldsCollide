@@ -5,6 +5,18 @@ from constants.espers import id_esper
 from collections import namedtuple
 ConditionType = namedtuple("ConditionType", ["name", "string_function", "value_range", "min_max", "result_exceptions"])
 
+def count_check_result_exceptions(count):
+    from constants.objectives.results import name_count_check_exceptions
+    # For the given check count, return an array of which results are excluded
+    # For example, if an Object Result ("Final Kefka Unlock") is excluded from 3 checks, then it should be excluded from check counts 60, 61, and 62
+    check_exceptions = []
+    max_checks = len(check_bit) + 1
+    for result_name in name_count_check_exceptions:
+        if(name_count_check_exceptions[result_name] >= max_checks - count):
+            check_exceptions.append(result_name)
+    
+    return check_exceptions
+
 # result_exceptions lists the results that cannot be selected for this condition. 
 #  It is intended to prevent selection of this condition for an objective on the website and to cause an error during seed generation if specified.
 #  Leave empty ([]) if there are no exceptions
@@ -37,7 +49,7 @@ types = [
                   lambda boss: []),
     ConditionType("Checks", lambda count : f"Complete {count} Checks",
                   list(range(1, len(check_bit) + 1)), True,
-                  lambda count: []),
+                  lambda count: count_check_result_exceptions(count)),
     ConditionType("Check", lambda check : f"{check_bit[check].name}",
                   ["r"] + list(range(len(check_bit))), False,
                   lambda check : check_bit[check].result_exceptions),
