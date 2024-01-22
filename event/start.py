@@ -248,8 +248,13 @@ class Start(Event):
                 #field.LoadMap(0x14, direction.DOWN, default_music = False, 
                 #              x = 38, y = 58, fade_in = False),
                 # WoB Vector
-                field.LoadMap(0xf2, direction.DOWN, default_music = False, 
-                              x = 32, y = 58, fade_in = False)
+                #field.LoadMap(0xF2, direction.DOWN, default_music = False, 
+                #              x = 32, y = 58, fade_in = False)
+                #field.SetParentMap(0, direction.DOWN, 120, 188),
+                # Opera House Lobby
+                field.LoadMap(0xED, direction.DOWN, default_music = False, 
+                              x = 60, y = 45, fade_in = False), 
+                field.SetParentMap(0, direction.DOWN, 45, 154)
             ]
         else:
             src += [

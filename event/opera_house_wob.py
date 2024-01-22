@@ -379,26 +379,38 @@ class OperaHouseWOB(Event):
         self.setzer_npc.sprite = character
         self.setzer_npc.palette = self.characters.get_palette(character)
 
-        self.reward_mod([
+        src = [
             field.RecruitAndSelectParty(character),
-            field.StartSong(53),
             field.ClearEventBit(event_bit.TEMP_SONG_OVERRIDE),
-            field.LoadMap(0x06, direction.DOWN, default_music = True, x = 16, y = 6, fade_in = True),
-        ])
+        ]
+        src += self.get_end_map_load_src()
+        self.reward_mod(src)
 
     def esper_item_mod(self, esper_item_instructions):
         self.setzer_npc.sprite = self.characters.get_random_esper_item_sprite()
         self.setzer_npc.palette = self.characters.get_palette(self.setzer_npc.sprite)
 
-        self.reward_mod([
+        src = [
             field.RefreshEntities(),
             field.UpdatePartyLeader(),
             field.ShowEntity(field_entity.PARTY0),
-            field.StartSong(53),
             field.ClearEventBit(event_bit.TEMP_SONG_OVERRIDE),
-            field.LoadMap(0x06, direction.DOWN, default_music = True, x = 16, y = 6, fade_in = True),
-            esper_item_instructions,
-        ])
+        ]
+        src += self.get_end_map_load_src()
+        src += esper_item_instructions
+        self.reward_mod(src)
+
+    def get_end_map_load_src(self):
+        map_load = [
+            field.StartSong(53),
+            field.LoadMap(0x06, direction.DOWN, default_music = True, x = 16, y = 6, fade_in = True), # Blackjack exterior
+        ]
+        if self.args.grounded:
+            # replace with loading into the entrance of the opera house
+            map_load = [
+                field.LoadMap(0xED, direction.DOWN, default_music = True, x = 60, y = 45, fade_in = True), # Opera House Lobby
+            ]
+        return map_load
 
     def esper_mod(self, esper):
         self.esper_item_mod([
