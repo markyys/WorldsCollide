@@ -241,20 +241,26 @@ class Start(Event):
         self.start_items = space.start_address
 
     def start_game_mod(self):
-        src = [
-            # place airship on wob, right outside narshe, start on airship deck
-            # TODO: grounded mode testing
-            # field.LoadMap(0x00, direction.DOWN, default_music = False,
-            #               x = 84, y = 34, fade_in = True, airship = True),
-            # vehicle.SetPosition(84, 34),
-
-            # TODO: grounded mode testing
-            #vehicle.LoadMap(0x06, direction.DOWN, default_music = True,
-            #                x = 16, y = 6, entrance_event = True),
-            # WoB Narshe
-            field.LoadMap(0x14, direction.DOWN, default_music = False, 
-                          x = 38, y = 58, fade_in = False),
-
+        src = []
+        if self.args.grounded:
+            src += [
+                # WoB Narshe
+                #field.LoadMap(0x14, direction.DOWN, default_music = False, 
+                #              x = 38, y = 58, fade_in = False),
+                # WoB Vector
+                field.LoadMap(0xf2, direction.DOWN, default_music = False, 
+                              x = 32, y = 58, fade_in = False)
+            ]
+        else:
+            src += [
+                # place airship on wob, right outside narshe, start on airship deck
+                field.LoadMap(0x00, direction.DOWN, default_music = False,
+                            x = 84, y = 34, fade_in = True, airship = True),
+                vehicle.SetPosition(84, 34),
+                vehicle.LoadMap(0x06, direction.DOWN, default_music = True,
+                            x = 16, y = 6, entrance_event = True),
+            ]
+        src += [
             field.EntityAct(field_entity.PARTY0, True,
                 field_entity.CenterScreen(),
             ),

@@ -7,6 +7,8 @@ def parse(parser):
                       help = "Unrestricted event access")
     mode.add_argument("-cg", "--character-gating", action = "store_true",
                       help = "Events locked until required characters recruited")
+    mode.add_argument("-grounded", "--grounded", action = "store_true",
+                      help = "Open world, but no airship or WoR access until you unlock it")
 
     seed_spoilers = parser.add_argument_group("seed_spoilers")
     seed_spoilers.add_argument("-s", dest = "seed", type = str, required = False, help = "RNG seed")
@@ -23,6 +25,8 @@ def flags(args):
         flags += " -cg"
     elif args.open_world:
         flags += " -open"
+    elif args.grounded:
+        flags += " -grounded"
 
     if args.spoiler_log:
         flags += " -sl"
@@ -33,6 +37,8 @@ def options(args):
     game_mode = "Open World"
     if args.character_gating:
         game_mode = "Character Gating"
+    elif args.grounded:
+        game_mode = "Grounded"
 
     return [
         ("Mode", game_mode, "game_mode"),

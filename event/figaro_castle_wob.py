@@ -14,12 +14,17 @@ class FigaroCastleWOB(Event):
             self.reward = self.add_reward(RewardType.CHARACTER | RewardType.ESPER | RewardType.ITEM)
 
     def init_event_bits(self, space):
-        space.write(
+        src = [
             field.SetEventBit(event_bit.MET_KEFKA_FIGARO_CASTLE),
             field.ClearEventBit(event_bit.NAMED_EDGAR),
             field.ClearEventBit(npc_bit.GUARDS_FIGARO_CASTLE),
-            field.SetEventBit(event_bit.FIGARO_CASTLE_MOVABLE), # TODO: grounded mode testing -- make Figaro castle movable
-        )
+        ]
+        if self.args.grounded:
+            src += [
+                field.SetEventBit(event_bit.FIGARO_CASTLE_MOVABLE), # make Figaro castle movable
+            ]
+
+        space.write(src)
 
     def mod(self):
         self.edgar_npc_id = 0x10

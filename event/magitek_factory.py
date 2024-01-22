@@ -331,6 +331,9 @@ class MagitekFactory(Event):
             battle_type = field.BattleType.PINCER
             battle_background = 37 # airship, center
 
+        if self.args.grounded:
+            battle_background = 19 # town exterior
+
         space = Reserve(0xb40e5, 0xb40eb, "magitek factory invoke battle cranes", field.NOP())
         space.write(
             field.InvokeBattleType(boss_pack_id, battle_type, battle_background),
@@ -347,8 +350,12 @@ class MagitekFactory(Event):
         space = Reserve(0xc8303, 0xc8304, "after magitek factory do not delete vector townspeople", field.NOP())
 
         space = Reserve(0xc8319, 0xc831f, "after magitek factory do not call go to zozo scenes", field.Return())
+        airship = True
+        if self.args.grounded:
+            # Don't go on the airship
+            airship = False
         space.write(
-            field.LoadMap(0x00, direction.DOWN, default_music = True, x = 120, y = 188, airship = True),
+            field.LoadMap(0x00, direction.DOWN, default_music = True, x = 120, y = 188, airship = airship),
             vehicle.End(),
         )
 
