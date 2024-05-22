@@ -8,7 +8,7 @@ class MtKolts(Event):
         return self.characters.SABIN
 
     def init_rewards(self):
-        self.reward = self.add_reward(RewardType.CHARACTER | RewardType.ESPER | RewardType.ITEM)
+        self.reward = self.add_reward(RewardType.CHARACTER | RewardType.ESPER)
 
     def mod(self):
         self.vargas_npc_id = 0x10

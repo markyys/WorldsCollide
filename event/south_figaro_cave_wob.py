@@ -8,7 +8,7 @@ class SouthFigaroCaveWOB(Event):
         return self.characters.LOCKE
 
     def init_rewards(self):
-        self.reward = self.add_reward(RewardType.CHARACTER | RewardType.ESPER | RewardType.ITEM)
+        self.reward = self.add_reward(RewardType.CHARACTER | RewardType.ESPER)
 
     def init_event_bits(self, space):
         space.write(

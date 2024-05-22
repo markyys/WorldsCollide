@@ -8,7 +8,7 @@ class DoomGaze(Event):
         return self.characters.SETZER # gate for airship option
 
     def init_rewards(self):
-        self.reward = self.add_reward(RewardType.ESPER | RewardType.ITEM)
+        self.reward = self.add_reward(RewardType.ESPER)
 
     def mod(self):
         self.magicite_npc_id = 0x12

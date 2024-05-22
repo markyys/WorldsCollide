@@ -8,7 +8,7 @@ class DarylTomb(Event):
         return self.characters.SETZER
 
     def init_rewards(self):
-        self.reward = self.add_reward(RewardType.CHARACTER | RewardType.ESPER | RewardType.ITEM)
+        self.reward = self.add_reward(RewardType.CHARACTER | RewardType.ESPER)
 
     def mod(self):
         self.entrance_mod()
