@@ -8,7 +8,10 @@ class ZoneEater(Event):
         return self.characters.GOGO
 
     def init_rewards(self):
-        self.reward = self.add_reward(RewardType.CHARACTER | RewardType.ESPER | RewardType.ITEM)
+        if self.args.os_progression:
+            self.reward = self.add_reward(RewardType.CHARACTER | RewardType.ESPER)
+        else:
+            self.reward = self.add_reward(RewardType.CHARACTER | RewardType.ESPER | RewardType.ITEM)
 
     def mod(self):
         self.gogo_npc_id = 0x10

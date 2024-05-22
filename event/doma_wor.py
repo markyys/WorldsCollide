@@ -8,9 +8,14 @@ class DomaWOR(Event):
         return self.characters.CYAN
 
     def init_rewards(self):
-        self.reward1 = self.add_reward(RewardType.CHARACTER | RewardType.ESPER)
-        self.reward2 = self.add_reward(RewardType.ESPER | RewardType.ITEM)
-        self.reward3 = self.add_reward(RewardType.ESPER | RewardType.ITEM)
+        if self.args.os_progression:
+            self.reward1 = self.add_reward(RewardType.CHARACTER | RewardType.ESPER)
+            self.reward2 = self.add_reward(RewardType.ESPER)
+            self.reward3 = self.add_reward(RewardType.ESPER | RewardType.ITEM)
+        else:
+            self.reward1 = self.add_reward(RewardType.CHARACTER | RewardType.ESPER)
+            self.reward2 = self.add_reward(RewardType.ESPER | RewardType.ITEM)
+            self.reward3 = self.add_reward(RewardType.ESPER | RewardType.ITEM)
 
     def mod(self):
         self.cyan_phantom_train_npc_id = 0x10

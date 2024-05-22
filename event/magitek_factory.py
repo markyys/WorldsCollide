@@ -8,9 +8,14 @@ class MagitekFactory(Event):
         return self.characters.CELES
 
     def init_rewards(self):
-        self.reward1 = self.add_reward(RewardType.ESPER | RewardType.ITEM)
-        self.reward2 = self.add_reward(RewardType.ESPER | RewardType.ITEM)
-        self.reward3 = self.add_reward(RewardType.CHARACTER | RewardType.ESPER)
+        if self.args.os_progression:
+            self.reward1 = self.add_reward(RewardType.ESPER | RewardType.ITEM)
+            self.reward2 = self.add_reward(RewardType.ESPER)
+            self.reward3 = self.add_reward(RewardType.CHARACTER | RewardType.ESPER)
+        else:
+            self.reward1 = self.add_reward(RewardType.ESPER | RewardType.ITEM)
+            self.reward2 = self.add_reward(RewardType.ESPER | RewardType.ITEM)
+            self.reward3 = self.add_reward(RewardType.CHARACTER | RewardType.ESPER)
 
     def init_event_bits(self, space):
         space.write(

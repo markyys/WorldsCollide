@@ -8,7 +8,10 @@ class OwzerMansion(Event):
         return self.characters.RELM
 
     def init_rewards(self):
-        self.reward = self.add_reward(RewardType.CHARACTER | RewardType.ESPER | RewardType.ITEM)
+        if self.args.os_progression:
+            self.reward = self.add_reward(RewardType.CHARACTER | RewardType.ESPER)
+        else:
+            self.reward = self.add_reward(RewardType.CHARACTER | RewardType.ESPER | RewardType.ITEM)
 
     def mod(self):
         self.relm_npc_id = 0x13

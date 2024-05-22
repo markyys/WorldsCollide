@@ -8,7 +8,10 @@ class SerpentTrench(Event):
         return self.characters.GAU
 
     def init_rewards(self):
-        self.reward = self.add_reward(RewardType.CHARACTER | RewardType.ESPER | RewardType.ITEM)
+        if self.args.os_progression:
+            self.reward = self.add_reward(RewardType.CHARACTER | RewardType.ESPER)
+        else:
+            self.reward = self.add_reward(RewardType.CHARACTER | RewardType.ESPER | RewardType.ITEM)
 
     def mod(self):
         self.cave_mod()
